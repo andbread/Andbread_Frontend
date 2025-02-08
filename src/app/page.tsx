@@ -1,3 +1,5 @@
+import Icon from '@/components/common/icon/Icon'
+
 export default function Page() {
   return (
     <div>
@@ -49,6 +51,46 @@ export default function Page() {
       <div className="columns-1">
         <button className="btn btn-small btn-primary">small primary</button>
         <button className="btn btn-small btn-secondary">small secondary</button>
+      </div>
+      <hr className="my-24"></hr>
+      <div className="columns-12">
+        <Icon
+          type="angleLeft"
+          width={16}
+          height={16}
+          fill="text-gray-600"
+        ></Icon>
+        <Icon
+          type="angleRight"
+          width={16}
+          height={16}
+          fill="text-gray-600"
+        ></Icon>
+        <Icon type="badge" width={16} height={16} fill="text-gray-600"></Icon>
+        <Icon
+          type="calendar"
+          width={16}
+          height={16}
+          fill="text-gray-600"
+        ></Icon>
+        <Icon type="check" width={16} height={16} fill="text-gray-600"></Icon>
+        <Icon type="copy" width={16} height={16} fill="text-gray-600"></Icon>
+        <Icon type="crossFill" width={16} height={16}></Icon>
+        <Icon type="cross" width={16} height={16} fill="text-gray-600"></Icon>
+        <Icon
+          type="googleLogo"
+          width={16}
+          height={16}
+          fill="text-gray-600"
+        ></Icon>
+        <Icon
+          type="kakaoLogo"
+          width={16}
+          height={16}
+          fill="text-gray-600"
+        ></Icon>
+        <Icon type="plus" width={16} height={16} fill="text-gray-600"></Icon>
+        <Icon type="warning" width={16} height={16} fill="text-gray-600"></Icon>
       </div>
     </div>
   )
