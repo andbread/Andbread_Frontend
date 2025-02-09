@@ -1,50 +1,76 @@
-/* Tailwind CSS 지시어 추가 */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* 기본 레이아웃 설정 */
 html,
 body {
-  max-width: 600px;
-  min-width: 300px; 
-  margin: 0 auto;
-  box-shadow: rgba(100, 100, 111, 0.1) 0px 7px 29px 0px;
-  min-height: 100vh;
-  overflow-x: hidden;
+  @apply mx-auto min-h-screen min-w-[320px] max-w-[600px] overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  @apply bg-background p-24 font-pretendard text-gray-800 antialiased;
 }
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  @apply m-0 p-0;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  @apply text-inherit no-underline;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* 커스텀 레이아웃 설정*/
+@layer base {
+  h1 {
+    @apply text-heading01;
+  }
+  h2 {
+    @apply text-heading02;
+  }
+  h3 {
+    @apply text-heading03;
+  }
+  h4 {
+    @apply text-heading04;
+  }
+  h5 {
+    @apply text-heading05;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-8 bg-white p-20;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12); /* 직접 box-shadow 적용 */
+  }
+
+  .btn {
+    @apply rounded-8 cursor-pointer;
+  }
+
+  .btn-small {
+    @apply w-148 h-48 text-heading05;
+  }
+
+  .btn-medium {
+    @apply w-232 h-48 text-heading05;
+  }
+
+  .btn-large {
+    @apply min-w-280 h-56 w-full text-heading04;
+  }
+
+  /* 유형별 스타일 */
+  .btn-primary {
+    @apply bg-secondary-100 text-white active:bg-secondary-200;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-700 active:bg-gray-300;
+  }
+
+  .btn-warning {
+    @apply bg-system-red text-white;
   }
 }
