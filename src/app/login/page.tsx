@@ -1,11 +1,11 @@
-import LoginButton from "@/components/login/LoginButton";
+import LoginButton from '@/components/login/LoginButton'
 const LoginPage = () => {
-    return (
-        <>
-            로그인 페이지 입니다.
-            <br/>
-            <LoginButton/>
-        </>
-    )
+  return (
+    <div >
+      <br />
+      <LoginButton provider="kakao" />
+      <LoginButton provider="google" />
+    </div>
+  )
 }
-export default LoginPage;
+export default LoginPage
