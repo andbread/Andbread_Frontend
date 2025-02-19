@@ -27,7 +27,7 @@ const iconMap = {
 } as const
 
 // iconMap의 key를 type으로 변경
-type IconType = keyof typeof iconMap
+export type IconType = keyof typeof iconMap
 
 interface IconProps {
   type: IconType
