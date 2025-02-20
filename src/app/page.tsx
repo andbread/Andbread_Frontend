@@ -1,8 +1,8 @@
-import Icon from '@/components/common/icon/Icon'
+import Icon from '@/components/common/icon/icon'
 
 export default function Page() {
   return (
-    <div>
+    <div className="p-24">
       <h1>heading-01 24px</h1>
       <h2>heading-02 20px</h2>
       <h3>heading-03 18px</h3>
