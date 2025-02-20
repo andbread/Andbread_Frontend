@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 /* 기본 레이아웃 설정 */
+/* 기본 레이아웃 설정 */
 html {
   @apply overflow-y-hidden;
 }
