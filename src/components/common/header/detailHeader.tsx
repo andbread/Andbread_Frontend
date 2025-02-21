@@ -8,13 +8,8 @@ export default function DetailHeader() {
 
   return (
     <header className="h-48 w-full pt-16">
-      <div onClick={() => router.back()}>
-        <Icon
-          type="angleLeft"
-          width={16}
-          height={16}
-          fill="text-gray-600"
-        ></Icon>
+      <div className="cursor-pointer" onClick={() => router.back()}>
+        <Icon type="angleLeft" width={16} height={16} fill="text-gray-600" />
       </div>
     </header>
   )
