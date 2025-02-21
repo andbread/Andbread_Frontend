@@ -9,3 +9,14 @@ export interface Nbread {
   paymentMonth: number | null
   paymentDate: number | null
 }
+
+export interface LoginProvider {
+  provider: 'kakao' | 'google'
+}
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  avatarUrl: string;
+}
