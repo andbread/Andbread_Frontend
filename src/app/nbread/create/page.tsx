@@ -12,7 +12,7 @@ import useNbreadStore from '@/stores/useNbreadStore'
 const Page = () => {
   const router = useRouter()
   const { setNbread } = useNbreadStore()
-  const nbread = useNbreadStore((state) => state.nbread)
+  const nbreadFormData = useNbreadStore((state) => state.nbread)
   const {
     register,
     setValue,
@@ -28,8 +28,8 @@ const Page = () => {
   }
 
   useEffect(() => {
-    if (nbread !== null) {
-      reset(nbread)
+    if (nbreadFormData !== null) {
+      reset(nbreadFormData)
     }
   }, [])
 
@@ -42,6 +42,7 @@ const Page = () => {
           register={register}
           setValue={setValue}
           getValues={getValues}
+          defaultNbreadValue={nbreadFormData || undefined}
         />
       </section>
       <button
