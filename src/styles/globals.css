@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 /* 기본 레이아웃 설정 */
-/* 기본 레이아웃 설정 */
 html {
   @apply overflow-y-hidden;
 }
@@ -16,6 +15,8 @@ body {
 body {
   @apply h-[100svh] bg-background font-pretendard text-gray-800 antialiased;
 }
+
+/* 기본 태그 스타일 초기화 및 커스터마이징 */
 
 input {
   @apply w-full border-0 border-gray-200 bg-transparent p-4 text-gray-800 transition-all duration-200;
@@ -34,6 +35,44 @@ input[type='number']::-webkit-outer-spin-button {
 
 input[type='date']::-webkit-calendar-picker-indicator {
   display: none;
+}
+
+input[type='checkbox'] {
+  display: none;
+}
+
+.checkbox_icon::before {
+  content: '';
+  display: block;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+  border: 1px solid theme('colors.secondary.200');
+  border-radius: 40px;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox_label input:checked + .checkbox_icon::before {
+  transition: all 0.15s ease;
+  background: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e")
+    theme('colors.secondary.200') no-repeat center;
+  border: none;
+}
+
+.checkbox_label input:disabled + .checkbox_icon::before {
+  background-color: theme('colors.gray.200');
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.checkbox_label input:checked:disabled + .checkbox_icon::before {
+  background: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e")
+    theme('colors.gray.200') no-repeat center;
+  border: none;
+  opacity: 0.6;
 }
 
 * {
@@ -119,7 +158,15 @@ a {
   }
 
   .badge {
-    @apply shadow-avatar cursor-pointer rounded-40 px-8 py-4 text-body03 transition-all duration-200;
+    @apply shadow-avatar cursor-pointer rounded-40 px-8 py-4 transition-all duration-200;
+  }
+
+  .badge-small {
+    @apply text-body03;
+  }
+
+  .badge-large {
+    @apply text-body02;
   }
 
   .badge-selected {
