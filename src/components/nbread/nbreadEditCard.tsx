@@ -36,6 +36,11 @@ const NbreadEditCard = ({
       : 0,
   )
 
+  const participantCountMinValue = Math.max(
+    1,
+    defaultNbreadValue?.participants?.length || 0,
+  )
+
   const paymentPeriodTab = ['매년', '매월']
   const paymentPeriodValue = ['year', 'month']
 
@@ -95,11 +100,17 @@ const NbreadEditCard = ({
                   setParticipantCount(Number(event.target.value)),
               })}
             >
-              {Array.from({ length: 10 }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {i + 1}명
-                </option>
-              ))}
+              {Array.from(
+                { length: 10 - participantCountMinValue + 1 },
+                (_, i) => (
+                  <option
+                    key={participantCountMinValue + i}
+                    value={participantCountMinValue + i}
+                  >
+                    {participantCountMinValue + i}명
+                  </option>
+                ),
+              )}
             </select>
           </div>
           {/* ------------ 엔빵 금액 ------------ */}
