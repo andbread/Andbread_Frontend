@@ -24,6 +24,7 @@ const Tabbar = ({ tabs, initialValue, onTabChange }: TabbarProps) => {
           key={index}
           isClicked={selectedTab === index}
           content={tab}
+          size="small"
           onClick={() => handleTabChange(index)}
         />
       ))}
