@@ -45,7 +45,6 @@ const Page = () => {
 
   useEffect(() => {
     reset(nbreadDummyData)
-    console.log(nbreadDummyData)
   }, [])
 
   return (
