@@ -23,12 +23,12 @@ if (typeof window !== 'undefined') {
     if (event === 'SIGNED_IN' && session) {
       // 사용자가 로그인했을 때, sessionStorage에 토큰 저장
       sessionStorage.setItem('access_token', session.access_token);
-      sessionStorage.setItem('refresh_token', session.refresh_token);
+      
       
     } else if (event === 'SIGNED_OUT') {
       // 로그아웃시 토큰 삭제
       sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('refresh_token');
+      
     }
   });
 }
