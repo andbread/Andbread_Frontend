@@ -1,6 +1,5 @@
 'use client'
 
-import useNbreadStore from '@/stores/useNbreadStore'
 import Tabbar from '../common/tabbar/tabbar'
 import { Nbread } from '@/types/nbread'
 import { useEffect, useState } from 'react'
@@ -14,22 +13,32 @@ interface NbreadEditCardProps {
   register: UseFormRegister<Nbread>
   setValue: UseFormSetValue<Nbread>
   getValues: UseFormGetValues<Nbread>
+  defaultNbreadValue?: Nbread
 }
 
 const NbreadEditCard = ({
   register,
   setValue,
   getValues,
+  defaultNbreadValue,
 }: NbreadEditCardProps) => {
-  const nbread = useNbreadStore((state) => state.nbread)
   const [amount, setAmount] = useState<number | undefined>(
-    nbread ? nbread.amount : 0,
+    defaultNbreadValue ? defaultNbreadValue.amount : 0,
   )
   const [participantCount, setParticipantCount] = useState<number>(
-    nbread ? nbread.participantCount : 1,
+    defaultNbreadValue ? defaultNbreadValue.participantCount : 1,
   )
   const [selectedTabIndex, setSelectedTabIndex] = useState<number>(
-    nbread ? (nbread.paymentPeriod === 'year' ? 0 : 1) : 0,
+    defaultNbreadValue
+      ? defaultNbreadValue.paymentPeriod === 'year'
+        ? 0
+        : 1
+      : 0,
+  )
+
+  const participantCountMinValue = Math.max(
+    1,
+    defaultNbreadValue?.participants?.length || 0,
   )
 
   const paymentPeriodTab = ['매년', '매월']
@@ -91,11 +100,17 @@ const NbreadEditCard = ({
                   setParticipantCount(Number(event.target.value)),
               })}
             >
-              {Array.from({ length: 10 }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {i + 1}명
-                </option>
-              ))}
+              {Array.from(
+                { length: 10 - participantCountMinValue + 1 },
+                (_, i) => (
+                  <option
+                    key={participantCountMinValue + i}
+                    value={participantCountMinValue + i}
+                  >
+                    {participantCountMinValue + i}명
+                  </option>
+                ),
+              )}
             </select>
           </div>
           {/* ------------ 엔빵 금액 ------------ */}
