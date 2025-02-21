@@ -1,4 +1,4 @@
-// TODO) 엔빵 타입 별도 선언 + 테이블 만들어지면 추가로 수정 필요
+import { User } from '@/types/user'
 export interface Nbread {
   id: string
   title: string
@@ -8,4 +8,11 @@ export interface Nbread {
   paymentPeriod: 'year' | 'month'
   paymentMonth: number | null
   paymentDate: number | null
+  leaderId: string | null
+  participants: Participant[] | null
+}
+
+export interface Participant {
+  user: User
+  isLeader: boolean
 }
