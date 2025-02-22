@@ -19,11 +19,14 @@ const CallbackPage = () => {
         }
 
         if (data.user) {
+          const provider = data.user.app_metadata.provider as 'kakao' | 'google';
+
           const userInfo = {
             id: data.user.id,
             email: data.user.email || '',
+            socialType : provider,
             name: data.user.user_metadata.full_name || '',
-            avatarUrl: data.user.user_metadata.avatar_url || '',
+            profileImage: data.user.user_metadata.avatar_url || '',
           };
           setUser(userInfo); // 사용자 정보 세션 스토리지에 저장
           router.replace('/');

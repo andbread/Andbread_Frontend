@@ -1,6 +1,7 @@
 
 import { supabase } from "./supabaseClient";
-import { LoginProvider } from "@/types/nbread";
+import { LoginProvider } from "@/types/user";
+
 export const login = async(provider: LoginProvider['provider']) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,

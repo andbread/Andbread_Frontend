@@ -1,8 +1,9 @@
 "use client"; 
 import Icon from '../common/icon/Icon';
 import { login } from '@/lib/auth'
-import { LoginProvider } from '@/types/nbread';
-const providerStyles = {
+import { LoginProvider } from '@/types/user';
+
+const providerStyles  = {
   kakao: ' bg-[#FEE500] hover:bg-yellow-400 text-black',
   google: 'bg-[#F2F2F2]  hover:bg-gray-200 text-black shadow-lg',
 }
