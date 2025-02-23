@@ -27,16 +27,17 @@ const iconMap = {
 } as const
 
 // iconMap의 key를 type으로 변경
-type IconType = keyof typeof iconMap
+export type IconType = keyof typeof iconMap
 
 interface IconProps {
   type: IconType
   width: number | string
   height: number | string
   fill?: string
+  onClick?: () => void
 }
 
-const Icon = ({ type, width, height, fill = '' }: IconProps) => {
+const Icon = ({ type, width, height, fill = '' , onClick }: IconProps) => {
   const SelectedIcon = iconMap[type]
 
   return (
@@ -46,6 +47,7 @@ const Icon = ({ type, width, height, fill = '' }: IconProps) => {
       className={`fill-current ${fill}`}
       aria-label={type}
       viewBox="0 0 24 24"
+      onClick={onClick}
     />
   )
 }

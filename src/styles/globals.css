@@ -3,17 +3,91 @@
 @tailwind utilities;
 
 /* 기본 레이아웃 설정 */
+html {
+  @apply overflow-y-hidden;
+}
+
 html,
 body {
-  @apply mx-auto min-h-screen min-w-[320px] max-w-[600px] overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
+  @apply mx-auto h-[100svh] min-h-screen min-w-[320px] max-w-[600px] overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
 }
 
 body {
-  @apply bg-background p-24 font-pretendard text-gray-800 antialiased;
+  @apply h-[100svh] bg-background font-pretendard text-gray-800 antialiased;
+}
+
+/* 기본 태그 스타일 초기화 및 커스터마이징 */
+
+input {
+  @apply w-full border-0 border-gray-200 bg-transparent p-4 text-gray-800 transition-all duration-200;
+  border-bottom: 1px solid theme('colors.gray.200');
+}
+
+input:focus {
+  outline: none;
+  border-bottom: 1.6px solid theme('colors.primary.500');
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  @apply hidden;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+input[type='checkbox'] {
+  display: none;
+}
+
+.checkbox_icon::before {
+  content: '';
+  display: block;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+  border: 1px solid theme('colors.secondary.200');
+  border-radius: 40px;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox_label input:checked + .checkbox_icon::before {
+  transition: all 0.15s ease;
+  background: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e")
+    theme('colors.secondary.200') no-repeat center;
+  border: none;
+}
+
+.checkbox_label input:disabled + .checkbox_icon::before {
+  background-color: theme('colors.gray.200');
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.checkbox_label input:checked:disabled + .checkbox_icon::before {
+  background: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e")
+    theme('colors.gray.200') no-repeat center;
+  border: none;
+  opacity: 0.6;
 }
 
 * {
   @apply m-0 p-0;
+}
+
+select {
+  @apply w-full p-2;
+  outline: none;
+  border-bottom: 1px solid theme('colors.gray.200');
+}
+
+select:focus {
+  outline: none;
+  border-bottom: 1.6px solid theme('colors.primary.500');
 }
 
 a {
@@ -45,32 +119,61 @@ a {
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12); /* 직접 box-shadow 적용 */
   }
 
+  .card-dashline {
+    @apply rounded-8 p-20 text-body01 text-gray-300;
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23C9C9CAFF' stroke-width='3' stroke-dasharray='8%2c 8' stroke-dashoffset='0' stroke-linecap='butt'/%3e%3c/svg%3e");
+  }
+
   .btn {
-    @apply rounded-8 cursor-pointer;
+    @apply cursor-pointer rounded-8;
   }
 
   .btn-small {
-    @apply w-148 h-48 text-heading05;
+    @apply h-48 w-148 text-heading05;
   }
 
   .btn-medium {
-    @apply w-232 h-48 text-heading05;
+    @apply h-48 w-232 text-heading05;
   }
 
   .btn-large {
-    @apply min-w-280 h-56 w-full text-heading04;
+    @apply h-56 w-full min-w-280 text-heading04;
   }
 
   /* 유형별 스타일 */
   .btn-primary {
-    @apply bg-secondary-100 text-white active:bg-secondary-200;
+    @apply bg-secondary-100 text-white hover:bg-primary-500 active:bg-secondary-200;
   }
 
   .btn-secondary {
-    @apply bg-gray-200 text-gray-700 active:bg-gray-300;
+    @apply bg-gray-300 text-gray-800 hover:bg-gray-200 active:bg-gray-400;
   }
 
   .btn-warning {
     @apply bg-system-red text-white;
+  }
+
+  .btn-disabled {
+    @apply bg-gray-300 text-gray-500;
+  }
+
+  .badge {
+    @apply shadow-avatar cursor-pointer rounded-40 px-8 py-4 transition-all duration-200;
+  }
+
+  .badge-small {
+    @apply text-body03;
+  }
+
+  .badge-large {
+    @apply text-body02;
+  }
+
+  .badge-selected {
+    @apply bg-primary-100 text-primary-500;
+  }
+
+  .badge-disabled {
+    @apply bg-gray-200 text-gray-400;
   }
 }
