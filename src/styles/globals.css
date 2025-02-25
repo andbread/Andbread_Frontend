@@ -177,3 +177,29 @@ a {
     @apply bg-gray-200 text-gray-400;
   }
 }
+
+/* toast 스타일 커스텀 */
+.Toastify__toast-container {
+  @apply p-24;
+}
+
+.Toastify__toast {
+  @apply min-h-48 items-center rounded-4 px-20;
+}
+
+.Toastify__toast--success {
+  @apply bg-system-green font-pretendard text-heading05 text-white;
+}
+
+.Toastify__toast--error {
+  @apply bg-system-red font-pretendard text-heading05 text-white;
+}
+
+.Toastify__toast-icon {
+  @apply h-16 w-16;
+}
+
+.Toastify__toast-icon svg {
+  @apply h-16 w-16;
+  fill: white;
+}
