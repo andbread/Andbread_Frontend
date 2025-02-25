@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 
-export const insertNbread = async (nbreadId: string) => {
+export const deleteNbread = async (nbreadId: string) => {
   try {
     const { data, error } = await supabase
       .from('nbread')
