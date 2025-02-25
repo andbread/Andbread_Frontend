@@ -14,7 +14,7 @@ const Header = () => {
         <button onClick={() => router.push("/calendar")} className="cursor-pointer mt-10">
           <Icon type="calendar" width={24} height={24} fill="text-gray-600" />
         </button>
-        <button onClick={() => router.push("/profile")} className="cursor-pointer mt-8 w-24 h-24">
+        <button onClick={() => router.push("/mypage")} className="cursor-pointer mt-8 w-24 h-24">
           <Avatar size="large" profileImageUrl={undefined} isNbreadLeader={false} />
         </button>
       </div>
