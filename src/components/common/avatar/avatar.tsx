@@ -22,6 +22,12 @@ const Avatar = ({ size, profileImageUrl, isNbreadLeader }: AvatarProps) => {
           className="rounded-40"
           width={avatarSize}
           height={avatarSize}
+          style={{
+            display: "block", 
+            objectFit: "cover",
+            width: `${avatarSize}px`, 
+            height: `${avatarSize}px`,
+          }}
         />
       ) : (
         <DefaultAvatar
