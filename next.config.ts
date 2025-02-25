@@ -8,9 +8,8 @@ const nextConfig: NextConfig = {
     })
     return config
   },
-  // TODO 구글, 카카오 프로필 이미지 도메인 추가 필요
   images: {
-    domains: ['avatars.githubusercontent.com'], // TODO 프로필 이미지 테스트용 임시 도메인, 수정 필요
+    domains: ["k.kakaocdn.net", "lh3.googleusercontent.com", "img1.kakaocdn.net", "t1.kakaocdn.net"],
   },
 }
 
