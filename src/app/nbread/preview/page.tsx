@@ -11,6 +11,7 @@ import { insertParticipant } from '@/lib/participant'
 import { useToast } from '@/components/common/toast/Toast'
 import { useRouter } from 'next/navigation'
 import useUserStore from '@/stores/useAuthStore'
+import { useEffect, useState } from 'react'
 
 const Page = () => {
   const nbreadData = useNbreadStore((state) => state.nbread)
@@ -18,13 +19,39 @@ const Page = () => {
   const { clearNbread } = useNbreadStore()
   const router = useRouter()
 
+  const [previewNbreadData, setPreviewNbreadData] = useState<Nbread | null>(
+    null,
+  )
+  const [savedNbreadData, setSavedNbreadData] = useState<Nbread | null>(null)
+
+  useEffect(() => {
+    if (!nbreadData) {
+      useToast.error('먼저 엔빵 폼을 작성해주세요.')
+      router.push('/nbread/create')
+    } else {
+      setPreviewNbreadData(nbreadData)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!previewNbreadData && savedNbreadData) {
+      setPreviewNbreadData(savedNbreadData)
+    }
+  }, [previewNbreadData, savedNbreadData])
+
+  if (!previewNbreadData) {
+    return <div></div>
+  }
+
   const handleClickSubmitButton = async () => {
     if (nbreadData && nbreadData.participants) {
       try {
         const newNbreadId = await insertNbread(nbreadData!)
         await insertParticipant(nbreadData.participants[0], newNbreadId)
 
+        setSavedNbreadData(previewNbreadData)
         clearNbread()
+        setPreviewNbreadData(null)
         useToast.success('엔빵 만들기에 성공했어요.')
         router.push('/home')
       } catch (error) {
@@ -42,8 +69,8 @@ const Page = () => {
         <div className="pt-20 text-body03 text-gray-400">
           작성한 엔빵의 미리보기에요.
         </div>
-        <h2 className="pb-12 pt-4">{nbreadData?.title || '저장 중...'}</h2>
-        {<NbreadCard nbreadData={nbreadData as Nbread} />}
+        <h2 className="pb-12 pt-4">{previewNbreadData?.title}</h2>
+        {<NbreadCard nbreadData={previewNbreadData as Nbread} />}
         <div className="mb-12 mt-40 text-body02 text-gray-500">참여한 사람</div>
         <div className="mb-40 flex flex-col gap-8">
           {/* TODO 로그인 기능 구현 후 데이터 수정 필요 */}
