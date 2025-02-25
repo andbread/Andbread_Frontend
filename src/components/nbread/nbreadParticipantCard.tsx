@@ -1,9 +1,9 @@
 import Avatar from '../common/avatar/avatar'
 import Checkbox from '../common/checkbox/checkbox'
-import Icon from '../common/icon/icon'
+import Icon from '../common/icon/Icon'
 
 interface NbreadParticipantCardProps {
-  profileImageUrl?: string
+  profileImageUrl?: string | null
   isNbreadLeader: boolean
   name: string
   paymentAmount?: number
