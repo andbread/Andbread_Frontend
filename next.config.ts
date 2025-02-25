@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
     return config
   },
   images: {
-    domains: ["k.kakaocdn.net", "lh3.googleusercontent.com"],
+    domains: ["k.kakaocdn.net", "lh3.googleusercontent.com", "img1.kakaocdn.net", "t1.kakaocdn.net"],
   },
 }
 

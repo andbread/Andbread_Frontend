@@ -9,7 +9,7 @@ const MyInfo = () => {
   return (
     <div className="card mt-12">
       <div className="flex items-center justify-between px-6 py-4">
-        <Avatar profileImageUrl={user?.profileImage || "/default-avatar.png"} size="large" />
+        <Avatar profileImageUrl={user?.profileImage} size="large" />
 
         <div className="flex-shrink-0 justify-between mr-225 ml-12">
           <p className="font-bold mb-5 text-heading05 text-gray-800">{user?.name || "이름 없음"}</p>
