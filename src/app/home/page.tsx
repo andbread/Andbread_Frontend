@@ -111,7 +111,7 @@ const HomePage = ({ profileImageUrl }: HomePageProps) => {
                     {nbread.payment_period === "year" ? " 매년" : " 매월"}
                   </p>
                 </div>
-                <div className="flex flex-col justify-end min-h-[30px]">
+                <div className="flex flex-col justify-end min-h-[30px] mr-12">
                   <p className="text-body03 text-secondary-200 mt-auto">{nbread.participant_count}명 참여 중</p>
                 </div>
               </div>
