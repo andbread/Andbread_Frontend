@@ -3,8 +3,6 @@ import { supabase } from "@/lib/supabaseClient";
 export const getUserNbreads = async (userId: string) => {
   if (!userId) return [];
 
-  console.log(`🔍 Fetching participant entries for userId: ${userId}`);
-
   const { data: participantEntries, error: participantError } = await supabase
     .from("participant") 
     .select("nbread_id")
@@ -20,7 +18,6 @@ export const getUserNbreads = async (userId: string) => {
   const nbreadIds = participantEntries.map((entry) => entry.nbread_id);
 
   if (nbreadIds.length === 0) {
-    console.log("⚠️ No nbreads found for this user.");
     return [];
   }
 
@@ -33,8 +30,6 @@ export const getUserNbreads = async (userId: string) => {
     console.error("❌ Failed to fetch nbreads:", error.message);
     return [];
   }
-
-  console.log("✅ Retrieved nbreads:", nbreads);
 
   return nbreads;
 };
