@@ -25,7 +25,7 @@ const NbreadCard = ({ nbread, profileImageUrl }: NbreadCardProps) => {
           ))}
         </div>
         {/* 참여 인원 상태 */}
-        <p className="text-body04 text-secondary-300">미완료 0/{nbread.participant_count}</p>
+        <p className="text-body04 text-secondary-300">미완료 0 / {nbread.participant_count}</p>
       </div>
     </div>
   );
