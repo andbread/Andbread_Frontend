@@ -8,9 +8,11 @@ import { Nbread } from '@/types/nbread'
 import classNames from 'classnames'
 import { useEffect } from 'react'
 import useNbreadStore from '@/stores/useNbreadStore'
+import useUserStore from '@/stores/useAuthStore'
 
 const Page = () => {
   const router = useRouter()
+  const userData = useUserStore((state) => state.user)
   const { setNbread } = useNbreadStore()
   const nbreadFormData = useNbreadStore((state) => state.nbread)
   const {
@@ -23,6 +25,9 @@ const Page = () => {
   } = useForm<Nbread>({ mode: 'onChange' })
 
   const onSubmit = (data: Nbread) => {
+    data.leaderId = userData!.id
+    data.participants = [{ user: userData!, isLeader: true }]
+
     setNbread(data)
     router.push('/nbread/preview')
   }
@@ -36,7 +41,7 @@ const Page = () => {
   return (
     <main className="flex h-full flex-col justify-between p-24">
       <section>
-        <DetailHeader></DetailHeader>
+        <DetailHeader />
         <h3 className="pb-12 pt-20">엔빵 만들기 🍞</h3>
         <NbreadEditCard
           register={register}
