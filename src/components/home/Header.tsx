@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"; 
 import Icon from "@/components/common/icon/Icon";
-import Avatar from "@/components/common/avatar/Avatar"; 
+import Avatar from "@/components/common/avatar/avatar"; 
 
 const Header = () => {
   const router = useRouter(); 
