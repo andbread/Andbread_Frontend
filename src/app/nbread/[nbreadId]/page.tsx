@@ -6,10 +6,9 @@ import { useToast } from '@/components/common/toast/Toast'
 import NbreadCard from '@/components/nbread/nbreadCard'
 import NbreadEditCard from '@/components/nbread/nbreadEditCard'
 import NbreadParticipantsList from '@/components/nbread/nbreadParticipantsList'
-import { getNbread } from '@/lib/nbread/getNbread'
-import { getParticipants } from '@/lib/participant/getParticipants'
+import { getNbread } from '@/lib/nbread'
+import { getParticipants } from '@/lib/participant'
 import { Nbread } from '@/types/nbread'
-import { User } from '@/types/user'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -28,6 +27,13 @@ const Page = () => {
     reset,
     formState: { isValid },
   } = useForm<Nbread>({ mode: 'onChange' })
+
+  const handleEditingNbread = (editedNbread: Nbread) => {
+    if (isEditing) {
+      setNbread({ ...editedNbread })
+    }
+    setIsEditing(!isEditing)
+  }
 
   useEffect(() => {
     if (!params.nbreadId) {

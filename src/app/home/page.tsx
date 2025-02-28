@@ -6,7 +6,7 @@ import MonthlyNbread from '@/components/home/MonthlyNbread'
 import MyNbread from '@/components/home/MyNbread'
 import { Nbread } from '@/types/nbread'
 import useUserStore from '@/stores/useAuthStore'
-import { getParticipants } from '@/lib/participant/getParticipants'
+import { getParticipants } from '@/lib/participant'
 
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
