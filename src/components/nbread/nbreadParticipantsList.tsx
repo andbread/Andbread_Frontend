@@ -13,6 +13,7 @@ interface NbreadParticipantsListProps {
   paymentAmount: number
   isEditing: boolean
   leaderId: string
+  onClick?: () => void
 }
 
 const NbreadParticipantsList = ({
@@ -23,6 +24,7 @@ const NbreadParticipantsList = ({
   paymentAmount,
   isEditing,
   leaderId,
+  onClick,
 }: NbreadParticipantsListProps) => {
   const userData = useUserStore((state) => state.user)
 
@@ -46,7 +48,6 @@ const NbreadParticipantsList = ({
                   participant.user.id !== userData?.id
                 }
                 hasDelete={isEditing && participant.user.id !== userData?.id}
-                // onClickCheckbox={() => console.log('엔빵 납부 여부 업데이트')}
                 // TODO 친구초대 기능 구현 후 모달 구현
                 onClickDelete={() => console.log('엔빵 멤버 삭제 모달 오픈')}
               />
@@ -82,7 +83,7 @@ const NbreadParticipantsList = ({
                 iconType="plus"
                 size={10}
                 tailwindColor="text-gray-00"
-                onClick={() => console.log('친구 초대하기 모달 열기')}
+                onClick={onClick}
               />
             ),
           )
