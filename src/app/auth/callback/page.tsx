@@ -29,7 +29,7 @@ const CallbackPage = () => {
             profileImage: data.user.user_metadata.avatar_url || '',
           };
           setUser(userInfo); // 사용자 정보 세션 스토리지에 저장
-          router.replace('/');
+          router.replace('/home');
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
