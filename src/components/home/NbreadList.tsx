@@ -7,7 +7,7 @@ interface NbreadListProps {
 
 const NbreadList = ({ nbreadList }: NbreadListProps) => {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       {nbreadList.map((nbread, index) => (
         <NbreadCard key={index} nbread={nbread} />
       ))}

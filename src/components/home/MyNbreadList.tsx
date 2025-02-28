@@ -1,16 +1,24 @@
 import { Nbread } from '@/types/nbread'
+import { useRouter } from 'next/navigation'
 
 interface MyNbreadListProps {
   nbreadList: Nbread[]
 }
 
 const MyNbreadList = ({ nbreadList }: MyNbreadListProps) => {
+  const router = useRouter()
+
+  const handleListClick = (nbreadId: string) => {
+    router.push(`/nbread/${nbreadId}`)
+  }
+
   return (
-    <div className="mb-12 mt-8 flex flex-col gap-4">
+    <div className="mb-12 mt-8 flex flex-col gap-8">
       {nbreadList.map((nbread, index) => (
         <div
           key={index}
-          className="shadow flex items-center justify-between rounded-lg bg-white p-24"
+          className="card card-clickable flex items-center justify-between rounded-lg bg-white p-24"
+          onClick={() => handleListClick(nbread.id)}
         >
           <div className="pl-10">
             <p className="mb-4 text-body02 font-bold text-gray-800">

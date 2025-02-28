@@ -1,6 +1,7 @@
 import { Participant } from '@/types/nbread'
 import NbreadParticipantCard from './nbreadParticipantCard'
 import DashlineCard from '../common/card/dashlineCard'
+import useUserStore from '@/stores/useAuthStore'
 
 interface NbreadParticipantsListProps {
   participants: Participant[]
@@ -17,6 +18,8 @@ const NbreadParticipantsList = ({
   isEditing,
   leaderId,
 }: NbreadParticipantsListProps) => {
+  const userData = useUserStore((state) => state.user)
+
   return (
     <section>
       <div className="mb-12 mt-40 text-body02 text-gray-500">참여한 사람</div>
@@ -29,11 +32,13 @@ const NbreadParticipantsList = ({
               name={participants[index].user.name}
               paymentAmount={paymentAmount}
               hasCheckbox={!isEditing}
-              // TODO 기능 구현 후 ID 하드코딩 값 수정 필요
               isCheckboxDisabled={
-                leaderId !== '1' && participants[index].user.id !== '1'
+                leaderId !== userData!.id &&
+                participants[index].user.id !== userData?.id
               }
-              hasDelete={isEditing && participants[index].user.id !== '1'}
+              hasDelete={
+                isEditing && participants[index].user.id !== userData?.id
+              }
               onClickDelete={() => console.log('엔빵 멤버 삭제 모달 오픈')}
             />
           ) : (
