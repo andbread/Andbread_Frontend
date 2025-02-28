@@ -1,6 +1,6 @@
 
-import InviteAcceptTitle from "@/components/invite-accept/InviteAcceptTitle";
-import InviteAcceptButton from "@/components/invite-accept/InviteAcceptButton";
+import InviteAcceptTitle from "@/components/inviteAccept/InviteAcceptTitle";
+import InviteAcceptButton from "@/components/inviteAccept/InviteAcceptButton";
 
 const InviteAcceptPage = () => {
    
