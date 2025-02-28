@@ -1,12 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { getUserNbreads } from '@/lib/nbread/getUserNbread'
+import { getUserNbreads } from '@/lib/nbread'
 import Header from '@/components/home/Header'
 import MonthlyNbread from '@/components/home/MonthlyNbread'
 import MyNbread from '@/components/home/MyNbread'
 import { Nbread } from '@/types/nbread'
 import useUserStore from '@/stores/useAuthStore'
-import { getParticipants } from '@/lib/participant/getParticipants'
+import { getParticipants } from '@/lib/participant'
 
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
