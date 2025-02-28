@@ -1,6 +1,6 @@
 import DefaultAvatar from '@/assets/avatar.svg'
 import Image from 'next/image'
-import Icon from '../icon/icon'
+import Icon from '../icon/Icon'
 
 const avatarSizeMap = { small: 24, large: 32 } as const
 

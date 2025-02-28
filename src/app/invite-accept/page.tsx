@@ -1,8 +1,14 @@
+
+import InviteAcceptTitle from "@/components/invite-accept/InviteAcceptTitle";
+import InviteAcceptButton from "@/components/invite-accept/InviteAcceptButton";
+
 const InviteAcceptPage = () => {
+   
     return (
-        <>
-        친구초대 수락 페이지
-        </>
+       <div className="flex flex-col px-24">
+        <InviteAcceptTitle/>
+        <InviteAcceptButton/>
+       </div>
     )
 }
 export default InviteAcceptPage;
