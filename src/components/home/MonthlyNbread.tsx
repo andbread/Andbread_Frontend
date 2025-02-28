@@ -20,7 +20,7 @@ const MonthlyNbread = ({
       </h2>
       {nbreadList.length > 0 ? (
         <>
-          <div className="shadow-md mb-4 rounded-lg bg-primary-400 p-36 text-[#333036]">
+          <div className="shadow-md mb-8 rounded-lg bg-primary-400 p-36 text-[#333036]">
             <p className="flex items-center text-body03 font-medium">
               {currentMonth}월 엔빵 🍞
             </p>
