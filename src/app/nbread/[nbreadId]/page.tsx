@@ -130,12 +130,14 @@ const Page = () => {
             />
           </>
         )}
-        <button
-          className="btn btn-large btn-warning"
-          onClick={() => setIsNbreadDeleteModalOpen(true)}
-        >
-          엔빵 삭제하기
-        </button>
+        {isEditing && (
+          <button
+            className="btn btn-large btn-warning"
+            onClick={() => setIsNbreadDeleteModalOpen(true)}
+          >
+            엔빵 삭제하기
+          </button>
+        )}
         <NbreadDeleteModal
           isOpen={isNbreadDeleteModalOpen}
           onClose={() => setIsNbreadDeleteModalOpen(false)}
