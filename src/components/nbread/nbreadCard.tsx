@@ -5,6 +5,10 @@ interface NbreadCardProps {
 }
 
 const NbreadCard = ({ nbreadData }: NbreadCardProps) => {
+  const paymentAmount =
+    Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
+
+  console.log(paymentAmount)
   return (
     <>
       <div className="card min-h-200 px-24 pb-32">
@@ -25,7 +29,7 @@ const NbreadCard = ({ nbreadData }: NbreadCardProps) => {
               <div className="flex flex-row items-center justify-between">
                 <div className="w-120 text-body02 text-gray-500">엔빵 금액</div>
                 <div className="text-body02 text-gray-800">
-                  {nbreadData.paymentAmount.toLocaleString()}원
+                  {Number(paymentAmount).toLocaleString()}원
                 </div>
               </div>
               <div className="flex flex-row items-center justify-between">
