@@ -6,15 +6,19 @@ import { useToast } from '@/components/common/toast/Toast'
 import NbreadCard from '@/components/nbread/nbreadCard'
 import NbreadEditCard from '@/components/nbread/nbreadEditCard'
 import NbreadParticipantsList from '@/components/nbread/nbreadParticipantsList'
-import { getNbread, updateNbread } from '@/lib/nbread'
+import { deleteNbread, getNbread, updateNbread } from '@/lib/nbread'
 import { getParticipants } from '@/lib/participant'
 import { Nbread } from '@/types/nbread'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import NbreadDeleteModal from '@/components/common/Modal/NbreadDeleteModal'
 
 const Page = () => {
   const [nbread, setNbread] = useState<Nbread | null>(null)
+  const [isNbreadDeleteModalOpen, setIsNbreadDeleteModalOpen] =
+    useState<boolean>(false)
+
   const params = useParams()
   const router = useRouter()
 
@@ -28,6 +32,7 @@ const Page = () => {
     formState: { isValid },
   } = useForm<Nbread>({ mode: 'onChange' })
 
+  // handleSubmit 콜백함수
   const onSubmit = async (editedNbreadData: Nbread) => {
     if (nbread === editedNbreadData) return
 
@@ -36,11 +41,25 @@ const Page = () => {
     useToast.success('엔빵 정보가 수정되었어요.')
   }
 
+  // 수정하기/저장하기 버튼 클릭 시 이벤트 핸들러 함수
   const handleEditingNbread = () => {
     if (isEditing) {
       handleSubmit(onSubmit)()
     }
     setIsEditing(!isEditing)
+  }
+
+  // 엔빵 삭제하기 버튼 클릭 시 이벤트 핸들러 함수
+  const handleDeleteNbread = async (nbreadId: string) => {
+    try {
+      await deleteNbread(nbreadId)
+      setIsNbreadDeleteModalOpen(false)
+      useToast.success('엔빵이 삭제되었어요.')
+      router.push('/home')
+    } catch (error) {
+      console.error(error)
+      useToast.error('엔빵 삭제에 실패했어요. 다시 시도해주세요.')
+    }
   }
 
   useEffect(() => {
@@ -112,6 +131,18 @@ const Page = () => {
             />
           </>
         )}
+        <button
+          className="btn btn-large btn-warning"
+          onClick={() => setIsNbreadDeleteModalOpen(true)}
+        >
+          엔빵 삭제하기
+        </button>
+        <NbreadDeleteModal
+          isOpen={isNbreadDeleteModalOpen}
+          onClose={() => setIsNbreadDeleteModalOpen(false)}
+          onSubmit={() => handleDeleteNbread(nbread!.id)}
+        />
+        <></>
       </section>
     </main>
   )
