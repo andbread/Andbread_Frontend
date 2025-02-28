@@ -29,6 +29,7 @@ export default {
           blue: '#55CBEF',
           yellow: '#FFEB00',
           green: '#57E45C',
+          kakao: '#FEE500',
         },
         gray: {
           100: '#F5F5F5',
