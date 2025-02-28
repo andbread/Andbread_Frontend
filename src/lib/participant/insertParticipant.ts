@@ -5,16 +5,20 @@ export const insertParticipant = async (
   participant: Participant,
   nbreadId: string,
 ) => {
-  const { data, error } = await supabase.from('participant').insert({
-    nbread_id: nbreadId,
-    user_id: participant.user.id,
-    is_leader: participant.isLeader,
-  })
+  try {
+    const { data, error } = await supabase.from('participant').insert({
+      nbread_id: nbreadId,
+      user_id: participant.user.id,
+      is_leader: participant.isLeader,
+    })
 
-  if (error) {
-    console.error('Error inserting participant:', error)
-    return null
+    if (error) {
+      console.error('Error inserting participant:', error)
+      throw error
+    }
+
+    return data
+  } catch (error) {
+    throw error
   }
-
-  return data
 }

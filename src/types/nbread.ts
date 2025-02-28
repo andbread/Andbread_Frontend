@@ -4,7 +4,7 @@ export interface Nbread {
   title: string
   participantCount: number
   amount: number
-  paymentAmount: number
+  paymentAmount?: number
   paymentPeriod: 'year' | 'month'
   paymentMonth: number | null
   paymentDate: number | null
@@ -16,7 +16,3 @@ export interface Participant {
   user: User
   isLeader: boolean
 }
-
-
-
-
