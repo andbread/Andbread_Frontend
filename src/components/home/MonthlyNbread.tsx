@@ -1,32 +1,40 @@
-import NbreadList from "@/components/home/NbreadList";
-import Emptylog from "@/components/home/Emptylog";
+import NbreadList from '@/components/home/NbreadList'
+import Emptylog from '@/components/home/Emptylog'
+import { Nbread } from '@/types/nbread'
 
 interface MonthlyNbreadProps {
-  nbreadList: any[];
-  totalAmount: number;
-  currentMonth: number;
-  profileImageUrl: string;
+  nbreadList: Nbread[]
+  totalAmount: number
+  currentMonth: number
 }
 
-const MonthlyNbread = ({ nbreadList, totalAmount, currentMonth, profileImageUrl }: MonthlyNbreadProps) => {
+const MonthlyNbread = ({
+  nbreadList,
+  totalAmount,
+  currentMonth,
+}: MonthlyNbreadProps) => {
   return (
     <section>
-      <h2 className="text-heading04 font-bold mb-24 text-gray-800">이번 달 엔빵</h2>
+      <h2 className="mb-24 text-heading04 font-bold text-gray-800">
+        이번 달 엔빵
+      </h2>
       {nbreadList.length > 0 ? (
         <>
-          <div className="bg-primary-400 text-[#333036] p-36 rounded-lg shadow-md mb-4">
-            <p className="text-body03 font-medium flex items-center">
+          <div className="shadow-md mb-4 rounded-lg bg-primary-400 p-36 text-[#333036]">
+            <p className="flex items-center text-body03 font-medium">
               {currentMonth}월 엔빵 🍞
             </p>
-            <p className="text-[18px] font-bold">{totalAmount.toLocaleString()}원</p>
+            <p className="text-[18px] font-bold">
+              {totalAmount.toLocaleString()}원
+            </p>
           </div>
-          <NbreadList nbreadList={nbreadList} profileImageUrl={profileImageUrl} />
+          <NbreadList nbreadList={nbreadList} />
         </>
       ) : (
         <Emptylog />
       )}
     </section>
-  );
-};
+  )
+}
 
-export default MonthlyNbread;
+export default MonthlyNbread
