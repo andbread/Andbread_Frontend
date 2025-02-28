@@ -6,7 +6,7 @@ const avatarSizeMap = { small: 24, large: 32 } as const
 
 interface AvatarProps {
   size: keyof typeof avatarSizeMap
-  profileImageUrl?: string
+  profileImageUrl?: string | null
   isNbreadLeader?: boolean
 }
 

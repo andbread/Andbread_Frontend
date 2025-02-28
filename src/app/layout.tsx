@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
+import Toast from '@/components/common/toast/Toast'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -20,6 +21,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-pre`} suppressHydrationWarning>
+        <Toast />
         {children}
       </body>
     </html>
