@@ -88,7 +88,6 @@ const Page = () => {
 
   useEffect(() => {
     if (nbread) {
-      console.log(nbread)
       reset(nbread)
     }
   }, [nbread])
