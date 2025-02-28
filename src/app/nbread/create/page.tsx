@@ -6,14 +6,20 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { Nbread } from '@/types/nbread'
 import classNames from 'classnames'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import useNbreadStore from '@/stores/useNbreadStore'
 import useUserStore from '@/stores/useAuthStore'
+import Icon from '@/components/common/icon/Icon'
+import ExitEditConfirmModal from '@/components/common/Modal/ExitEditConfirmModal'
 
 const Page = () => {
   const router = useRouter()
   const userData = useUserStore((state) => state.user)
   const { setNbread } = useNbreadStore()
+  const nbread = useNbreadStore((state) => state.nbread)
+  const [isExitEditConfirmModalOpen, setIsExitEditConfirmModalOpen] =
+    useState<boolean>(false)
+
   const nbreadFormData = useNbreadStore((state) => state.nbread)
   const {
     register,
@@ -21,7 +27,7 @@ const Page = () => {
     getValues,
     handleSubmit,
     reset,
-    formState: { isValid },
+    formState: { isValid, isDirty },
   } = useForm<Nbread>({ mode: 'onChange' })
 
   const onSubmit = (data: Nbread) => {
@@ -30,6 +36,14 @@ const Page = () => {
 
     setNbread(data)
     router.push('/nbread/preview')
+  }
+
+  const handleClickBack = () => {
+    if (!nbread && isDirty) {
+      setIsExitEditConfirmModalOpen(true)
+    } else {
+      router.back()
+    }
   }
 
   useEffect(() => {
@@ -41,7 +55,7 @@ const Page = () => {
   return (
     <main className="flex h-full flex-col justify-between p-24">
       <section>
-        <DetailHeader />
+        <DetailHeader onClickBack={() => handleClickBack()} />
         <h3 className="pb-12 pt-20">엔빵 만들기 🍞</h3>
         <NbreadEditCard
           register={register}
@@ -60,6 +74,11 @@ const Page = () => {
       >
         저장하기
       </button>
+      <ExitEditConfirmModal
+        isOpen={isExitEditConfirmModalOpen}
+        onClose={() => setIsExitEditConfirmModalOpen(false)}
+        onSubmit={() => router.back()}
+      />
     </main>
   )
 }
