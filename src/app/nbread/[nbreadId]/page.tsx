@@ -6,7 +6,7 @@ import { useToast } from '@/components/common/toast/Toast'
 import NbreadCard from '@/components/nbread/nbreadCard'
 import NbreadEditCard from '@/components/nbread/nbreadEditCard'
 import NbreadParticipantsList from '@/components/nbread/nbreadParticipantsList'
-import { getNbread } from '@/lib/nbread'
+import { getNbread, updateNbread } from '@/lib/nbread'
 import { getParticipants } from '@/lib/participant'
 import { Nbread } from '@/types/nbread'
 import { useRouter, useParams } from 'next/navigation'
@@ -28,9 +28,17 @@ const Page = () => {
     formState: { isValid },
   } = useForm<Nbread>({ mode: 'onChange' })
 
-  const handleEditingNbread = (editedNbread: Nbread) => {
+  const onSubmit = async (editedNbreadData: Nbread) => {
+    if (nbread === editedNbreadData) return
+
+    await updateNbread(editedNbreadData)
+    setNbread({ ...editedNbreadData })
+    useToast.success('엔빵 정보가 수정되었어요.')
+  }
+
+  const handleEditingNbread = () => {
     if (isEditing) {
-      setNbread({ ...editedNbread })
+      handleSubmit(onSubmit)()
     }
     setIsEditing(!isEditing)
   }
@@ -81,7 +89,7 @@ const Page = () => {
                   content={isEditing ? '저장하기' : '수정하기'}
                   size="large"
                   isClicked={isEditing}
-                  onClick={() => setIsEditing(!isEditing)}
+                  onClick={() => handleEditingNbread()}
                 />
               </div>
             </div>
