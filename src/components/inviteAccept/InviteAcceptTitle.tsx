@@ -1,6 +1,10 @@
-import { data } from './data'
+
 
 const InviteAcceptTitle = () => {
+   const data ={
+    id: "신혜민",
+    title: "유튜브 프리미엄"
+}
   return (
       <div>
           <div className="mt-111 mb-20 text-heading02">
