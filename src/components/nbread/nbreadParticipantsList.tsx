@@ -39,6 +39,7 @@ const NbreadParticipantsList = ({
               hasDelete={
                 isEditing && participants[index].user.id !== userData?.id
               }
+              // TODO 친구초대 기능 구현 후 모달 구현
               onClickDelete={() => console.log('엔빵 멤버 삭제 모달 오픈')}
             />
           ) : (
