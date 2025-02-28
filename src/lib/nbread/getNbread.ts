@@ -28,6 +28,7 @@ export const getNbread = async (nbreadId: string) => {
       paymentPeriod: data.payment_period as 'year' | 'month',
       leaderId: data.leader_id,
       participants: null,
+      currentPaymentDate: data.current_payment_date,
     }
 
     return nbread

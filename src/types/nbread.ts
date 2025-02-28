@@ -10,6 +10,7 @@ export interface Nbread {
   paymentDate: number | null
   leaderId: string | null
   participants: Participant[] | null
+  currentPaymentDate: string | null
 }
 
 export interface Participant {
