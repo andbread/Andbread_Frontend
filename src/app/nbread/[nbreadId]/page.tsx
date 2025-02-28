@@ -122,6 +122,8 @@ const Page = () => {
               <NbreadCard nbreadData={nbread as Nbread} />
             )}
             <NbreadParticipantsList
+              nbreadId={nbread.id}
+              currentPaymentDate={nbread.currentPaymentDate!}
               participants={nbread.participants!}
               participantMaxCount={nbread.participantCount}
               leaderId={nbread.leaderId!}
