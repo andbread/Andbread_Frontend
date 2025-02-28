@@ -1,8 +1,14 @@
+import { updateNbreadRecord } from '@/lib/nbreadRecord'
 import Avatar from '../common/avatar/avatar'
 import Checkbox from '../common/checkbox/checkbox'
 import Icon from '../common/icon/Icon'
+import { useToast } from '../common/toast/Toast'
+import useUserStore from '@/stores/useAuthStore'
+import { useState } from 'react'
 
 interface NbreadParticipantCardProps {
+  nbreadId: string
+  currentPaymentDate: string
   profileImageUrl?: string | null
   isNbreadLeader: boolean
   name: string
@@ -10,12 +16,31 @@ interface NbreadParticipantCardProps {
   hasCheckbox?: boolean
   isChecked?: boolean
   isCheckboxDisabled?: boolean
-  onClickCheckbox?: () => void
+  // onClickCheckbox?: () => void
   hasDelete?: boolean
   onClickDelete?: () => void
 }
 
 const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
+  const [isChecked, setIsChecked] = useState<boolean>(props.isChecked || false)
+  const userData = useUserStore((state) => state.user)
+
+  const handleClickCheckbox = async () => {
+    try {
+      const data = await updateNbreadRecord(
+        props.nbreadId,
+        userData!.id,
+        !isChecked,
+        props.currentPaymentDate,
+      )
+
+      useToast.success('완료 여부 업데이트에 성공했어요.')
+      setIsChecked(!isChecked)
+    } catch (error) {
+      useToast.error('완료 여부 업데이트에 실패했어요. 다시 시도해주세요.')
+    }
+  }
+
   return (
     <div className="card flex flex-row items-center justify-between">
       <div className="align-center flex flex-row items-center gap-16">
@@ -34,8 +59,8 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
       {props.hasCheckbox && (
         <Checkbox
           disabled={props.isCheckboxDisabled}
-          isChecked={props.isChecked}
-          onClick={() => props.onClickCheckbox && props.onClickCheckbox()}
+          isChecked={isChecked}
+          onChange={() => handleClickCheckbox()}
         />
       )}
       {props.hasDelete && (

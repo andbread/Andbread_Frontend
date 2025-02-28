@@ -2,8 +2,12 @@ import { Participant } from '@/types/nbread'
 import NbreadParticipantCard from './nbreadParticipantCard'
 import DashlineCard from '../common/card/dashlineCard'
 import useUserStore from '@/stores/useAuthStore'
+import { updateNbreadRecord } from '@/lib/nbreadRecord'
+import { useToast } from '../common/toast/Toast'
 
 interface NbreadParticipantsListProps {
+  nbreadId: string
+  currentPaymentDate: string
   participants: Participant[]
   participantMaxCount: number
   paymentAmount: number
@@ -12,6 +16,8 @@ interface NbreadParticipantsListProps {
 }
 
 const NbreadParticipantsList = ({
+  nbreadId,
+  currentPaymentDate,
   participants,
   participantMaxCount,
   paymentAmount,
@@ -29,6 +35,8 @@ const NbreadParticipantsList = ({
             {participants.map((participant, index) => (
               <NbreadParticipantCard
                 key={index}
+                nbreadId={nbreadId}
+                currentPaymentDate={currentPaymentDate}
                 isNbreadLeader={true}
                 name={participant.user.name}
                 paymentAmount={paymentAmount}
@@ -38,6 +46,7 @@ const NbreadParticipantsList = ({
                   participant.user.id !== userData?.id
                 }
                 hasDelete={isEditing && participant.user.id !== userData?.id}
+                // onClickCheckbox={() => console.log('엔빵 납부 여부 업데이트')}
                 // TODO 친구초대 기능 구현 후 모달 구현
                 onClickDelete={() => console.log('엔빵 멤버 삭제 모달 오픈')}
               />
@@ -53,7 +62,9 @@ const NbreadParticipantsList = ({
           Array.from({ length: participantMaxCount }).map((_, index) =>
             participants && index < participants.length ? (
               <NbreadParticipantCard
+                nbreadId={nbreadId}
                 key={index}
+                currentPaymentDate={currentPaymentDate}
                 isNbreadLeader={true}
                 name={participants[index].user.name}
                 paymentAmount={paymentAmount}

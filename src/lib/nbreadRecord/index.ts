@@ -1,0 +1,1 @@
+export { updateNbreadRecord } from './updateNbreadRecord'

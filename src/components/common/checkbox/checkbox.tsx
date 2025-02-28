@@ -1,13 +1,18 @@
 interface CheckboxProps {
   disabled?: boolean
   isChecked?: boolean
-  onClick: () => void
+  onChange: () => void
 }
 
-const Checkbox = ({ disabled, isChecked, onClick }: CheckboxProps) => {
+const Checkbox = ({ disabled, isChecked, onChange }: CheckboxProps) => {
   return (
-    <label className="checkbox_label h-16" onClick={onClick}>
-      <input type="checkbox" disabled={disabled || false} checked={isChecked} />
+    <label className="checkbox_label h-16">
+      <input
+        type="checkbox"
+        disabled={disabled || false}
+        onChange={onChange}
+        checked={isChecked}
+      />
       <span className="checkbox_icon" />
     </label>
   )
