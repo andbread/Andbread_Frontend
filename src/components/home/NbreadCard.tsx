@@ -20,14 +20,15 @@ const NbreadCard = ({ nbread }: NbreadCardProps) => {
       <div className="mr-12 flex w-[100px] flex-col items-end">
         {/* ✅ 참여자 Avatar 아이콘 */}
         <div className="mb-2 flex w-full justify-end">
-          {participants!.map((participant, idx) => (
-            <div key={idx} className="relative -ml-6">
-              <Avatar
-                size="large"
-                profileImageUrl={participant.user.profileImage}
-              />
-            </div>
-          ))}
+          {participants &&
+            participants!.map((participant, idx) => (
+              <div key={idx} className="relative -ml-6">
+                <Avatar
+                  size="large"
+                  profileImageUrl={participant.user.profileImage}
+                />
+              </div>
+            ))}
         </div>
         {/* 참여 인원 상태 */}
         <p className="text-body04 text-secondary-300">
