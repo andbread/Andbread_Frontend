@@ -143,7 +143,6 @@ const Page = () => {
           onClose={() => setIsNbreadDeleteModalOpen(false)}
           onSubmit={() => handleDeleteNbread(nbread!.id)}
         />
-        <></>
       </section>
     </main>
   )
