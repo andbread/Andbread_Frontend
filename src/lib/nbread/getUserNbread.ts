@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { Nbread } from '@/types/nbread'
+import { NbreadRow } from '@/types/supabase'
 
 export const getUserNbreads = async (userId: string): Promise<Nbread[]> => {
   if (!userId) return []
@@ -36,18 +37,19 @@ export const getUserNbreads = async (userId: string): Promise<Nbread[]> => {
   }
 
   // Supabase에서 가져온 데이터를 type에 맞게 변환
-  const renamedNbreadsData: Nbread[] = nbreads?.map((nbread) => ({
-    id: nbread.id,
-    title: nbread.title,
-    amount: nbread.amount,
-    participantCount: nbread.participantCount,
-    paymentDate: nbread.payment_date,
-    paymentMonth: nbread.payment_month,
-    paymentPeriod: nbread.payment_period,
-    paymentAmount: nbread.payment_amount,
-    leaderId: nbread.leader_id,
-    participants: null,
-  }))
+  const renamedNbreadsData: Nbread[] = (nbreads as NbreadRow[])?.map(
+    (nbread) => ({
+      id: nbread.id,
+      title: nbread.title,
+      amount: nbread.amount,
+      participantCount: nbread.participant_count,
+      paymentDate: nbread.payment_date,
+      paymentMonth: nbread.payment_month,
+      paymentPeriod: nbread.payment_period as 'year' | 'month',
+      leaderId: nbread.leader_id,
+      participants: null,
+    }),
+  )
 
   return renamedNbreadsData
 }
