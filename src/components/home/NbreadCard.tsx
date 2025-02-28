@@ -1,15 +1,24 @@
 import Avatar from '@/components/common/avatar/avatar'
 import { Nbread } from '@/types/nbread'
+import { useRouter } from 'next/navigation'
 
 interface NbreadCardProps {
   nbread: Nbread
 }
 
 const NbreadCard = ({ nbread }: NbreadCardProps) => {
+  const router = useRouter()
   const participants = nbread.participants
 
+  const handleCardClick = () => {
+    router.push(`/nbread/${nbread.id}`)
+  }
+
   return (
-    <div className="shadow flex items-center justify-between rounded-lg bg-white p-24">
+    <div
+      className="card card-clickable flex items-center justify-between rounded-lg bg-white p-24"
+      onClick={() => handleCardClick()}
+    >
       <div className="pl-10">
         <p className="mb-4 text-body02 font-bold">{nbread.title}</p>
         <p className="text-body03 text-gray-500">
