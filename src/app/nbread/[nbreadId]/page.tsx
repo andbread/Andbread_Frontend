@@ -13,10 +13,13 @@ import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import NbreadDeleteModal from '@/components/common/Modal/NbreadDeleteModal'
+import NbreadInviteModal from '@/components/common/Modal/NbreadInviteModal'
 
 const Page = () => {
   const [nbread, setNbread] = useState<Nbread | null>(null)
   const [isNbreadDeleteModalOpen, setIsNbreadDeleteModalOpen] =
+    useState<boolean>(false)
+  const [isNbreadInviteModalOpen, setIsNbreadInviteModalOpen] =
     useState<boolean>(false)
 
   const params = useParams()
@@ -60,6 +63,11 @@ const Page = () => {
       console.error(error)
       useToast.error('엔빵 삭제에 실패했어요. 다시 시도해주세요.')
     }
+  }
+
+  // TODO 친구 초대하기 버튼 클릭 시 이벤트 핸들러 함수 작성 필요
+  const handleClickInviteCard = () => {
+    setIsNbreadInviteModalOpen(true)
   }
 
   useEffect(() => {
@@ -129,6 +137,7 @@ const Page = () => {
               leaderId={nbread.leaderId!}
               isEditing={isEditing}
               paymentAmount={nbread.paymentAmount!}
+              onClick={() => handleClickInviteCard()}
             />
           </>
         )}
@@ -144,6 +153,12 @@ const Page = () => {
           isOpen={isNbreadDeleteModalOpen}
           onClose={() => setIsNbreadDeleteModalOpen(false)}
           onSubmit={() => handleDeleteNbread(nbread!.id)}
+        />
+        <NbreadInviteModal
+          isOpen={isNbreadInviteModalOpen}
+          onClose={() => setIsNbreadInviteModalOpen(false)}
+          // TODO onSubmit 시 초대 링크 클립보드 복사 기능 구현 필요
+          onSubmit={() => console.log('친구 초대 링크 생성')}
         />
       </section>
     </main>
