@@ -1,4 +1,3 @@
-// stores/nbreadPaymentState.ts
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
 import { fetchNbreadData } from "@/lib/nbread/fetchNbreadData"  
@@ -19,7 +18,7 @@ const useNbreadPaymentState = create<NbreadPaymentState>()(
 
       fetchNbreadData: async (userId) => {
         // fetchNbreadData 호출
-        const nbreadData = await fetchNbreadData(userId);
+        const nbreadData = await fetchNbreadData(userId)
 
         if (nbreadData) {
           set({ nbreadData });
