@@ -36,9 +36,27 @@ export const getUserNbreads = async (userId: string): Promise<Nbread[]> => {
     return []
   }
 
+  // 각 엔빵별 결제 완료 인원 수 조회
+  const paidCounts = await Promise.all(
+    nbreadIds.map(async (nbreadId) => {
+      const { count, error } = await supabase
+        .from('nbread_records')
+        .select('*', { count: 'exact' })
+        .eq('nbread_id', nbreadId)
+        .eq('is_paid', true)
+
+      if (error) {
+        console.error(`❌ Failed to fetch paid count for nbread_id: ${nbreadId}`, error.message)
+        return 0
+      }
+
+      return count || 0
+    })
+  )
+
   // Supabase에서 가져온 데이터를 type에 맞게 변환
   const renamedNbreadsData: Nbread[] = (nbreads as NbreadRow[])?.map(
-    (nbread) => ({
+    (nbread, index) => ({
       id: nbread.id,
       title: nbread.title,
       amount: nbread.amount,
@@ -49,6 +67,7 @@ export const getUserNbreads = async (userId: string): Promise<Nbread[]> => {
       leaderId: nbread.leader_id,
       participants: null,
       currentPaymentDate: nbread.current_payment_date,
+      paidCount: paidCounts[index],
     }),
   )
 
