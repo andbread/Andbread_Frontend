@@ -43,10 +43,10 @@ export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
   if (!user) {
     throw new Error('유저정보를 찾을수 없음')
   }
-  const deleteUser = await adminSupabase.auth.admin.deleteUser(user)
+  await adminSupabase.auth.admin.deleteUser(user),supabase.auth.signOut
   useUserStore.getState().clearUser()
   sessionStorage.removeItem('user-store')
-  await supabase.auth.signOut()
+
   setTimeout(() => {
     useToast.success('회원 탈퇴가 완료되었어요.')
     router.replace('/login')
