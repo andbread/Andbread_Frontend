@@ -1,4 +1,4 @@
-import Modal from '../common/Modal/Modal'
+import Modal from '../common/modal/Modal'
 interface DeleteAccountModalProps {
   isOpen: boolean
   onClose: () => void
@@ -12,22 +12,24 @@ const DeleteAccountModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col p-8">
-        <h2 className="mb-10 text-heading05 font-semibold text-gray-800">
-          정말 회원탈퇴를 하시겠습니까?
-        </h2>
-        <p className="mb-30 text-body02 text-gray-600">
-          회원탈퇴를 진행하면, 회원정보가 삭제됩니다.
-        </p>
+        <div className="flex flex-col pl-4">
+          <h2 className="mb-10 text-heading05 font-semibold text-gray-800">
+            정말 탈퇴하시겠어요?
+          </h2>
+          <p className="mb-30 text-body02 text-gray-600">
+            탈퇴 시 회원정보 및 엔빵 정보가 모두 삭제됩니다.
+          </p>
+        </div>
         <div className="flex flex-row gap-10">
           <button
             onClick={onClose}
-            className="btn-small text-heading06 rounded-md bg-gray-300 text-gray-800"
+            className="btn btn-small btn-secondary text-heading06"
           >
             취소
           </button>
           <button
             onClick={onSubmit}
-            className="btn-small text-heading06 rounded-md bg-red-500 text-white"
+            className="btn btn-small btn-warning text-heading06"
           >
             탈퇴하기
           </button>
