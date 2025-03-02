@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY as string
 
+
 // 클라이언트 환경인지 확인 후 sessionStorage 사용
 const authConfig =
   typeof window !== 'undefined'
@@ -32,3 +33,4 @@ if (typeof window !== 'undefined') {
     }
   })
 }
+
