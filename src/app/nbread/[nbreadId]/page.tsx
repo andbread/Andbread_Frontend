@@ -113,10 +113,6 @@ const Page = () => {
     }
   }, [nbread])
 
-  useEffect(() => {
-    if (nbreadRecords) console.log(nbreadRecords)
-  }, [nbreadRecords])
-
   return (
     <main className="h-full-y-auto relative p-24">
       <section>
