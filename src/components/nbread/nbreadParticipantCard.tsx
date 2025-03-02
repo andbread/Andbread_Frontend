@@ -4,7 +4,7 @@ import Checkbox from '../common/checkbox/checkbox'
 import Icon from '../common/icon/Icon'
 import { useToast } from '../common/toast/Toast'
 import useUserStore from '@/stores/useAuthStore'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface NbreadParticipantCardProps {
   nbreadId: string
@@ -16,7 +16,6 @@ interface NbreadParticipantCardProps {
   hasCheckbox?: boolean
   isChecked?: boolean
   isCheckboxDisabled?: boolean
-  // onClickCheckbox?: () => void
   hasDelete?: boolean
   onClickDelete?: () => void
 }
@@ -24,10 +23,14 @@ interface NbreadParticipantCardProps {
 const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
   const [isChecked, setIsChecked] = useState<boolean>(props.isChecked || false)
   const userData = useUserStore((state) => state.user)
+  const isThrottling = useRef(false)
 
   const handleClickCheckbox = async () => {
+    if (isThrottling.current) return
+    isThrottling.current = true // ✅ 실행 중 상태 설정
+
     try {
-      const data = await updateNbreadRecord(
+      await updateNbreadRecord(
         props.nbreadId,
         userData!.id,
         !isChecked,
@@ -35,10 +38,14 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
       )
 
       useToast.success('완료 여부 업데이트에 성공했어요.')
-      setIsChecked(!isChecked)
+      setIsChecked((prev) => !prev)
     } catch (error) {
       useToast.error('완료 여부 업데이트에 실패했어요. 다시 시도해주세요.')
     }
+
+    setTimeout(() => {
+      isThrottling.current = false // ✅ 3초 후 다시 실행 가능하도록 초기화
+    }, 3000)
   }
 
   return (
