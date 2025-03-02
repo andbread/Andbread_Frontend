@@ -8,15 +8,19 @@ import NbreadEditCard from '@/components/nbread/nbreadEditCard'
 import NbreadParticipantsList from '@/components/nbread/nbreadParticipantsList'
 import { deleteNbread, getNbread, updateNbread } from '@/lib/nbread'
 import { getParticipants } from '@/lib/participant'
-import { Nbread } from '@/types/nbread'
+import { Nbread, NbreadRecord } from '@/types/nbread'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import NbreadDeleteModal from '@/components/common/Modal/NbreadDeleteModal'
 import NbreadInviteModal from '@/components/common/Modal/NbreadInviteModal'
+import { getNbreadRecords } from '@/lib/nbreadRecord'
 
 const Page = () => {
   const [nbread, setNbread] = useState<Nbread | null>(null)
+  const [nbreadRecords, setNbreadRecords] = useState<NbreadRecord[] | null>(
+    null,
+  )
   const [isNbreadDeleteModalOpen, setIsNbreadDeleteModalOpen] =
     useState<boolean>(false)
   const [isNbreadInviteModalOpen, setIsNbreadInviteModalOpen] =
@@ -95,10 +99,23 @@ const Page = () => {
   }, [])
 
   useEffect(() => {
+    const fetchNbreadRecordData = async () => {
+      const nbreadRecordsData = await getNbreadRecords(
+        nbread!.id,
+        nbread!.currentPaymentDate!,
+      )
+      setNbreadRecords(nbreadRecordsData)
+    }
+
     if (nbread) {
       reset(nbread)
+      fetchNbreadRecordData()
     }
   }, [nbread])
+
+  useEffect(() => {
+    if (nbreadRecords) console.log(nbreadRecords)
+  }, [nbreadRecords])
 
   return (
     <main className="h-full-y-auto relative p-24">
@@ -129,16 +146,19 @@ const Page = () => {
             ) : (
               <NbreadCard nbreadData={nbread as Nbread} />
             )}
-            <NbreadParticipantsList
-              nbreadId={nbread.id}
-              currentPaymentDate={nbread.currentPaymentDate!}
-              participants={nbread.participants!}
-              participantMaxCount={nbread.participantCount}
-              leaderId={nbread.leaderId!}
-              isEditing={isEditing}
-              paymentAmount={nbread.paymentAmount!}
-              onClick={() => handleClickInviteCard()}
-            />
+            {nbreadRecords && (
+              <NbreadParticipantsList
+                nbreadId={nbread.id}
+                nbreadRecords={nbreadRecords!}
+                currentPaymentDate={nbread.currentPaymentDate!}
+                participants={nbread.participants!}
+                participantMaxCount={nbread.participantCount}
+                leaderId={nbread.leaderId!}
+                isEditing={isEditing}
+                paymentAmount={nbread.paymentAmount!}
+                onClick={() => handleClickInviteCard()}
+              />
+            )}
           </>
         )}
         {isEditing && (

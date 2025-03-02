@@ -1,4 +1,4 @@
-import { Participant } from '@/types/nbread'
+import { NbreadRecord, Participant } from '@/types/nbread'
 import NbreadParticipantCard from './nbreadParticipantCard'
 import DashlineCard from '../common/card/dashlineCard'
 import useUserStore from '@/stores/useAuthStore'
@@ -7,6 +7,7 @@ import { useToast } from '../common/toast/Toast'
 
 interface NbreadParticipantsListProps {
   nbreadId: string
+  nbreadRecords: NbreadRecord[]
   currentPaymentDate: string
   participants: Participant[]
   participantMaxCount: number
@@ -19,6 +20,7 @@ interface NbreadParticipantsListProps {
 const NbreadParticipantsList = ({
   nbreadId,
   currentPaymentDate,
+  nbreadRecords,
   participants,
   participantMaxCount,
   paymentAmount,
@@ -28,20 +30,29 @@ const NbreadParticipantsList = ({
 }: NbreadParticipantsListProps) => {
   const userData = useUserStore((state) => state.user)
 
+  const participantsWithNbreadRecord = participants.map((participant) => {
+    const record = nbreadRecords.find(
+      (record) => record.userId === participant.user.id,
+    )
+    return { ...participant, isPaid: record ? record.isPaid : null }
+  })
+
   return (
     <section>
       <div className="mb-12 mt-40 text-body02 text-gray-500">참여한 사람</div>
       <div className="mb-40 flex flex-col gap-8">
         {isEditing ? (
           <>
-            {participants.map((participant, index) => (
+            {participantsWithNbreadRecord.map((participant, index) => (
               <NbreadParticipantCard
                 key={index}
                 nbreadId={nbreadId}
                 currentPaymentDate={currentPaymentDate}
-                isNbreadLeader={true}
+                isNbreadLeader={participant.isLeader}
                 name={participant.user.name}
+                profileImageUrl={participant.user.profileImage}
                 paymentAmount={paymentAmount}
+                isChecked={participant.isPaid!}
                 hasCheckbox={!isEditing}
                 isCheckboxDisabled={
                   leaderId !== userData!.id &&
@@ -61,15 +72,18 @@ const NbreadParticipantsList = ({
           </>
         ) : (
           Array.from({ length: participantMaxCount }).map((_, index) =>
-            participants && index < participants.length ? (
+            participantsWithNbreadRecord &&
+            index < participantsWithNbreadRecord.length ? (
               <NbreadParticipantCard
-                nbreadId={nbreadId}
                 key={index}
+                nbreadId={nbreadId}
                 currentPaymentDate={currentPaymentDate}
-                isNbreadLeader={true}
+                isNbreadLeader={participants[index].isLeader}
                 name={participants[index].user.name}
+                profileImageUrl={participants[index].user.profileImage}
                 paymentAmount={paymentAmount}
                 hasCheckbox={!isEditing}
+                isChecked={participantsWithNbreadRecord[index].isPaid!}
                 isCheckboxDisabled={
                   leaderId !== userData!.id &&
                   participants[index].user.id !== userData?.id
