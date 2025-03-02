@@ -214,3 +214,52 @@ a {
   @apply h-16 w-16;
   fill: white;
 }
+
+/* 프로그래스 바를 화면 중앙에 위치하도록 수정 */
+#nprogress .bar {
+  position: fixed;
+  top: 50%; /* 화면 중간에 배치 */
+  left: 50%;
+  transform: translate(-50%, -50%); /* 정확한 중앙 정렬 */
+  width: 50%;  /* 프로그래스 바의 너비 */
+  height: 4px;  /* 프로그래스 바의 높이 */
+  background: #FFAC39;  /* 바의 색상 */
+  z-index: 1031;
+}
+
+/* NProgress 기본 스피너 비활성화 */
+#nprogress .spinner {
+  display: none;  /* 기본 스피너를 숨깁니다 */
+}
+
+/* 새로운 스피너를 화면 중앙에 배치 */
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border-top: 4px solid #FFAC39;
+  border-right: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 스피너 애니메이션 */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
