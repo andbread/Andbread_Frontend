@@ -42,9 +42,11 @@ const NbreadCard = ({ nbread, showParticipants = true }: NbreadCardProps) => {
         </div>
 
         {showParticipants && (
-          <p className="text-body04 text-secondary-300">
-            미완료 0 / {nbread.participantCount}
-          </p>
+            <p className="text-body04 text-secondary-300">
+            {nbread.paidCount === nbread.participantCount
+            ? `완료 ${nbread.paidCount} / ${nbread.participantCount}`
+            : `미완료 ${nbread.paidCount} / ${nbread.participantCount}`}
+            </p>
         )}
       </div>
     </div>
