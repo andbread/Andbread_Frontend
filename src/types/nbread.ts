@@ -18,3 +18,10 @@ export interface Participant {
   user: User
   isLeader: boolean
 }
+
+export interface NbreadRecord {
+  userId: string
+  nbreadId: string
+  paymentDate: string
+  isPaid: boolean
+}

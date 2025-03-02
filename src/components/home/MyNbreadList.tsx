@@ -33,7 +33,7 @@ const MyNbreadList = ({ nbreadList }: MyNbreadListProps) => {
           </div>
           <div className="mr-12 flex min-h-[30px] flex-col justify-end">
             <p className="mt-auto text-body03 text-secondary-200">
-              {nbread.participantCount}명 참여 중
+              {nbread.participants?.length}명 참여 중
             </p>
           </div>
         </div>

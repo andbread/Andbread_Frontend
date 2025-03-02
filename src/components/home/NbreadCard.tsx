@@ -4,10 +4,10 @@ import { useRouter } from 'next/navigation'
 
 interface NbreadCardProps {
   nbread: Nbread
-  showParticipants?: boolean 
+  showParticipants?: boolean
 }
 
-const NbreadCard = ({ nbread, showParticipants = true }: NbreadCardProps) => {  
+const NbreadCard = ({ nbread, showParticipants = true }: NbreadCardProps) => {
   const router = useRouter()
   const participants = nbread.participants
 
@@ -42,11 +42,11 @@ const NbreadCard = ({ nbread, showParticipants = true }: NbreadCardProps) => {
         </div>
 
         {showParticipants && (
-            <p className="text-body04 text-secondary-300">
-            {nbread.paidCount === nbread.participantCount
-            ? `완료 ${nbread.paidCount} / ${nbread.participantCount}`
-            : `미완료 ${nbread.paidCount} / ${nbread.participantCount}`}
-            </p>
+          <p className="text-body04 text-secondary-300">
+            {nbread.paidCount === participants?.length
+              ? `완료 ${nbread.paidCount} / ${participants?.length}`
+              : `미완료 ${nbread.paidCount} / ${participants?.length}`}
+          </p>
         )}
       </div>
     </div>
