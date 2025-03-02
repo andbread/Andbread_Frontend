@@ -4,9 +4,10 @@ import { useRouter } from 'next/navigation'
 
 interface NbreadCardProps {
   nbread: Nbread
+  showParticipants?: boolean 
 }
 
-const NbreadCard = ({ nbread }: NbreadCardProps) => {
+const NbreadCard = ({ nbread, showParticipants = true }: NbreadCardProps) => {  
   const router = useRouter()
   const participants = nbread.participants
 
@@ -30,7 +31,7 @@ const NbreadCard = ({ nbread }: NbreadCardProps) => {
         {/* ✅ 참여자 Avatar 아이콘 */}
         <div className="mb-2 flex w-full justify-end">
           {participants &&
-            participants!.map((participant, idx) => (
+            participants.map((participant, idx) => (
               <div key={idx} className="relative -ml-6">
                 <Avatar
                   size="large"
@@ -39,10 +40,12 @@ const NbreadCard = ({ nbread }: NbreadCardProps) => {
               </div>
             ))}
         </div>
-        {/* 참여 인원 상태 */}
-        <p className="text-body04 text-secondary-300">
-          미완료 0 / {nbread.participantCount}
-        </p>
+
+        {showParticipants && (
+          <p className="text-body04 text-secondary-300">
+            미완료 0 / {nbread.participantCount}
+          </p>
+        )}
       </div>
     </div>
   )
