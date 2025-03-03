@@ -1,5 +1,5 @@
 import React from 'react'
-import Nbreads from '@/assets/nbreads.svg'
+import Nbreads from '@/assets/nbread/nbreads.svg'
 import classNames from 'classnames'
 
 interface NbreadImageProps {
