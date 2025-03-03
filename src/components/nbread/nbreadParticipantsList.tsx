@@ -47,6 +47,7 @@ const NbreadParticipantsList = ({
               <NbreadParticipantCard
                 key={index}
                 nbreadId={nbreadId}
+                participantId={participant.user.id}
                 currentPaymentDate={currentPaymentDate}
                 isNbreadLeader={participant.isLeader}
                 name={participant.user.name}
@@ -78,6 +79,7 @@ const NbreadParticipantsList = ({
               <NbreadParticipantCard
                 key={index}
                 nbreadId={nbreadId}
+                participantId={participants[index].user.id}
                 currentPaymentDate={currentPaymentDate}
                 isNbreadLeader={participants[index].isLeader}
                 name={participants[index].user.name}
