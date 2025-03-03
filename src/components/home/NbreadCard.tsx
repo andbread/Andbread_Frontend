@@ -42,11 +42,11 @@ const NbreadCard = ({ nbread, showParticipants = true }: NbreadCardProps) => {
         </div>
         {showParticipants &&
           (nbread.paidCount === participants?.length ? (
-            <p className="text-body03 text-secondary-300">
+            <p className="text-body03 text-gray-300">
               {`완료 ${nbread.paidCount} / ${participants?.length}`}
             </p>
           ) : (
-            <p className="text-body03 text-gray-300">{`미완료 ${nbread.paidCount} / ${participants?.length}`}</p>
+            <p className="text-body03 text-secondary-300">{`미완료 ${nbread.paidCount} / ${participants?.length}`}</p>
           ))}
       </div>
     </div>
