@@ -12,8 +12,8 @@ import { Nbread, NbreadRecord } from '@/types/nbread'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import NbreadDeleteModal from '@/components/common/Modal/NbreadDeleteModal'
-import NbreadInviteModal from '@/components/common/Modal/NbreadInviteModal'
+import NbreadDeleteModal from '@/components/common/modal/NbreadDeleteModal'
+import NbreadInviteModal from '@/components/common/modal/NbreadInviteModal'
 import { getNbreadRecords } from '@/lib/nbreadRecord'
 
 const Page = () => {
@@ -175,6 +175,7 @@ const Page = () => {
           onClose={() => setIsNbreadInviteModalOpen(false)}
           // TODO onSubmit 시 초대 링크 클립보드 복사 기능 구현 필요
           onSubmit={() => console.log('친구 초대 링크 생성')}
+          nbreadId={params.nbreadId as string}
         />
       </section>
     </main>

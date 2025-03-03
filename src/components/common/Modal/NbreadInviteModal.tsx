@@ -1,17 +1,27 @@
 import Modal from '@/components/common/modal/Modal'
 import Icon from '../icon/Icon'
-
+import { useEffect, useState } from 'react'
+import { createLink } from '@/lib/nbread/insertLink'
 interface NbreadInviteModalProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: () => void
+  nbreadId: string
 }
 
 const NbreadInviteModal = ({
   isOpen,
   onClose,
   onSubmit,
+  nbreadId,
 }: NbreadInviteModalProps) => {
+  useEffect(() => {
+    if (isOpen) {
+      createLink(nbreadId);
+      console.log('모달 열고 링크 ! :',createLink(nbreadId))
+    }
+  }, [isOpen])
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col items-center p-8">

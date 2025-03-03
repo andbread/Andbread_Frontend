@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import useNbreadStore from '@/stores/useNbreadStore'
 import useUserStore from '@/stores/useAuthStore'
 import Icon from '@/components/common/icon/Icon'
-import ExitEditConfirmModal from '@/components/common/Modal/ExitEditConfirmModal'
+import ExitEditConfirmModal from '@/components/common/modal/ExitEditConfirmModal'
 
 const Page = () => {
   const router = useRouter()

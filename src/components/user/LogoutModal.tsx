@@ -1,4 +1,4 @@
-import Modal from '../common/Modal/Modal'
+import Modal from '../common/modal/Modal'
 
 interface LogoutModalProps {
   isOpen: boolean
