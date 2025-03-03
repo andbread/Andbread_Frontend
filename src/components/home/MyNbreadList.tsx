@@ -17,25 +17,21 @@ const MyNbreadList = ({ nbreadList }: MyNbreadListProps) => {
       {nbreadList.map((nbread, index) => (
         <div
           key={index}
-          className="card card-clickable flex items-center justify-between rounded-lg bg-white p-24"
+          className="card card-clickable flex cursor-pointer flex-row items-end justify-between bg-white p-24"
           onClick={() => handleListClick(nbread.id)}
         >
-          <div className="pl-10">
-            <p className="mb-4 text-body02 font-bold text-gray-800">
-              {nbread.title}
-            </p>
-            <p className="text-body03 text-gray-500">
+          <div className="flex flex-col gap-4">
+            <p className="text-body01">{nbread.title}</p>
+            <p className="text-body02 text-gray-500">
               {Math.floor(
                 nbread.amount / nbread.participantCount,
               ).toLocaleString()}
               원 /{nbread.paymentPeriod === 'year' ? ' 매년' : ' 매월'}
             </p>
           </div>
-          <div className="mr-12 flex min-h-[30px] flex-col justify-end">
-            <p className="mt-auto text-body03 text-secondary-200">
-              {nbread.participants?.length}명 참여 중
-            </p>
-          </div>
+          <p className="text-body02 text-secondary-200">
+            {nbread.participants?.length}명 참여 중
+          </p>
         </div>
       ))}
     </div>

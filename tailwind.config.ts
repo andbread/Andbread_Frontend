@@ -1,9 +1,9 @@
 import type { Config } from 'tailwindcss'
-import pxToRem from 'tailwindcss-preset-px-to-rem'
 import plugin from 'tailwindcss/plugin'
 
 export default {
-  presets: [pxToRem],
+  // presets: [pxToRem],
+  presets: [require('tailwindcss-preset-px-to-rem')],
   content: ['./src/**/*.{js,ts,jsx,tsx}', './public/**/*.html'],
   theme: {
     fontFamily: {
@@ -48,20 +48,20 @@ export default {
     /* font scale */
     fontSize: {
       // heading, h 태그에 사용
-      heading01: ['24px', { lineHeight: '28.8px', fontWeight: '700' }],
-      heading02: ['20px', { lineHeight: '24px', fontWeight: '700' }],
-      heading03: ['18px', { lineHeight: '21.6px', fontWeight: '700' }],
-      heading04: ['16px', { lineHeight: '19px', fontWeight: '700' }],
-      heading05: ['14px', { lineHeight: '16.8px', fontWeight: '700' }],
+      heading01: ['1.5rem', { lineHeight: '1.8rem', fontWeight: '700' }],
+      heading02: ['1.25rem', { lineHeight: '1.5rem', fontWeight: '700' }],
+      heading03: ['1.125rem', { lineHeight: '1.35rem', fontWeight: '700' }],
+      heading04: ['1rem', { lineHeight: '1.1875rem', fontWeight: '700' }],
+      heading05: ['0.875rem', { lineHeight: '1.05rem', fontWeight: '700' }],
       // body, p 태그에 사용
-      body01: ['16px', { lineHeight: '19px', fontWeight: '500' }],
-      body02: ['14px', { lineHeight: '16.8px', fontWeight: '500' }],
-      body03: ['12px', { lineHeight: '14.4px', fontWeight: '500' }],
-      body04: ['11px', { lineHeight: '13.2px', fontWeight: '400' }],
-      body05: ['10px', { lineHeight: '12px', fontWeight: '400' }],
-      body06: ['8px', { lineHeight: '10px', fontWeight: '400' }],
+      body01: ['1rem', { lineHeight: '1.1875rem', fontWeight: '500' }],
+      body02: ['0.875rem', { lineHeight: '1.05rem', fontWeight: '500' }],
+      body03: ['0.75rem', { lineHeight: '0.9rem', fontWeight: '500' }],
+      body04: ['0.6875rem', { lineHeight: '0.825rem', fontWeight: '400' }],
+      body05: ['0.625rem', { lineHeight: '0.75rem', fontWeight: '400' }],
+      body06: ['0.5rem', { lineHeight: '0.625rem', fontWeight: '400' }],
       // paragraph, pre 태그 & 2줄 이상의 긴 텍스트에 사용
-      paragraph: ['14px', { lineHeight: '19.6px', fontWeight: '400' }],
+      paragraph: ['0.875rem', { lineHeight: '1.225rem', fontWeight: '400' }],
     },
     /* box shadow */
     boxShadow: {

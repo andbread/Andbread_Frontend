@@ -17,7 +17,7 @@ const DashlineCard = ({
 }: DashlineCardProps) => {
   return (
     <div
-      className="card-dashline flex flex-row items-center justify-center gap-8 px-32 py-26"
+      className="card-dashline mb-1 flex flex-row items-center justify-center gap-8 px-32 py-26"
       onClick={onClick}
     >
       <Icon type={iconType} width={size} height={size} fill={tailwindColor} />
