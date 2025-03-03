@@ -11,7 +11,7 @@ const MyNbread = ({ nbreadList }: MyNbreadProps) => {
 
   return (
     <section className="mt-48">
-      <div className="mb-16 flex flex-row items-end gap-12">
+      <div className="mb-12 flex flex-row items-end gap-12">
         <h3>나의 엔빵</h3>
         {nbreadList.length > 0 && (
           <h5 className="mb-2 text-heading05 text-secondary-200">

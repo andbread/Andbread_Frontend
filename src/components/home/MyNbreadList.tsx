@@ -17,7 +17,7 @@ const MyNbreadList = ({ nbreadList }: MyNbreadListProps) => {
       {nbreadList.map((nbread, index) => (
         <div
           key={index}
-          className="card card-clickable flex flex-row items-end justify-between bg-white p-24"
+          className="card card-clickable flex cursor-pointer flex-row items-end justify-between bg-white p-24"
           onClick={() => handleListClick(nbread.id)}
         >
           <div className="flex flex-col gap-4">

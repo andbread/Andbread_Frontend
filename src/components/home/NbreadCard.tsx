@@ -17,7 +17,7 @@ const NbreadCard = ({ nbread, showParticipants = true }: NbreadCardProps) => {
 
   return (
     <div
-      className="card card-clickable flex items-center justify-between bg-white px-24 py-20"
+      className="card card-clickable flex cursor-pointer items-center justify-between bg-white px-24 py-20"
       onClick={() => handleCardClick()}
     >
       <div className="flex flex-col items-start gap-2">

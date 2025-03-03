@@ -15,7 +15,7 @@ const MonthlyNbread = ({
 }: MonthlyNbreadProps) => {
   return (
     <section>
-      <h3 className="mb-16 font-bold text-gray-800">이번 달 엔빵</h3>
+      <h3 className="mb-12 font-bold text-gray-800">이번 달 엔빵</h3>
       {nbreadList.length > 0 ? (
         <>
           <div className="card mb-8 flex flex-col gap-8 bg-primary-400 p-24">
