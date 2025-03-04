@@ -65,16 +65,14 @@ const DashlineCard = ({
   }, [userId, nbreadId]);  // userId와 nbreadId가 변경될 때마다 실행
 
   return (
-    isLeader ? (
-      <div
-        className="card-dashline flex flex-row items-center justify-center gap-8 px-32 py-26"
-        onClick={onClick}
-      >
-        <Icon type={iconType} width={size} height={size} fill={tailwindColor} />
-        <div className="text-body02">{text}</div>
-      </div>
-    ) : null
-  );
+    <div
+      className="card-dashline mb-1 flex flex-row items-center justify-center gap-8 px-32 py-26"
+      onClick={onClick}
+    >
+      <Icon type={iconType} width={size} height={size} fill={tailwindColor} />
+      <div className="text-body02">{text}</div>
+    </div>
+  )
 }
 
 export default DashlineCard;

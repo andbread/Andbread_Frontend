@@ -15,8 +15,10 @@ import { useForm } from 'react-hook-form'
 import NbreadDeleteModal from '@/components/common/modal/NbreadDeleteModal'
 import NbreadInviteModal from '@/components/common/modal/NbreadInviteModal'
 import { getNbreadRecords } from '@/lib/nbreadRecord'
+import useUserStore from '@/stores/useAuthStore'
 
 const Page = () => {
+  const userData = useUserStore((state) => state.user)
   const [nbread, setNbread] = useState<Nbread | null>(null)
   const [nbreadRecords, setNbreadRecords] = useState<NbreadRecord[] | null>(
     null,
@@ -124,12 +126,14 @@ const Page = () => {
                 {isEditing ? '엔빵 수정하기' : nbread?.title}
               </h2>
               <div className="h-20">
-                <Tab
-                  content={isEditing ? '저장하기' : '수정하기'}
-                  size="large"
-                  isClicked={isEditing}
-                  onClick={() => handleEditingNbread()}
-                />
+                {userData?.id === nbread.leaderId && (
+                  <Tab
+                    content={isEditing ? '저장하기' : '수정하기'}
+                    size="large"
+                    isClicked={isEditing}
+                    onClick={() => handleEditingNbread()}
+                  />
+                )}
               </div>
             </div>
             {isEditing ? (

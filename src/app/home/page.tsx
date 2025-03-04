@@ -7,11 +7,13 @@ import MyNbread from '@/components/home/MyNbread'
 import { Nbread } from '@/types/nbread'
 import useUserStore from '@/stores/useAuthStore'
 import { getParticipants } from '@/lib/participant'
+import Spinner from '@/components/common/spinner/Spinner'
 
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
   const [nbreadList, setNbreadList] = useState<Nbread[]>([])
   const [totalAmount, setTotalAmount] = useState(0)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const currentMonth = new Date().getMonth() + 1
 
@@ -26,6 +28,8 @@ const HomePage = () => {
       }),
     )
     setNbreadList(nbreadsWithParticipants)
+
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -47,12 +51,18 @@ const HomePage = () => {
     <div className="flex flex-col justify-between p-24 pt-16">
       <Header />
       <main className="mt-24 p-4">
-        <MonthlyNbread
-          nbreadList={nbreadList}
-          totalAmount={totalAmount}
-          currentMonth={currentMonth}
-        />
-        <MyNbread nbreadList={nbreadList} />
+        {isLoading ? (
+          <Spinner isLoading={isLoading} />
+        ) : (
+          <>
+            <MonthlyNbread
+              nbreadList={nbreadList}
+              totalAmount={totalAmount}
+              currentMonth={currentMonth}
+            />
+            <MyNbread nbreadList={nbreadList} />
+          </>
+        )}
       </main>
     </div>
   )

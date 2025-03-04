@@ -7,9 +7,8 @@ import useUserStore from '@/stores/useAuthStore'
 import { useRef, useState } from 'react'
 
 interface NbreadParticipantCardProps {
-  nbreadId: string
-  participantId: string
-  currentPaymentDate: string
+  nbreadId?: string
+  currentPaymentDate?: string
   profileImageUrl?: string | null
   isNbreadLeader: boolean
   name: string
@@ -32,10 +31,10 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
 
     try {
       await updateNbreadRecord(
-        props.nbreadId,
-        props.participantId,
+        props.nbreadId!,
+        userData!.id,
         !isChecked,
-        props.currentPaymentDate,
+        props.currentPaymentDate!,
       )
 
       useToast.success('완료 여부 업데이트에 성공했어요.')

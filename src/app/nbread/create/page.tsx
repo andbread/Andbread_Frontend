@@ -9,13 +9,12 @@ import classNames from 'classnames'
 import { useEffect, useState } from 'react'
 import useNbreadStore from '@/stores/useNbreadStore'
 import useUserStore from '@/stores/useAuthStore'
-import Icon from '@/components/common/icon/Icon'
-import ExitEditConfirmModal from '@/components/common/modal/ExitEditConfirmModal'
+import ExitEditConfirmModal from '@/components/common/Modal/ExitEditConfirmModal'
 
 const Page = () => {
   const router = useRouter()
   const userData = useUserStore((state) => state.user)
-  const { setNbread } = useNbreadStore()
+  const { setNbread, clearNbread } = useNbreadStore()
   const nbread = useNbreadStore((state) => state.nbread)
   const [isExitEditConfirmModalOpen, setIsExitEditConfirmModalOpen] =
     useState<boolean>(false)
@@ -28,7 +27,10 @@ const Page = () => {
     handleSubmit,
     reset,
     formState: { isValid, isDirty },
-  } = useForm<Nbread>({ mode: 'onChange' })
+  } = useForm<Nbread>({
+    mode: 'onChange',
+    defaultValues: {},
+  })
 
   const onSubmit = (data: Nbread) => {
     data.leaderId = userData!.id
@@ -38,25 +40,25 @@ const Page = () => {
     router.push('/nbread/preview')
   }
 
+  useEffect(() => {
+    if (nbread !== null) {
+      reset(nbread)
+    }
+  }, [])
+
   const handleClickBack = () => {
-    if (!nbread && isDirty) {
+    if (nbread || isDirty) {
       setIsExitEditConfirmModalOpen(true)
     } else {
       router.back()
     }
   }
 
-  useEffect(() => {
-    if (nbreadFormData !== null) {
-      reset(nbreadFormData)
-    }
-  }, [])
-
   return (
     <main className="flex h-full flex-col justify-between p-24">
       <section>
         <DetailHeader onClickBack={() => handleClickBack()} />
-        <h3 className="pb-12 pt-20">엔빵 만들기 🍞</h3>
+        <h2 className="pb-12 pt-20">엔빵 만들기 🍞</h2>
         <NbreadEditCard
           register={register}
           setValue={setValue}
@@ -77,7 +79,10 @@ const Page = () => {
       <ExitEditConfirmModal
         isOpen={isExitEditConfirmModalOpen}
         onClose={() => setIsExitEditConfirmModalOpen(false)}
-        onSubmit={() => router.back()}
+        onSubmit={() => {
+          router.back()
+          clearNbread()
+        }}
       />
     </main>
   )

@@ -12,6 +12,7 @@ import { useToast } from '@/components/common/toast/Toast'
 import { useRouter } from 'next/navigation'
 import useUserStore from '@/stores/useAuthStore'
 import { useEffect, useState } from 'react'
+import Spinner from '@/components/common/spinner/Spinner'
 
 const Page = () => {
   const nbreadData = useNbreadStore((state) => state.nbread)
@@ -39,10 +40,6 @@ const Page = () => {
     }
   }, [previewNbreadData, savedNbreadData])
 
-  if (!previewNbreadData) {
-    return <div></div>
-  }
-
   const handleClickSubmitButton = async () => {
     if (nbreadData && nbreadData.participants) {
       try {
@@ -62,18 +59,21 @@ const Page = () => {
     }
   }
 
+  if (!previewNbreadData) {
+    return <Spinner isLoading={true} />
+  }
+
   return (
     <main className="h-full-y-auto relative p-24">
-      <section className="stick">
+      <section>
         <DetailHeader />
-        <div className="pt-20 text-body03 text-gray-400">
+        <div className="pb-4 pt-20 text-body03 text-gray-400">
           작성한 엔빵의 미리보기에요.
         </div>
         <h2 className="pb-12 pt-4">{previewNbreadData?.title}</h2>
         {<NbreadCard nbreadData={previewNbreadData as Nbread} />}
         <div className="mb-12 mt-40 text-body02 text-gray-500">참여한 사람</div>
         <div className="mb-40 flex flex-col gap-8">
-          {/* TODO 로그인 기능 구현 후 데이터 수정 필요 */}
           <NbreadParticipantCard
             isNbreadLeader={true}
             name={userData!.name}

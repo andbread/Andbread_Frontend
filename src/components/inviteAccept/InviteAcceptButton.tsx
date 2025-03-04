@@ -12,7 +12,7 @@ const InviteAcceptButton = () => {
     router.push('/home')
   }
   return (
-    <div className="flex flex-col">
+    <div className="mb-64 flex flex-col">
       <button
         className="btn-large mb-20 rounded-8 bg-secondary-100 text-white"
         onClick={() => setModalOpen(true)}
