@@ -5,6 +5,10 @@ interface InvitationToNbreadProps {
     onSubmit: () => void;
   }
 const InvitationToNbreadModal = ({isOpen,onClose,onSubmit} : InvitationToNbreadProps) => {
+    const clearNbreadID = () => {
+        sessionStorage.removeItem('group_id')
+        onClose();
+    }
     return (
        <Modal isOpen={isOpen} onClose={onClose}>
         <div className="flex flex-col p-10">
@@ -16,7 +20,7 @@ const InvitationToNbreadModal = ({isOpen,onClose,onSubmit} : InvitationToNbreadP
           </p>
           <div className="flex flex-row items-center justify-center gap-5 pt-15">
             <button className="btn btn-small btn-disabled text-white"
-            onClick={onClose}>거절</button>
+            onClick={clearNbreadID}>거절</button>
             <button className="btn btn-small btn-primary"
             onClick={onSubmit}>참여</button>
           </div>

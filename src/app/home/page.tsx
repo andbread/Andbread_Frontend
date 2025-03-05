@@ -11,6 +11,7 @@ import Spinner from '@/components/common/spinner/Spinner'
 import InvitationToNbreadModal from '@/components/inviteAccept/InvitationToNbreadModal'
 import { getUser } from '@/lib/auth'
 import { insertParticipant } from '@/lib/participant'
+import { useToast } from '@/components/common/toast/Toast'
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
   const [nbreadList, setNbreadList] = useState<Nbread[]>([])
@@ -19,7 +20,6 @@ const HomePage = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false)
   const [groupId, setGroupId] = useState<string>()
   const currentMonth = new Date().getMonth() + 1
-
   // Nbread 및 Participant 정보를 DB로부터 fetch
   const fetchNbreads = async (userId: string) => {
     const nbreads = await getUserNbreads(userId)
@@ -31,7 +31,6 @@ const HomePage = () => {
       }),
     )
     setNbreadList(nbreadsWithParticipants)
-
     setIsLoading(false)
   }
 
@@ -81,7 +80,13 @@ const HomePage = () => {
       }
     }
     fetchInviteData()
-    setModalOpen(false)
+    setTimeout(() => {
+      if(!user)return
+      fetchNbreads(user.id)
+      setModalOpen(false)
+      useToast.success('엔빵 참여가 완료되었어요.')
+      }, 1000)
+    
   }
   useEffect(() => {
     const groupId = sessionStorage.getItem('group_id')

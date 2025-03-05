@@ -2,6 +2,7 @@ import Modal from '@/components/common/modal/Modal'
 import Icon from '../icon/Icon'
 import { useEffect, useState } from 'react'
 import { createLink } from '@/lib/nbread/insertLink'
+import { useToast } from '../toast/Toast'
 interface NbreadInviteModalProps {
   isOpen: boolean
   onClose: () => void
@@ -15,12 +16,26 @@ const NbreadInviteModal = ({
   onSubmit,
   nbreadId,
 }: NbreadInviteModalProps) => {
+  const [inviteLink, setInviteLink] =useState<string>()
   useEffect(() => {
     if (isOpen) {
-      createLink(nbreadId);
+      setInviteLink(createLink(nbreadId));
       console.log('모달 열고 링크 ! :',createLink(nbreadId))
     }
   }, [isOpen])
+  const handleCopyLink = () => {
+    if (inviteLink) {
+      // 클립보드에 링크 복사
+      navigator.clipboard.writeText(inviteLink)
+        .then(() => {
+          useToast.success('링크가 클립보드에 복사되었습니다.')
+          console.log('링크가 클립보드에 복사되었습니다!');
+        })
+        .catch((error) => {
+          console.error('클립보드 복사 실패:', error);
+        });
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -35,7 +50,7 @@ const NbreadInviteModal = ({
         </div>
         <div className="flex flex-col items-center gap-8 pb-12">
           <button
-            onClick={onSubmit}
+            onClick={handleCopyLink}
             className="btn btn-medium text-heading06 bg-system-blue text-white"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">
