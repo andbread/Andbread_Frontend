@@ -122,7 +122,7 @@ const Calendar: React.FC<CalendarProps> = ({
         {daysOfWeek.map((day, index) => (
           <div
             key={day}
-            className={`p-1 ${index === 6 ? 'text-system-red' : ''}`}
+            className={`p-1 ${index === 6 ? 'text-system-red01' : ''}`}
           >
             {day}
           </div>

@@ -161,7 +161,7 @@ a {
   }
 
   .btn-warning {
-    @apply bg-system-red text-white;
+    @apply bg-system-red01 hover:bg-system-red02 active:bg-system-red02 text-white;
   }
 
   .btn-disabled {
@@ -203,7 +203,7 @@ a {
 }
 
 .Toastify__toast--error {
-  @apply bg-system-red font-pretendard text-heading05 text-white;
+  @apply bg-system-red01 font-pretendard text-heading05 text-white;
 }
 
 .Toastify__toast-icon {

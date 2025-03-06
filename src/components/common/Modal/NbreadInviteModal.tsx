@@ -26,7 +26,7 @@ const NbreadInviteModal = ({
         <div className="flex flex-col items-center gap-8 pb-12">
           <button
             onClick={onSubmit}
-            className="btn btn-medium text-heading06 bg-system-blue text-white"
+            className="btn btn-medium text-heading06 bg-system-blue01 hover:bg-system-blue02 active:bg-system-blue02 text-white"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">
               <Icon type="copy" width={14} height={14} fill="text-white" />
@@ -36,7 +36,7 @@ const NbreadInviteModal = ({
           <button
             // TODO 카카오톡 공유하기 onClick 속성 수정 필요
             onClick={onSubmit}
-            className="btn btn-medium text-heading06 bg-system-kakao"
+            className="btn btn-medium text-heading06 bg-system-kakao hover:bg-yellow-400"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">
               <div className="pt-4">
