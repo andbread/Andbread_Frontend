@@ -16,7 +16,7 @@ export default function ProtectRoute({
   const pathname = usePathname()
   const [isLoginConfirmModalOpen, setIsLoginConfirmModalOpen] =
     useState<boolean>(false)
-  const user = useUserStore((state) => state.user)
+  const user = sessionStorage.getItem('user-store')
 
   useEffect(() => {
     if (!user && !publicRoutes.includes(pathname)) {
