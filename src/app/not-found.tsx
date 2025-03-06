@@ -2,9 +2,18 @@
 
 import NbreadNotFound from '@/assets/logo/nbreads-not-found.svg'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 const Page = () => {
   const router = useRouter()
+
+  useEffect(() => {
+    ;(window as any).__IS_NOT_FOUND_PAGE__ = true
+    return () => {
+      ;(window as any).__IS_NOT_FOUND_PAGE__ = false
+    }
+  }, [])
+
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-20">
       <h1 className="text-64 text-gray-600">404</h1>

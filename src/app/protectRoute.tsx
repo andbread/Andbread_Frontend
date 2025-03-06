@@ -18,7 +18,8 @@ export default function ProtectRoute({
 
   useEffect(() => {
     const user = sessionStorage.getItem('user-store')
-    if (!user && !publicRoutes.includes(pathname)) {
+    const isNotFoundPage = (window as any).__IS_NOT_FOUND_PAGE__
+    if (!user && !publicRoutes.includes(pathname) && !isNotFoundPage) {
       setIsLoginConfirmModalOpen(true)
     }
   }, [pathname])
