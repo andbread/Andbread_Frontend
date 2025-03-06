@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import useUserStore from '@/stores/useAuthStore'
 import LoginConfirmModal from '@/components/common/Modal/LoginConfirmModal'
+import Toast from '@/components/common/toast/Toast'
 
 const publicRoutes = ['/login', '/auth/callback', 'inviteAccept']
 
@@ -26,6 +26,7 @@ export default function ProtectRoute({
 
   return (
     <>
+      <Toast />
       {children}
       <LoginConfirmModal
         isOpen={isLoginConfirmModalOpen}
