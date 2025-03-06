@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import LoginConfirmModal from '@/components/common/Modal/LoginConfirmModal'
-import Toast from '@/components/common/toast/Toast'
 
 const publicRoutes = ['/login', '/auth/callback', 'inviteAccept']
 
@@ -16,9 +15,9 @@ export default function ProtectRoute({
   const pathname = usePathname()
   const [isLoginConfirmModalOpen, setIsLoginConfirmModalOpen] =
     useState<boolean>(false)
-  const user = sessionStorage.getItem('user-store')
 
   useEffect(() => {
+    const user = sessionStorage.getItem('user-store')
     if (!user && !publicRoutes.includes(pathname)) {
       setIsLoginConfirmModalOpen(true)
     }
@@ -26,7 +25,6 @@ export default function ProtectRoute({
 
   return (
     <>
-      <Toast />
       {children}
       <LoginConfirmModal
         isOpen={isLoginConfirmModalOpen}

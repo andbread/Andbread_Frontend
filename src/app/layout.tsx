@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
 import ProtectRoute from './protectRoute'
+import Toast from '@/components/common/toast/Toast'
 
 export const metadata: Metadata = {
   title: '엔빵',
@@ -21,6 +22,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-pre`} suppressHydrationWarning>
+        <Toast />
         <ProtectRoute>{children}</ProtectRoute>
       </body>
     </html>
