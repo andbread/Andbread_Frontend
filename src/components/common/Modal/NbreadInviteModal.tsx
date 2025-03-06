@@ -23,6 +23,41 @@ const NbreadInviteModal = ({
       console.log('모달 열고 링크 ! :',createLink(nbreadId))
     }
   }, [isOpen])
+  useEffect(() => {
+    if (isOpen && typeof window !== 'undefined' && window.Kakao) {
+      // 이미 초기화된 경우 초기화하지 않도록 처리
+      if (!window.Kakao.isInitialized()) {
+        console.log('카카오 SDK 초기화 중...')
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_APP_KEY) // 'NEXT_PUBLIC_KAKAO_APP_KEY' 환경변수 사용
+      }
+    }
+  }, [isOpen])
+  const handleKakaoShare = () => {
+    if (!inviteLink || !window.Kakao) return;
+    console.log("제발 얍!!")
+    window.Kakao.Share.sendDefault({
+      
+      objectType: 'feed',
+      content: {
+        title: '엔빵 초대',
+        description: '이 링크로 엔빵에 참여하세요.',
+        imageUrl: 'https://example.com/image.png', // 공유할 이미지 URL
+        link: {
+          mobileWebUrl: inviteLink, // 모바일 웹에서 열릴 URL
+          webUrl: inviteLink, // 웹에서 열릴 URL
+        },
+      },
+      buttons: [
+        {
+          title: '참여하기',
+          link: {
+            mobileWebUrl: inviteLink,
+            webUrl: inviteLink,
+          },
+        },
+      ],
+    });
+  };
   const handleCopyLink = () => {
     if (inviteLink) {
       // 클립보드에 링크 복사
@@ -60,7 +95,7 @@ const NbreadInviteModal = ({
           </button>
           <button
             // TODO 카카오톡 공유하기 onClick 속성 수정 필요
-            onClick={onSubmit}
+            onClick={handleKakaoShare}
             className="btn btn-medium text-heading06 bg-system-kakao"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">

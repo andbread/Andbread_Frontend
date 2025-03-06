@@ -75,9 +75,6 @@ const Page = () => {
   const handleClickInviteCard = () => {
     setIsNbreadInviteModalOpen(true)
   }
-  const handleCopyLink = () => {
-
-  }
 
   useEffect(() => {
     if (!params.nbreadId) {

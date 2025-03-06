@@ -19,6 +19,7 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
         />
+        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
       </head>
       <body className={`font-pre`} suppressHydrationWarning>
         <Toast />
