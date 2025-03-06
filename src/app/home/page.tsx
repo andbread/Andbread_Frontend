@@ -73,8 +73,25 @@ const HomePage = () => {
           }
           if (groupId) {
             const data = await insertParticipant(user, groupId)
-            console.log(data)
+            console.log('홈 화면에서의 데이터!! : ',data)
             sessionStorage.removeItem('group_id')
+            let inviteToast = "";
+            if(data?.isInsert){
+              console.log("성공!") 
+             inviteToast = "성공"
+            }
+            else {
+              inviteToast = "실패"
+             
+            }
+            console.log("inviteToast : ",inviteToast)
+      if(inviteToast === "성공"){
+        useToast.success('엔빵 참여가 완료되었어요.')
+      }
+      else {
+        useToast.error('이미 참여한 엔빵이네요.')
+      }
+            
           }
         }
       }
@@ -84,7 +101,6 @@ const HomePage = () => {
       if(!user)return
       fetchNbreads(user.id)
       setModalOpen(false)
-      useToast.success('엔빵 참여가 완료되었어요.')
       }, 1000)
     
   }

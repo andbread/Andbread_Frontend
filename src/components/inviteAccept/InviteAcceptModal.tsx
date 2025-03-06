@@ -106,7 +106,7 @@ const InviteAcceptModal = ({ isOpen, onClose }: InviteAcceptProps) => {
         onClick={
           inviteAcceptModalData.buttonTitle === '로그인하러 가기'
             ? handleLoginRedirect
-            : inviteAcceptModalData.buttonTitle === '엔빵확인하러 가기'
+            : inviteAcceptModalData.buttonTitle === '엔빵확인하러 가기' ||'홈으로 가기'
             ? handleCompleteRedirect
             : onClose
         }

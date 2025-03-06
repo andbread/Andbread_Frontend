@@ -31,9 +31,9 @@ export const insertParticipant = async (
         throw error
       }
       console.log("저장됐어?",data);
-      return {title:"엔빵 참여가 완료되었어요.",subTitle:"참여한 엔빵 정보를 바로 확인할 수 있어요.",buttonTitle:"엔빵확인하러 가기"}
+      return {isInsert:true,title:"엔빵 참여가 완료되었어요.",subTitle:"참여한 엔빵 정보를 바로 확인할 수 있어요.",buttonTitle:"엔빵확인하러 가기"}
     }
-    return {title: "이미 참가 완료되어 있어요.",subTitle:"참여한 엔빵 정보를 바로 확인할 수 있어요.",buttonTitle:"엔빵확인하러 가기"}
+    return {isInsert:false,title: "이미 참가 완료되어 있어요.",subTitle:"참여한 엔빵 정보를 바로 확인할 수 있어요.",buttonTitle:"엔빵확인하러 가기"}
   }
       }
     }
