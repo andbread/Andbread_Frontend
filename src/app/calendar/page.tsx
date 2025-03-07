@@ -96,7 +96,7 @@ const CalendarPage = ({}: CalendarPageProps) => {
         userId={userId}
         onDateSelect={handleDateSelect}
       />
-      <div className="mb-20 px-24">
+      <div className="mb-20 flex flex-col gap-8 px-24">
         {loading ? (
           <div />
         ) : filteredNbreadList.length > 0 ? (
