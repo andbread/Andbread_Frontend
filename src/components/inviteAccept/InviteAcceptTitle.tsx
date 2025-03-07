@@ -1,56 +1,46 @@
-
-"use client"; 
-import { useState, useEffect } from "react";
-import { getNbread } from "@/lib/nbread";
-import { getUserName } from "@/lib/auth";
+'use client'
+import { useState, useEffect } from 'react'
+import { getNbread } from '@/lib/nbread'
+import { getUserName } from '@/lib/auth'
 const InviteAcceptTitle = () => {
-  const data = {
-    id: "신혜민",
-    title: "유튜브 프리미엄"
-  };
-
-  const [groupId, setGroupId] = useState<string | null>(null);
-  const [code, setCode] = useState<string | null>(null);
-  const [leaderId,setLeaderId] = useState<string | null>(null);
-  const [ leaderName,setLeaderName] = useState();
-  const [ nbreadtitle,setNbreadTitle ] = useState<string | null>(null);
+  const [groupId, setGroupId] = useState<string | null>(null)
+  const [code, setCode] = useState<string | null>(null)
+  const [leaderId, setLeaderId] = useState<string | null>(null)
+  const [leaderName, setLeaderName] = useState()
+  const [nbreadtitle, setNbreadTitle] = useState<string | null>(null)
   useEffect(() => {
     const fetchData = async () => {
-      const url = window.location.href;
-      const parsedUrl = new URL(url);
+      const url = window.location.href
+      const parsedUrl = new URL(url)
 
-      const groupId = parsedUrl.searchParams.get("groupId");
-      const code = parsedUrl.searchParams.get("code");
+      const groupId = parsedUrl.searchParams.get('groupId')
+      const code = parsedUrl.searchParams.get('code')
 
-      setGroupId(groupId);
-      setCode(code);
+      setGroupId(groupId)
+      setCode(code)
 
       if (groupId) {
-        
-       const leaderIdData =  await getNbread(groupId);
-        setLeaderId(leaderIdData.leaderId);
-        setNbreadTitle(leaderIdData.title);
-        sessionStorage.setItem('group_id',groupId);
-        const leaderName = await getUserName(leaderId as string);
+        const leaderIdData = await getNbread(groupId)
+        setLeaderId(leaderIdData.leaderId)
+        setNbreadTitle(leaderIdData.title)
+        sessionStorage.setItem('group_id', groupId)
+        const leaderName = await getUserName(leaderId as string)
         setLeaderName(leaderName)
       }
-    };
+    }
 
-    fetchData();
-  }, [leaderId]);
+    fetchData()
+  }, [leaderId])
 
   return (
     <div>
-      <div className="mt-111 mb-20 text-heading02">
+      <div className="mb-20 mt-111 text-heading02">
         <span>{leaderName}</span>님이 당신을
-
         <br />
         <span className="text-secondary-100">{nbreadtitle}</span>으로 초대했어요
       </div>
+    </div>
+  )
+}
 
-      </div>
-  
-  );
-};
-
-export default InviteAcceptTitle;
+export default InviteAcceptTitle

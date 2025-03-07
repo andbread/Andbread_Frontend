@@ -28,19 +28,28 @@ const InviteAcceptModal = ({ isOpen, onClose }: InviteAcceptProps) => {
 
   const router = useRouter() // useRouter 훅을 사용하여 라우터를 가져옵니다.
 
-  const inviteAcceptData = (title:string, subTitle:string, buttonTitle:string) => ({
+  const inviteAcceptData = (
+    title: string,
+    subTitle: string,
+    buttonTitle: string,
+  ) => ({
     title: title,
     subTitle: subTitle,
     buttonTitle: buttonTitle,
-  });
+  })
 
   // 로그인 상태를 확인하는 useEffect
   useEffect(() => {
     const accessTokenData = sessionStorage.getItem('access_token')
     if (!accessTokenData) {
-      setInviteAcceptModalData(inviteAcceptData("먼저 로그인이 필요해요.","엔빵에 참여하려면 로그인을 해야 해요.","로그인하러 가기"))
+      setInviteAcceptModalData(
+        inviteAcceptData(
+          '먼저 로그인이 필요해요.',
+          '엔빵에 참여하려면 로그인을 해야 해요.',
+          '로그인하러 가기',
+        ),
+      )
     } else {
-      console.log("유저가 있다!!")
       setAccessToken(accessTokenData)
       setIsUser(true)
     }
@@ -50,13 +59,13 @@ const InviteAcceptModal = ({ isOpen, onClose }: InviteAcceptProps) => {
   useEffect(() => {
     if (!isOpen || !isUser || !accessToken) return // 모달이 열려야 하고, 유저가 있어야 API 요청을 진행
 
-    
     const fetchData = async () => {
       const data = await getUser(accessToken)
-      console.log("user : ", data)
 
       if (data.data.user) {
-        const provider = data.data.user.app_metadata.provider as 'kakao' | 'google'
+        const provider = data.data.user.app_metadata.provider as
+          | 'kakao'
+          | 'google'
 
         const userInfo = {
           id: data.data.user.id,
@@ -69,18 +78,18 @@ const InviteAcceptModal = ({ isOpen, onClose }: InviteAcceptProps) => {
         const user = { user: userInfo, isLeader: false }
         setGroupId(sessionStorage.getItem('group_id'))
         if (groupId) {
-          console.log("실행됐엉")
           const data = await insertParticipant(user, groupId)
-          console.log("저장됐니?",data)
-          if(data){
-            setInviteAcceptModalData(inviteAcceptData(data.title,data.subTitle,data.buttonTitle))
+
+          if (data) {
+            setInviteAcceptModalData(
+              inviteAcceptData(data.title, data.subTitle, data.buttonTitle),
+            )
           }
-          
         }
       }
     }
     fetchData()
-  }, [isOpen, isUser, accessToken, groupId]) 
+  }, [isOpen, isUser, accessToken, groupId])
 
   const handleLoginRedirect = () => {
     router.replace('/login')
@@ -106,9 +115,10 @@ const InviteAcceptModal = ({ isOpen, onClose }: InviteAcceptProps) => {
         onClick={
           inviteAcceptModalData.buttonTitle === '로그인하러 가기'
             ? handleLoginRedirect
-            : inviteAcceptModalData.buttonTitle === '엔빵확인하러 가기' ||'홈으로 가기'
-            ? handleCompleteRedirect
-            : onClose
+            : inviteAcceptModalData.buttonTitle === '엔빵확인하러 가기' ||
+                '홈으로 가기'
+              ? handleCompleteRedirect
+              : onClose
         }
         className="text-lg m-16 h-[48px] w-[232px] rounded-md bg-[#FFAC39] p-12 font-semibold text-white"
       >

@@ -54,7 +54,7 @@ const HomePage = () => {
       if (!accessToken) {
       } else {
         const data = await getUser(accessToken)
-        console.log('user : ', data)
+
         if (data.data.user) {
           const provider = data.data.user.app_metadata.provider as
             | 'kakao'
@@ -73,36 +73,37 @@ const HomePage = () => {
           }
           if (groupId) {
             const data = await insertParticipant(user, groupId)
-            console.log('홈 화면에서의 데이터!! : ',data)
             sessionStorage.removeItem('group_id')
-            let inviteToast = "";
-            if(data?.isInsert){
-              console.log("성공!") 
-             inviteToast = "성공"
+            let inviteToast = ''
+            if (data?.isInsert === '참여') {
+              inviteToast = '성공'
+            } else {
+              if (data?.isInsert === '이미참여') {
+                inviteToast = '이미참여'
+              } else {
+                inviteToast = '만료'
+              }
             }
-            else {
-              inviteToast = "실패"
-             
+            console.log('inviteToast : ', inviteToast)
+            if (inviteToast === '성공') {
+              useToast.success('엔빵 참여가 완료되었어요.')
+            } else {
+              if (inviteToast === '이미참여') {
+                useToast.error('이미 참여한 엔빵이네요.')
+              } else {
+                useToast.error('엔빵 초대가 만료되었어요.')
+              }
             }
-            console.log("inviteToast : ",inviteToast)
-      if(inviteToast === "성공"){
-        useToast.success('엔빵 참여가 완료되었어요.')
-      }
-      else {
-        useToast.error('이미 참여한 엔빵이네요.')
-      }
-            
           }
         }
       }
     }
     fetchInviteData()
     setTimeout(() => {
-      if(!user)return
+      if (!user) return
       fetchNbreads(user.id)
       setModalOpen(false)
-      }, 1000)
-    
+    }, 1000)
   }
   useEffect(() => {
     const groupId = sessionStorage.getItem('group_id')

@@ -21,7 +21,7 @@ export const login = async (provider: LoginProvider['provider']) => {
   if (error) {
     throw new Error(error.message)
   }
-
+  
   return data
 }
 
@@ -29,8 +29,9 @@ export const logout = async (router: ReturnType<typeof useRouter>) => {
   const data = await supabase.auth.signOut()
   console.log(data)
   useUserStore.getState().clearUser()
-  sessionStorage.removeItem('user-store')
+  sessionStorage.clear()
   setTimeout(() => {
+    localStorage.clear()
     useToast.success('로그아웃이 완료되었어요.')
     router.replace('/login')
   }, 1000)
@@ -46,6 +47,7 @@ export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
   await adminSupabase.auth.admin.deleteUser(user),supabase.auth.signOut
   useUserStore.getState().clearUser()
   sessionStorage.removeItem('user-store')
+  localStorage.clear()
   setTimeout(() => {
     useToast.success('회원 탈퇴가 완료되었어요.')
     router.replace('/login')
@@ -54,7 +56,6 @@ export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
 export const getUserName = async (leaderId:string) => {
   try {
 if(!leaderId){
-  console.log('리더의 이름을 찾을수 없습니다! ');
   return null;
 }
     const { data, error } = await supabase
@@ -74,8 +75,7 @@ if(!leaderId){
     // 사용자 이름 반환
     return data.name;
   }   catch (error) {
-    // 에러 처리
-    console.error('Error fetching user name:', error);
+    
     return null; // 에러 발생 시 null 반환
   }
 

@@ -16,27 +16,24 @@ const NbreadInviteModal = ({
   onSubmit,
   nbreadId,
 }: NbreadInviteModalProps) => {
-  const [inviteLink, setInviteLink] =useState<string>()
+  const [inviteLink, setInviteLink] = useState<string>()
   useEffect(() => {
     if (isOpen) {
-      setInviteLink(createLink(nbreadId));
-      console.log('모달 열고 링크 ! :',createLink(nbreadId))
+      setInviteLink(createLink(nbreadId))
     }
   }, [isOpen])
   useEffect(() => {
     if (isOpen && typeof window !== 'undefined' && window.Kakao) {
       // 이미 초기화된 경우 초기화하지 않도록 처리
       if (!window.Kakao.isInitialized()) {
-        console.log('카카오 SDK 초기화 중...')
         window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_APP_KEY) // 'NEXT_PUBLIC_KAKAO_APP_KEY' 환경변수 사용
       }
     }
   }, [isOpen])
   const handleKakaoShare = () => {
-    if (!inviteLink || !window.Kakao) return;
-    console.log("제발 얍!!")
+    if (!inviteLink || !window.Kakao) return
+
     window.Kakao.Share.sendDefault({
-      
       objectType: 'feed',
       content: {
         title: '엔빵 초대',
@@ -56,21 +53,19 @@ const NbreadInviteModal = ({
           },
         },
       ],
-    });
-  };
+    })
+  }
   const handleCopyLink = () => {
     if (inviteLink) {
       // 클립보드에 링크 복사
-      navigator.clipboard.writeText(inviteLink)
+      navigator.clipboard
+        .writeText(inviteLink)
         .then(() => {
           useToast.success('링크가 클립보드에 복사되었습니다.')
-          console.log('링크가 클립보드에 복사되었습니다!');
         })
-        .catch((error) => {
-          console.error('클립보드 복사 실패:', error);
-        });
+        .catch((error) => {})
     }
-  };
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -94,7 +89,6 @@ const NbreadInviteModal = ({
             </div>
           </button>
           <button
-            // TODO 카카오톡 공유하기 onClick 속성 수정 필요
             onClick={handleKakaoShare}
             className="btn btn-medium text-heading06 bg-system-kakao"
           >

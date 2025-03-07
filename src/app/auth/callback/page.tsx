@@ -41,6 +41,7 @@ const CallbackPage = () => {
           setUser(userInfo) // 사용자 정보 세션 스토리지에 저장
           setTimeout(() => {
             setLoading(false)
+            localStorage.clear()
             router.replace('/home')
           }, 1000)
         }

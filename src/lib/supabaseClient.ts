@@ -13,7 +13,7 @@ const authConfig =
         auth: {
           storage: sessionStorage, // 클라이언트에서만 사용
           autoRefreshToken: true,
-          persistSession: true,
+          persistSession: false,
           detectSessionInUrl: true,
         },
       }
