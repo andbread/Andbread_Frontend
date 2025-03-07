@@ -3,6 +3,7 @@ import Icon from '../icon/Icon'
 import { useEffect, useState } from 'react'
 import { createLink } from '@/lib/nbread/insertLink'
 import { useToast } from '../toast/Toast'
+import useUserStore from '@/stores/useAuthStore'
 interface NbreadInviteModalProps {
   isOpen: boolean
   onClose: () => void
@@ -15,11 +16,14 @@ const NbreadInviteModal = ({
   nbreadId,
 }: NbreadInviteModalProps) => {
   const [inviteLink, setInviteLink] = useState<string>()
+  const user = useUserStore((state) => state.user)
+
   useEffect(() => {
     if (isOpen) {
       setInviteLink(createLink(nbreadId))
     }
   }, [isOpen])
+
   useEffect(() => {
     if (isOpen && typeof window !== 'undefined' && window.Kakao) {
       // 이미 초기화된 경우 초기화하지 않도록 처리
@@ -28,14 +32,17 @@ const NbreadInviteModal = ({
       }
     }
   }, [isOpen])
+
   const handleKakaoShare = () => {
+    onClose()
     if (!inviteLink || !window.Kakao) return
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: '엔빵 초대',
-        description: '이 링크로 엔빵에 참여하세요.',
-        imageUrl: 'https://example.com/image.png', // 공유할 이미지 URL
+        title: `${user?.name}님이 엔빵으로 초대했어요!`,
+        description: '링크를 클릭하고 엔빵 초대를 수락해보세요.',
+        imageUrl:
+          'https://whsygotpggvtadynqwmv.supabase.co/storage/v1/object/public/service-image//nbread-service-image-text.png',
         link: {
           mobileWebUrl: inviteLink, // 모바일 웹에서 열릴 URL
           webUrl: inviteLink, // 웹에서 열릴 URL
@@ -52,7 +59,9 @@ const NbreadInviteModal = ({
       ],
     })
   }
+
   const handleCopyLink = () => {
+    onClose()
     if (inviteLink) {
       // 클립보드에 링크 복사
       navigator.clipboard
@@ -80,7 +89,7 @@ const NbreadInviteModal = ({
         <div className="flex flex-col items-center gap-8 pb-12">
           <button
             onClick={handleCopyLink}
-            className="btn btn-medium text-heading06 bg-system-blue text-white"
+            className="btn btn-medium text-heading06 bg-system-blue01 hover:bg-system-blue02 text-white"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">
               <Icon type="copy" width={14} height={14} fill="text-white" />
@@ -90,7 +99,7 @@ const NbreadInviteModal = ({
           <button
             // TODO 카카오톡 공유하기 onClick 속성 수정 필요
             onClick={handleKakaoShare}
-            className="btn btn-medium text-heading06 bg-system-kakao"
+            className="btn btn-medium text-heading06 bg-system-kakao hover:bg-yellow-400"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">
               <div className="pt-4">
