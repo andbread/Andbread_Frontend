@@ -34,7 +34,7 @@ const InviteAcceptTitle = () => {
 
   return (
     <div>
-      <div className="mb-20 mt-111 text-heading02">
+      <div className="mb-20 mt-108 text-heading01">
         <span>{leaderName}</span>님이 당신을
         <br />
         <span className="text-secondary-100">{nbreadtitle}</span>으로 초대했어요
