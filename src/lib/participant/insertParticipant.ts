@@ -37,14 +37,14 @@ export const insertParticipant = async (
             isInsert: '참여',
             title: '엔빵 참여가 완료되었어요.',
             subTitle: '참여한 엔빵 정보를 바로 확인할 수 있어요.',
-            buttonTitle: '엔빵확인하러 가기',
+            buttonTitle: '엔빵 확인하러 가기',
           }
         }
         return {
-          isInsert: '이미참여',
-          title: '이미 참가 완료되어 있어요.',
+          isInsert: '이미 참여',
+          title: '이미 참여 중인 엔빵이에요.',
           subTitle: '참여한 엔빵 정보를 바로 확인할 수 있어요.',
-          buttonTitle: '엔빵확인하러 가기',
+          buttonTitle: '엔빵 확인하러 가기',
         }
       }
     }

@@ -40,7 +40,7 @@ const NbreadInviteModal = ({
       objectType: 'feed',
       content: {
         title: `${user?.name}님이 엔빵으로 초대했어요!`,
-        description: '링크를 클릭하고 엔빵 초대를 수락해보세요.',
+        description: '참여하기를 클릭해 초대를 수락해보세요.',
         imageUrl:
           'https://whsygotpggvtadynqwmv.supabase.co/storage/v1/object/public/service-image//nbread-service-image-text.png',
         link: {
@@ -67,7 +67,7 @@ const NbreadInviteModal = ({
       navigator.clipboard
         .writeText(inviteLink)
         .then(() => {
-          useToast.success('링크가 클립보드에 복사되었습니다.')
+          useToast.success('링크가 클립보드에 복사됐어요.')
         })
         .catch((error) => {
           console.error('클립보드 복사 실패:', error)
