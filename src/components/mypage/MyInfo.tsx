@@ -9,8 +9,9 @@ const MyInfo = () => {
   return (
     <div className="card">
       <div className="flex items-center gap-20 py-4">
-        <Avatar profileImageUrl={user?.profileImage} size="large" />
-
+        <div className="flex-shrink-0">
+          <Avatar profileImageUrl={user?.profileImage} size="large" />
+        </div>
         <div className="flex-shrink-0 justify-between">
           <p className="mb-4 text-heading04 text-gray-800">
             {user?.name || '이름 없음'}
