@@ -1,17 +1,71 @@
 import Modal from '@/components/common/modal/Modal'
 import Icon from '../icon/Icon'
-
+import { useEffect, useState } from 'react'
+import { createLink } from '@/lib/nbread/insertLink'
+import { useToast } from '../toast/Toast'
 interface NbreadInviteModalProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: () => void
+  nbreadId: string
 }
 
 const NbreadInviteModal = ({
   isOpen,
   onClose,
-  onSubmit,
+  nbreadId,
 }: NbreadInviteModalProps) => {
+  const [inviteLink, setInviteLink] = useState<string>()
+  useEffect(() => {
+    if (isOpen) {
+      setInviteLink(createLink(nbreadId))
+    }
+  }, [isOpen])
+  useEffect(() => {
+    if (isOpen && typeof window !== 'undefined' && window.Kakao) {
+      // 이미 초기화된 경우 초기화하지 않도록 처리
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_APP_KEY) // 'NEXT_PUBLIC_KAKAO_APP_KEY' 환경변수 사용
+      }
+    }
+  }, [isOpen])
+  const handleKakaoShare = () => {
+    if (!inviteLink || !window.Kakao) return
+    window.Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '엔빵 초대',
+        description: '이 링크로 엔빵에 참여하세요.',
+        imageUrl: 'https://example.com/image.png', // 공유할 이미지 URL
+        link: {
+          mobileWebUrl: inviteLink, // 모바일 웹에서 열릴 URL
+          webUrl: inviteLink, // 웹에서 열릴 URL
+        },
+      },
+      buttons: [
+        {
+          title: '참여하기',
+          link: {
+            mobileWebUrl: inviteLink,
+            webUrl: inviteLink,
+          },
+        },
+      ],
+    })
+  }
+  const handleCopyLink = () => {
+    if (inviteLink) {
+      // 클립보드에 링크 복사
+      navigator.clipboard
+        .writeText(inviteLink)
+        .then(() => {
+          useToast.success('링크가 클립보드에 복사되었습니다.')
+        })
+        .catch((error) => {
+          console.error('클립보드 복사 실패:', error)
+        })
+    }
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col items-center p-8">
@@ -25,8 +79,8 @@ const NbreadInviteModal = ({
         </div>
         <div className="flex flex-col items-center gap-8 pb-12">
           <button
-            onClick={onSubmit}
-            className="btn btn-medium text-heading06 bg-system-blue01 hover:bg-system-blue02 active:bg-system-blue02 text-white"
+            onClick={handleCopyLink}
+            className="btn btn-medium text-heading06 bg-system-blue text-white"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">
               <Icon type="copy" width={14} height={14} fill="text-white" />
@@ -35,8 +89,8 @@ const NbreadInviteModal = ({
           </button>
           <button
             // TODO 카카오톡 공유하기 onClick 속성 수정 필요
-            onClick={onSubmit}
-            className="btn btn-medium text-heading06 bg-system-kakao hover:bg-yellow-400"
+            onClick={handleKakaoShare}
+            className="btn btn-medium text-heading06 bg-system-kakao"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">
               <div className="pt-4">

@@ -47,6 +47,7 @@ const NbreadParticipantsList = ({
               <NbreadParticipantCard
                 key={index}
                 nbreadId={nbreadId}
+                participantId={participant.user.id}
                 currentPaymentDate={currentPaymentDate}
                 isNbreadLeader={participant.isLeader}
                 name={participant.user.name}
@@ -67,6 +68,7 @@ const NbreadParticipantsList = ({
               text="친구 초대는 엔빵 수정이 끝난 후에 가능해요."
               iconType="warning"
               size={10}
+              nbreadId={nbreadId}
               tailwindColor="text-gray-00"
             />
           </>
@@ -77,6 +79,7 @@ const NbreadParticipantsList = ({
               <NbreadParticipantCard
                 key={index}
                 nbreadId={nbreadId}
+                participantId={participants[index].user.id}
                 currentPaymentDate={currentPaymentDate}
                 isNbreadLeader={participants[index].isLeader}
                 name={participants[index].user.name}
@@ -96,6 +99,7 @@ const NbreadParticipantsList = ({
                 text="친구 추가하기"
                 iconType="plus"
                 size={10}
+                nbreadId={nbreadId}
                 tailwindColor="text-gray-00"
                 onClick={onClick}
               />

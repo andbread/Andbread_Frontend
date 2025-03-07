@@ -32,3 +32,33 @@ export const getParticipants = async (
 
   return participants
 }
+export const isGetParticipantsUser = async (
+  participant: Participant,
+  nbreadId: string,
+) => {
+  const { data, error } = await supabase
+    .from('participant')
+    .select('*')
+    .eq('nbread_id', nbreadId)
+    .eq('user_id', participant.user.id)
+    .maybeSingle()
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  return data
+}
+export const participantUsers = async (nbreadId: string) => {
+  const { data, error } = await supabase
+    .from('participant')
+    .select('*') // 'exact'를 사용하여 정확한 개수 반환
+    .eq('nbread_id', nbreadId)
+
+  if (error) {
+    console.error(error)
+    return
+  }
+  return data
+}
