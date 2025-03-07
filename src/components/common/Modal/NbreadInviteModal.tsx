@@ -6,14 +6,12 @@ import { useToast } from '../toast/Toast'
 interface NbreadInviteModalProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: () => void
   nbreadId: string
 }
 
 const NbreadInviteModal = ({
   isOpen,
   onClose,
-  onSubmit,
   nbreadId,
 }: NbreadInviteModalProps) => {
   const [inviteLink, setInviteLink] = useState<string>()
@@ -32,7 +30,6 @@ const NbreadInviteModal = ({
   }, [isOpen])
   const handleKakaoShare = () => {
     if (!inviteLink || !window.Kakao) return
-
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
@@ -63,7 +60,9 @@ const NbreadInviteModal = ({
         .then(() => {
           useToast.success('링크가 클립보드에 복사되었습니다.')
         })
-        .catch((error) => {})
+        .catch((error) => {
+          console.error('클립보드 복사 실패:', error)
+        })
     }
   }
 
@@ -89,6 +88,7 @@ const NbreadInviteModal = ({
             </div>
           </button>
           <button
+            // TODO 카카오톡 공유하기 onClick 속성 수정 필요
             onClick={handleKakaoShare}
             className="btn btn-medium text-heading06 bg-system-kakao"
           >

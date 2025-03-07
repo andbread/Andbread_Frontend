@@ -177,8 +177,6 @@ const Page = () => {
         <NbreadInviteModal
           isOpen={isNbreadInviteModalOpen}
           onClose={() => setIsNbreadInviteModalOpen(false)}
-          // TODO onSubmit 시 초대 링크 클립보드 복사 기능 구현 필요
-          onSubmit={() => console.log('친구 초대 링크 생성')}
           nbreadId={params.nbreadId as string}
         />
       </section>

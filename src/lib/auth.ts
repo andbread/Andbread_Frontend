@@ -21,13 +21,12 @@ export const login = async (provider: LoginProvider['provider']) => {
   if (error) {
     throw new Error(error.message)
   }
-  
+
   return data
 }
 
 export const logout = async (router: ReturnType<typeof useRouter>) => {
   const data = await supabase.auth.signOut()
-  console.log(data)
   useUserStore.getState().clearUser()
   sessionStorage.clear()
   setTimeout(() => {
@@ -39,12 +38,11 @@ export const logout = async (router: ReturnType<typeof useRouter>) => {
 
 export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
   const data = await supabase.auth.getUser()
-  console.log(data.data.user?.id)
   const user = data.data.user?.id
   if (!user) {
     throw new Error('유저정보를 찾을수 없음')
   }
-  await adminSupabase.auth.admin.deleteUser(user),supabase.auth.signOut
+  await adminSupabase.auth.admin.deleteUser(user), supabase.auth.signOut
   useUserStore.getState().clearUser()
   sessionStorage.removeItem('user-store')
   localStorage.clear()
@@ -53,34 +51,32 @@ export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
     router.replace('/login')
   }, 1000)
 }
-export const getUserName = async (leaderId:string) => {
+export const getUserName = async (leaderId: string) => {
   try {
-if(!leaderId){
-  return null;
-}
+    if (!leaderId) {
+      return null
+    }
     const { data, error } = await supabase
-    .from('user')
-    .select('name')
-    .eq('id', leaderId) 
-    .single();
+      .from('user')
+      .select('name')
+      .eq('id', leaderId)
+      .single()
     if (error) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
 
     // 데이터가 없으면 null 반환
     if (!data) {
-      return null;
+      return null
     }
 
     // 사용자 이름 반환
-    return data.name;
-  }   catch (error) {
-    
-    return null; // 에러 발생 시 null 반환
+    return data.name
+  } catch (error) {
+    return null // 에러 발생 시 null 반환
   }
-
 }
-export const getUser = async (accessToken : string) => {
-  const data = await supabase.auth.getUser(accessToken);
+export const getUser = async (accessToken: string) => {
+  const data = await supabase.auth.getUser(accessToken)
   return data
 }

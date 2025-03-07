@@ -84,7 +84,6 @@ const HomePage = () => {
                 inviteToast = '만료'
               }
             }
-            console.log('inviteToast : ', inviteToast)
             if (inviteToast === '성공') {
               useToast.success('엔빵 참여가 완료되었어요.')
             } else {
