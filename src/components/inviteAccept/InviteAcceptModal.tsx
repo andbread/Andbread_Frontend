@@ -44,8 +44,8 @@ const InviteAcceptModal = ({ isOpen, onClose }: InviteAcceptProps) => {
     if (!accessTokenData) {
       setInviteAcceptModalData(
         inviteAcceptData(
-          '먼저 로그인이 필요해요.',
-          '엔빵에 참여하려면 로그인을 해야 해요.',
+          '로그인이 필요해요.',
+          '엔빵에 참여하려면 로그인이 필요해요.',
           '로그인하러 가기',
         ),
       )
@@ -94,36 +94,42 @@ const InviteAcceptModal = ({ isOpen, onClose }: InviteAcceptProps) => {
   const handleLoginRedirect = () => {
     router.replace('/login')
   }
-  const handleCompleteRedirect = () => {
+
+  const handleHomeRedirect = () => {
     sessionStorage.removeItem('group_id')
     router.replace('/home')
   }
 
+  const handleNbreadRedirect = () => {
+    sessionStorage.removeItem('group_id')
+    router.replace(`/nbread/${groupId}`)
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col">
-        <div className="pl-15">
-          <p className="mb-10 text-heading05 text-gray-800">
+      <div className="flex w-full flex-col items-center p-12">
+        <div className="mb-24 flex w-full flex-col gap-8">
+          <p className="text-heading05 text-gray-800">
             {inviteAcceptModalData.title}
           </p>
-          <p className="mb-15 text-body02 text-gray-800">
+          <p className="text-body02 text-gray-800">
             {inviteAcceptModalData.subTitle}
           </p>
         </div>
+
+        <button
+          onClick={
+            inviteAcceptModalData.buttonTitle === '로그인하러 가기'
+              ? handleLoginRedirect
+              : inviteAcceptModalData.buttonTitle === '엔빵 확인하러 가기'
+                ? handleNbreadRedirect
+                : handleHomeRedirect
+          }
+          className="btn btn-medium btn-primary"
+        >
+          {inviteAcceptModalData.buttonTitle}
+        </button>
       </div>
-      <button
-        onClick={
-          inviteAcceptModalData.buttonTitle === '로그인하러 가기'
-            ? handleLoginRedirect
-            : inviteAcceptModalData.buttonTitle === '엔빵확인하러 가기' ||
-                '홈으로 가기'
-              ? handleCompleteRedirect
-              : onClose
-        }
-        className="text-lg m-16 h-[48px] w-[232px] rounded-md bg-[#FFAC39] p-12 font-semibold text-white"
-      >
-        {inviteAcceptModalData.buttonTitle}
-      </button>
     </Modal>
   )
 }

@@ -25,10 +25,10 @@ const Manage = ({ setAuthProgress }: ManageProps) => {
   }
 
   return (
-    <div className="card mt-4 p-24">
-      <ul className="py-2">
+    <div className="card p-28">
+      <ul>
         <li
-          className="cursor-pointer py-10 text-body02 text-gray-800"
+          className="mb-20 cursor-pointer text-body02 text-gray-800"
           onClick={() => setLogoutModalOpen(true)}
         >
           로그아웃
@@ -39,7 +39,7 @@ const Manage = ({ setAuthProgress }: ManageProps) => {
           onSubmit={handleLogout}
         />
         <li
-          className="cursor-pointer py-10 text-body02 text-gray-800"
+          className="cursor-pointer text-body02 text-gray-800"
           onClick={() => setDeleteAccountModalOpen(true)}
         >
           탈퇴하기

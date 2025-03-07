@@ -25,8 +25,10 @@ export default {
           300: '#FF8204',
         },
         system: {
-          red: '#FE5E4B',
-          blue: '#55CBEF',
+          red01: '#FE5E4B',
+          red02: '#F55441',
+          blue01: '#55CBEF',
+          blue02: '#46C2E8',
           yellow: '#FFEB00',
           green: '#57E45C',
           kakao: '#FEE500',

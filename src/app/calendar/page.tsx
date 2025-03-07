@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useMemo } from "react"
-import NbreadCard from "@/components/home/NbreadCard"
-import { getUserNbreads } from "@/lib/nbread/getUserNbread"
-import Calendar from "@/components/calendar/calendar"
-import DetailHeader from "@/components/common/header/detailHeader"
-import { Nbread } from "@/types/nbread"
+import { useState, useEffect, useMemo } from 'react'
+import NbreadCard from '@/components/home/NbreadCard'
+import { getUserNbreads } from '@/lib/nbread/getUserNbread'
+import Calendar from '@/components/calendar/calendar'
+import DetailHeader from '@/components/common/header/detailHeader'
+import { Nbread } from '@/types/nbread'
 
 interface CalendarPageProps {
-  nbreads: Nbread[];
+  nbreads: Nbread[]
 }
 const CalendarPage = ({}: CalendarPageProps) => {
   const [userId, setUserId] = useState<string | null>(null)
@@ -19,7 +19,7 @@ const CalendarPage = ({}: CalendarPageProps) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const userStore = sessionStorage.getItem("user-store")
+    const userStore = sessionStorage.getItem('user-store')
     if (userStore) {
       const userData = JSON.parse(userStore).state?.user
       if (userData?.id) {
@@ -36,25 +36,28 @@ const CalendarPage = ({}: CalendarPageProps) => {
         setNbreadList(nbreads)
         setLoading(false)
       } catch (error) {
-        console.error("🚨 엔빵 데이터 가져오기 실패:", error)
+        console.error('🚨 엔빵 데이터 가져오기 실패:', error)
         setLoading(false)
       }
-    };
+    }
     fetchNbreads()
   }, [userId])
-  
 
   // 날짜 필터링
   const filteredNbreadList = useMemo(() => {
     if (!selectedDate) return []
-  
+
     const filtered = nbreadList.filter((nbread) => {
-      const currentPaymentDate = nbread.currentPaymentDate ? new Date(nbread.currentPaymentDate) : null
-      const nextPaymentDate = nbread.paymentDate ? new Date(nbread.paymentDate) : null
-  
+      const currentPaymentDate = nbread.currentPaymentDate
+        ? new Date(nbread.currentPaymentDate)
+        : null
+      const nextPaymentDate = nbread.paymentDate
+        ? new Date(nbread.paymentDate)
+        : null
+
       // currentPaymentDate와 nextPaymentDate가 유효하지 않으면 필터링에서 제외
       if (!currentPaymentDate && !nextPaymentDate) return false
-  
+
       // selectedDate와 currentPaymentDate 또는 nextPaymentDate를 비교
       const isSameDate =
         (currentPaymentDate &&
@@ -64,17 +67,15 @@ const CalendarPage = ({}: CalendarPageProps) => {
         (nextPaymentDate &&
           nextPaymentDate.getDate() === selectedDate.getDate() &&
           nextPaymentDate.getMonth() === selectedDate.getMonth() &&
-          nextPaymentDate.getFullYear() === selectedDate.getFullYear());
-  
+          nextPaymentDate.getFullYear() === selectedDate.getFullYear())
+
       return isSameDate
-    });
-  
-    return filtered;
+    })
+
+    return filtered
   }, [nbreadList, selectedDate])
-  
-  
-  useEffect(() => {
-  }, [filteredNbreadList])
+
+  useEffect(() => {}, [filteredNbreadList])
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
@@ -86,7 +87,7 @@ const CalendarPage = ({}: CalendarPageProps) => {
 
   return (
     <main className="flex h-full flex-col">
-      <div className="bg-white pt-[24px] pl-[24px]">
+      <div className="bg-white pl-24 pt-24">
         <DetailHeader />
       </div>
       <Calendar
@@ -95,17 +96,19 @@ const CalendarPage = ({}: CalendarPageProps) => {
         userId={userId}
         onDateSelect={handleDateSelect}
       />
-      <div className="p-16">
+      <div className="mb-20 flex flex-col gap-8 px-24">
         {loading ? (
           <div />
+        ) : filteredNbreadList.length > 0 ? (
+          filteredNbreadList.map((nbread) => (
+            <NbreadCard
+              key={nbread.id}
+              nbread={nbread}
+              showParticipants={false}
+            />
+          ))
         ) : (
-          filteredNbreadList.length > 0 ? (
-            filteredNbreadList.map((nbread) => (
-              <NbreadCard key={nbread.id} nbread={nbread} showParticipants={false} />
-            ))
-          ) : (
-            <div />
-          )
+          <div />
         )}
       </div>
     </main>

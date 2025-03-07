@@ -1,26 +1,30 @@
-"use client";
+'use client'
 
-import Avatar from "../../components/common/avatar/avatar";
-import useUserStore from "@/stores/useAuthStore"; 
+import Avatar from '../../components/common/avatar/avatar'
+import useUserStore from '@/stores/useAuthStore'
 
 const MyInfo = () => {
-  const { user } = useUserStore(); 
+  const { user } = useUserStore()
 
   return (
-    <div className="card mt-12">
-      <div className="flex items-center justify-between px-6 py-4">
+    <div className="card">
+      <div className="flex items-center gap-20 py-4">
         <Avatar profileImageUrl={user?.profileImage} size="large" />
 
-        <div className="flex-shrink-0 justify-between mr-225 ml-12">
-          <p className="font-bold mb-5 text-heading05 text-gray-800">{user?.name || "이름 없음"}</p>
-          <p className="text-body04 text-gray-600 whitespace-nowrap">
-            {user?.socialType?.toUpperCase() || "소셜 로그인"} 계정
-            <span className="text-body04 text-gray-400 ml-12 mr-36 whitespace-nowrap">{user?.email || "이메일 없음"}</span>
+        <div className="flex-shrink-0 justify-between">
+          <p className="mb-4 text-heading04 text-gray-800">
+            {user?.name || '이름 없음'}
+          </p>
+          <p className="whitespace-nowrap text-body03 text-gray-600">
+            {user?.socialType?.toUpperCase() || '소셜 로그인'} 계정
+            <span className="ml-12 whitespace-nowrap text-body03 text-gray-400">
+              {user?.email || '이메일 없음'}
+            </span>
           </p>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MyInfo;
+export default MyInfo

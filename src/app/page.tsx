@@ -29,8 +29,8 @@ export default function Page() {
         <div className="bg-secondary-100 p-8 text-body03">secondary-100</div>
       </div>
       <div className="rows-1 flex">
-        <div className="bg-system-red p-8 text-body03">system-red</div>
-        <div className="bg-system-blue p-8 text-body03">system-blue</div>
+        <div className="bg-system-red01 p-8 text-body03">system-red</div>
+        <div className="bg-system-blue01 p-8 text-body03">system-blue</div>
         <div className="bg-system-yellow p-8 text-body03">system-yellow</div>
         <div className="bg-system-green p-8 text-body03">system-green</div>
       </div>

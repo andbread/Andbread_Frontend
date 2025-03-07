@@ -48,6 +48,7 @@ const HomePage = () => {
     )
     setTotalAmount(total)
   }, [nbreadList])
+
   const inviteAccept = () => {
     const fetchInviteData = async () => {
       const accessToken = sessionStorage.getItem('access_token')
@@ -78,19 +79,19 @@ const HomePage = () => {
             if (data?.isInsert === '참여') {
               inviteToast = '성공'
             } else {
-              if (data?.isInsert === '이미참여') {
-                inviteToast = '이미참여'
+              if (data?.isInsert === '이미 참여') {
+                inviteToast = '이미 참여'
               } else {
                 inviteToast = '만료'
               }
             }
             if (inviteToast === '성공') {
-              useToast.success('엔빵 참여가 완료되었어요.')
+              useToast.success('엔빵 참여가 완료됐어요.')
             } else {
-              if (inviteToast === '이미참여') {
-                useToast.error('이미 참여한 엔빵이네요.')
+              if (inviteToast === '이미 참여') {
+                useToast.error('이미 참여 중인 엔빵이에요.')
               } else {
-                useToast.error('엔빵 초대가 만료되었어요.')
+                useToast.error('엔빵 초대가 만료됐어요.')
               }
             }
           }
@@ -98,12 +99,14 @@ const HomePage = () => {
       }
     }
     fetchInviteData()
+
     setTimeout(() => {
       if (!user) return
       fetchNbreads(user.id)
       setModalOpen(false)
     }, 1000)
   }
+
   useEffect(() => {
     const groupId = sessionStorage.getItem('group_id')
     if (groupId) {
