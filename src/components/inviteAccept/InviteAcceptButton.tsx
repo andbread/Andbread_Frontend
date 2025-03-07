@@ -9,6 +9,7 @@ const InviteAcceptButton = () => {
     setModalOpen(false)
   }
   const handleHome = () => {
+    
     router.push('/home')
   }
   return (

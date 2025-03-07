@@ -1,10 +1,15 @@
+'use client'
 import Icon, { IconType } from '../icon/icon'
+
+import { useEffect, useState } from 'react'
+import { getNbread } from '@/lib/nbread'
 
 interface DashlineCardProps {
   text: string
   tailwindColor: string
   iconType: IconType
   size: number
+  nbreadId: string
   onClick?: () => void
 }
 
