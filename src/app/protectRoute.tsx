@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import LoginConfirmModal from '@/components/common/Modal/LoginConfirmModal'
 
-const publicRoutes = ['/login', '/auth/callback', 'inviteAccept']
+const publicRoutes = ['/login', '/auth/callback', '/inviteAccept']
 
 export default function ProtectRoute({
   children,
