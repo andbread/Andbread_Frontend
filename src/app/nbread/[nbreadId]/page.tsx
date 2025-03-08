@@ -71,7 +71,6 @@ const Page = () => {
     }
   }
 
-  // TODO 친구 초대하기 버튼 클릭 시 이벤트 핸들러 함수 작성 필요
   const handleClickInviteCard = () => {
     setIsNbreadInviteModalOpen(true)
   }
@@ -156,7 +155,7 @@ const Page = () => {
                 leaderId={nbread.leaderId!}
                 isEditing={isEditing}
                 paymentAmount={nbread.paymentAmount!}
-                onClick={() => handleClickInviteCard()}
+                onClickInvite={() => handleClickInviteCard()}
               />
             )}
           </>

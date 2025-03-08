@@ -14,7 +14,7 @@ interface NbreadParticipantsListProps {
   paymentAmount: number
   isEditing: boolean
   leaderId: string
-  onClick?: () => void
+  onClickInvite?: () => void
 }
 
 const NbreadParticipantsList = ({
@@ -26,7 +26,7 @@ const NbreadParticipantsList = ({
   paymentAmount,
   isEditing,
   leaderId,
-  onClick,
+  onClickInvite,
 }: NbreadParticipantsListProps) => {
   const userData = useUserStore((state) => state.user)
 
@@ -101,7 +101,7 @@ const NbreadParticipantsList = ({
                 size={10}
                 nbreadId={nbreadId}
                 tailwindColor="text-gray-00"
-                onClick={onClick}
+                onClick={onClickInvite}
               />
             ),
           )
