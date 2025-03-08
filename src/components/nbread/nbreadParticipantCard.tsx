@@ -72,13 +72,15 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
         />
       )}
       {props.hasDelete && (
-        <Icon
-          type="cross"
-          width={16}
-          height={16}
-          fill="text-gray-500"
-          onClick={props.onClickDelete}
-        />
+        <div className="cursor-pointer">
+          <Icon
+            type="cross"
+            width={16}
+            height={16}
+            fill="text-gray-500"
+            onClick={props.onClickDelete}
+          />
+        </div>
       )}
     </div>
   )
