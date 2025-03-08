@@ -18,7 +18,7 @@ const InvitationToNbreadModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col p-10">
-        <p className="mb-10 text-heading05 text-gray-800">
+        <p className="mb-10 text-heading04 text-gray-800">
           초대받은 엔빵이 있어요.
         </p>
         <div className="flex flex-col gap-4 text-body02 text-gray-800">
