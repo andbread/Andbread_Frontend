@@ -75,25 +75,26 @@ const Page = () => {
     setIsNbreadInviteModalOpen(true)
   }
 
+  // 엔빵 및 참여자 정보를 DB로부터 불러오는 함수
+  const fetchNbreadData = async () => {
+    const nbreadId = params.nbreadId as string
+
+    const [nbreadData, participants] = await Promise.all([
+      getNbread(nbreadId),
+      getParticipants(nbreadId),
+    ])
+
+    const paymentAmount =
+      Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
+
+    setNbread({ ...nbreadData, paymentAmount, participants })
+  }
+
   useEffect(() => {
     if (!params.nbreadId) {
       useToast.error('잘못된 URL 주소입니다. 다시 시도해주세요.')
       router.back()
       return
-    }
-
-    const fetchNbreadData = async () => {
-      const nbreadId = params.nbreadId as string
-
-      const [nbreadData, participants] = await Promise.all([
-        getNbread(nbreadId),
-        getParticipants(nbreadId),
-      ])
-
-      const paymentAmount =
-        Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
-
-      setNbread({ ...nbreadData, paymentAmount, participants })
     }
 
     fetchNbreadData()
@@ -156,6 +157,7 @@ const Page = () => {
                 isEditing={isEditing}
                 paymentAmount={nbread.paymentAmount!}
                 onClickInvite={() => handleClickInviteCard()}
+                updateParticipantData={() => fetchNbreadData()}
               />
             )}
           </>
