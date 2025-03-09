@@ -7,7 +7,7 @@ import NbreadCard from '@/components/nbread/nbreadCard'
 import NbreadEditCard from '@/components/nbread/nbreadEditCard'
 import NbreadParticipantsList from '@/components/nbread/nbreadParticipantsList'
 import { deleteNbread, getNbread, updateNbread } from '@/lib/nbread'
-import { getParticipants } from '@/lib/participant'
+import { deleteParticipants, getParticipants } from '@/lib/participant'
 import { Nbread, NbreadRecord } from '@/types/nbread'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -16,6 +16,8 @@ import NbreadDeleteModal from '@/components/common/modal/NbreadDeleteModal'
 import NbreadInviteModal from '@/components/common/modal/NbreadInviteModal'
 import { getNbreadRecords } from '@/lib/nbreadRecord'
 import useUserStore from '@/stores/useAuthStore'
+import QuitNbreadModal from '@/components/common/Modal/QuitNbreadModal'
+import Spinner from '@/components/common/spinner/Spinner'
 
 const Page = () => {
   const userData = useUserStore((state) => state.user)
@@ -23,9 +25,12 @@ const Page = () => {
   const [nbreadRecords, setNbreadRecords] = useState<NbreadRecord[] | null>(
     null,
   )
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isNbreadDeleteModalOpen, setIsNbreadDeleteModalOpen] =
     useState<boolean>(false)
   const [isNbreadInviteModalOpen, setIsNbreadInviteModalOpen] =
+    useState<boolean>(false)
+  const [isQuitNbreadModalOpen, setIsQuitNbreadModalOpen] =
     useState<boolean>(false)
 
   const params = useParams()
@@ -71,30 +76,40 @@ const Page = () => {
     }
   }
 
-  // TODO 친구 초대하기 버튼 클릭 시 이벤트 핸들러 함수 작성 필요
-  const handleClickInviteCard = () => {
-    setIsNbreadInviteModalOpen(true)
+  // 엔빵 및 참여자 정보를 DB로부터 불러오는 함수
+  const fetchNbreadData = async () => {
+    const nbreadId = params.nbreadId as string
+
+    const [nbreadData, participants] = await Promise.all([
+      getNbread(nbreadId),
+      getParticipants(nbreadId),
+    ])
+
+    const paymentAmount =
+      Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
+
+    setNbread({ ...nbreadData, paymentAmount, participants })
+  }
+
+  // 엔빵 탈퇴 처리 함수
+  const onSubmitQuitNbread = async () => {
+    try {
+      await deleteParticipants(userData?.id!, nbread!.id)
+      setIsQuitNbreadModalOpen(false)
+      useToast.success('엔빵 나가기에 성공했어요.')
+      router.replace('/home')
+    } catch (error) {
+      useToast.success('엔빵 나가기에 실패했어요.')
+    }
   }
 
   useEffect(() => {
+    setIsLoading(true)
+
     if (!params.nbreadId) {
       useToast.error('잘못된 URL 주소입니다. 다시 시도해주세요.')
       router.back()
       return
-    }
-
-    const fetchNbreadData = async () => {
-      const nbreadId = params.nbreadId as string
-
-      const [nbreadData, participants] = await Promise.all([
-        getNbread(nbreadId),
-        getParticipants(nbreadId),
-      ])
-
-      const paymentAmount =
-        Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
-
-      setNbread({ ...nbreadData, paymentAmount, participants })
     }
 
     fetchNbreadData()
@@ -114,6 +129,16 @@ const Page = () => {
       fetchNbreadRecordData()
     }
   }, [nbread])
+
+  useEffect(() => {
+    if (nbreadRecords) {
+      setIsLoading(false)
+    }
+  }, [nbreadRecords])
+
+  if (isLoading) {
+    return <Spinner isLoading={isLoading} />
+  }
 
   return (
     <main className="h-full-y-auto relative p-24">
@@ -156,7 +181,8 @@ const Page = () => {
                 leaderId={nbread.leaderId!}
                 isEditing={isEditing}
                 paymentAmount={nbread.paymentAmount!}
-                onClick={() => handleClickInviteCard()}
+                onClickInvite={() => setIsNbreadInviteModalOpen(true)}
+                updateParticipantData={() => fetchNbreadData()}
               />
             )}
           </>
@@ -169,6 +195,14 @@ const Page = () => {
             엔빵 삭제하기
           </button>
         )}
+        {userData?.id !== nbread?.leaderId && (
+          <button
+            className="btn btn-large btn-warning"
+            onClick={() => setIsQuitNbreadModalOpen(true)}
+          >
+            엔빵 나가기
+          </button>
+        )}
         <NbreadDeleteModal
           isOpen={isNbreadDeleteModalOpen}
           onClose={() => setIsNbreadDeleteModalOpen(false)}
@@ -178,6 +212,11 @@ const Page = () => {
           isOpen={isNbreadInviteModalOpen}
           onClose={() => setIsNbreadInviteModalOpen(false)}
           nbreadId={params.nbreadId as string}
+        />
+        <QuitNbreadModal
+          isOpen={isQuitNbreadModalOpen}
+          onClose={() => setIsQuitNbreadModalOpen(false)}
+          onSubmit={() => onSubmitQuitNbread()}
         />
       </section>
     </main>

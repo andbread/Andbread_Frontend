@@ -11,7 +11,7 @@ const LogoutModal = ({ isOpen, onClose, onSubmit }: LogoutModalProps) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col p-8">
         <div className="flex flex-col pl-8">
-          <h2 className="mb-10 text-heading05 font-semibold text-gray-800">
+          <h2 className="mb-10 text-heading04 font-semibold text-gray-800">
             로그아웃 하시겠어요?
           </h2>
           <p className="mb-30 text-body02 text-gray-600">

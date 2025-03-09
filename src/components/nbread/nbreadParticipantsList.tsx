@@ -4,6 +4,9 @@ import DashlineCard from '../common/card/dashlineCard'
 import useUserStore from '@/stores/useAuthStore'
 import { updateNbreadRecord } from '@/lib/nbreadRecord'
 import { useToast } from '../common/toast/Toast'
+import { deleteParticipants } from '@/lib/participant'
+import DeleteParticipantModal from '../common/Modal/DeleteParticipantModal'
+import { useState } from 'react'
 
 interface NbreadParticipantsListProps {
   nbreadId: string
@@ -14,7 +17,8 @@ interface NbreadParticipantsListProps {
   paymentAmount: number
   isEditing: boolean
   leaderId: string
-  onClick?: () => void
+  onClickInvite?: () => void
+  updateParticipantData: () => void
 }
 
 const NbreadParticipantsList = ({
@@ -26,9 +30,17 @@ const NbreadParticipantsList = ({
   paymentAmount,
   isEditing,
   leaderId,
-  onClick,
+  onClickInvite,
+  updateParticipantData,
 }: NbreadParticipantsListProps) => {
   const userData = useUserStore((state) => state.user)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [deleteParticipantUserId, setDeleteParticipantUserId] = useState<
+    string | null
+  >(null)
+  const [deleteParticipantName, setDeleteParticipantName] = useState<
+    string | null
+  >(null)
 
   const participantsWithNbreadRecord = participants.map((participant) => {
     const record = nbreadRecords.find(
@@ -36,6 +48,33 @@ const NbreadParticipantsList = ({
     )
     return { ...participant, isPaid: record ? record.isPaid : null }
   })
+
+  const onClickDeleteUser = async (userId: string, userName: string) => {
+    setDeleteParticipantUserId(userId)
+    setDeleteParticipantName(userName)
+    setIsModalOpen(true)
+  }
+
+  const onSubmitDeleteUser = async () => {
+    try {
+      if (deleteParticipantUserId && deleteParticipantName) {
+        const data = await deleteParticipants(
+          deleteParticipantUserId!,
+          nbreadId,
+        )
+        setIsModalOpen(false)
+        updateParticipantData()
+        useToast.success(`${deleteParticipantName}님을 엔빵에서 내보냈어요.`)
+      } else {
+        throw Error
+      }
+    } catch (error) {
+      setIsModalOpen(false)
+      useToast.error('멤버 삭제에 실패했어요.')
+    }
+    setDeleteParticipantUserId(null)
+    setDeleteParticipantName(null)
+  }
 
   return (
     <section>
@@ -60,8 +99,9 @@ const NbreadParticipantsList = ({
                   participant.user.id !== userData?.id
                 }
                 hasDelete={isEditing && participant.user.id !== userData?.id}
-                // TODO 친구초대 기능 구현 후 모달 구현
-                onClickDelete={() => console.log('엔빵 멤버 삭제 모달 오픈')}
+                onClickDelete={() =>
+                  onClickDeleteUser(participant.user.id, participant.user.name)
+                }
               />
             ))}
             <DashlineCard
@@ -101,12 +141,18 @@ const NbreadParticipantsList = ({
                 size={10}
                 nbreadId={nbreadId}
                 tailwindColor="text-gray-00"
-                onClick={onClick}
+                onClick={onClickInvite}
               />
             ),
           )
         )}
       </div>
+      <DeleteParticipantModal
+        isOpen={isModalOpen}
+        userName={deleteParticipantName!}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={() => onSubmitDeleteUser()}
+      />
     </section>
   )
 }
