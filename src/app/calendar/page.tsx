@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 import NbreadCard from '@/components/home/NbreadCard'
 import { getUserNbreads } from '@/lib/nbread/getUserNbread'
 import Calendar from '@/components/calendar/calendar'
-import DetailHeader from '@/components/common/header/detailHeader'
+import DetailHeader from '@/components/common/header/DetailHeader'
 import { Nbread } from '@/types/nbread'
 
 interface CalendarPageProps {

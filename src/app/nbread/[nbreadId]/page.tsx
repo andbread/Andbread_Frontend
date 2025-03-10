@@ -1,6 +1,6 @@
 'use client'
 
-import DetailHeader from '@/components/common/header/detailHeader'
+import DetailHeader from '@/components/common/header/DetailHeader'
 import Tab from '@/components/common/tab/tab'
 import { useToast } from '@/components/common/toast/Toast'
 import NbreadCard from '@/components/nbread/nbreadCard'
@@ -16,7 +16,7 @@ import NbreadDeleteModal from '@/components/common/modal/NbreadDeleteModal'
 import NbreadInviteModal from '@/components/common/modal/NbreadInviteModal'
 import { getNbreadRecords } from '@/lib/nbreadRecord'
 import useUserStore from '@/stores/useAuthStore'
-import QuitNbreadModal from '@/components/common/Modal/QuitNbreadModal'
+import QuitNbreadModal from '@/components/common/modal/QuitNbreadModal'
 import Spinner from '@/components/common/spinner/Spinner'
 
 const Page = () => {
