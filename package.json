@@ -10,20 +10,30 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.14",
+    "autoprefixer": "^10.4.20",
+    "classnames": "^2.5.1",
     "next": "15.1.4",
+    "nprogress": "^0.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.54.2",
+    "react-toastify": "^11.0.5",
+    "tailwindcss-preset-px-to-rem": "^1.2.1",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
+    "@types/nprogress": "^0.2.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.4",
     "eslint-config-prettier": "^10.0.1",
     "postcss": "^8",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

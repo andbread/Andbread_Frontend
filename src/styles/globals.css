@@ -1,46 +1,281 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* 기본 레이아웃 설정 */
+html {
+  @apply overflow-y-hidden;
 }
 
 html,
 body {
-  max-width: 600px;
-  min-width: 300px; 
-  margin: 0 auto;
-  box-shadow: rgba(100, 100, 111, 0.1) 0px 7px 29px 0px;
-  min-height: 100vh;
-  overflow-x: hidden;
+  @apply mx-auto h-[100svh] min-h-screen min-w-[320px] max-w-[600px] overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  @apply h-[100svh] bg-background font-pretendard text-gray-800 antialiased;
+}
+
+/* 기본 태그 스타일 초기화 및 커스터마이징 */
+
+input {
+  @apply w-full border-0 border-gray-200 bg-transparent p-4 text-gray-800 transition-all duration-200;
+  border-bottom: 1px solid theme('colors.gray.200');
+}
+
+input:focus {
+  outline: none;
+  border-bottom: 1.6px solid theme('colors.primary.500');
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  @apply hidden;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+input[type='checkbox'] {
+  display: none;
+}
+
+.checkbox_icon::before {
+  content: '';
+  display: block;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+  border: 1px solid theme('colors.secondary.200');
+  border-radius: 40px;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox_label input:checked + .checkbox_icon::before {
+  transition: all 0.15s ease;
+  background: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e")
+    theme('colors.secondary.200') no-repeat center;
+  border: none;
+}
+
+.checkbox_label input:disabled + .checkbox_icon::before {
+  background-color: theme('colors.gray.200');
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.checkbox_label input:checked:disabled + .checkbox_icon::before {
+  background: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e")
+    theme('colors.gray.200') no-repeat center;
+  border: none;
+  opacity: 0.6;
 }
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  @apply m-0 p-0;
+}
+
+select {
+  @apply w-full p-2;
+  outline: none;
+  border-bottom: 1px solid theme('colors.gray.200');
+}
+
+select:focus {
+  outline: none;
+  border-bottom: 1.6px solid theme('colors.primary.500');
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  @apply text-inherit no-underline;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* 커스텀 레이아웃 설정*/
+@layer base {
+  h1 {
+    @apply text-heading01;
   }
+  h2 {
+    @apply text-heading02;
+  }
+  h3 {
+    @apply text-heading03;
+  }
+  h4 {
+    @apply text-heading04;
+  }
+  h5 {
+    @apply text-heading05;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-8 bg-white p-20;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12); /* 직접 box-shadow 적용 */
+  }
+
+  .card .card-clickable {
+    @apply cursor-pointer transition-shadow duration-500 ease-in-out;
+  }
+
+  .card-clickable:hover {
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.16);
+  }
+  .card-clickable:active {
+    background-color: theme('colors.gray.50');
+  }
+
+  .card-dashline {
+    @apply h-64 cursor-pointer rounded-8 p-20 text-body01 text-gray-300;
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='8' ry='8' stroke='%23C9C9CAB0' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='22' stroke-linecap='square'/%3e%3c/svg%3e");
+  }
+
+  .btn {
+    @apply cursor-pointer rounded-8;
+  }
+
+  .btn-small {
+    @apply h-48 w-148 text-heading05;
+  }
+
+  .btn-medium {
+    @apply h-48 w-232 text-heading05;
+  }
+
+  .btn-large {
+    @apply h-56 w-full min-w-280 text-heading04;
+  }
+
+  /* 유형별 스타일 */
+  .btn-primary {
+    @apply bg-secondary-100 text-white hover:bg-primary-500 active:bg-secondary-200;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-300 text-gray-800 hover:bg-gray-200 active:bg-gray-400;
+  }
+
+  .btn-warning {
+    @apply bg-system-red01 hover:bg-system-red02 active:bg-system-red02 text-white;
+  }
+
+  .btn-disabled {
+    @apply bg-gray-300 text-gray-500;
+  }
+
+  .badge {
+    @apply shadow-avatar cursor-pointer rounded-40 px-8 py-4 transition-all duration-200;
+  }
+
+  .badge-small {
+    @apply text-body03;
+  }
+
+  .badge-large {
+    @apply text-body02;
+  }
+
+  .badge-selected {
+    @apply bg-primary-100 text-primary-500;
+  }
+
+  .badge-disabled {
+    @apply bg-gray-200 text-gray-400;
+  }
+}
+
+/* toast 스타일 커스텀 */
+.Toastify__toast-container {
+  @apply p-24;
+}
+
+.Toastify__toast {
+  @apply min-h-48 items-center rounded-4 px-20;
+}
+
+.Toastify__toast--success {
+  @apply bg-system-green font-pretendard text-heading05 text-white;
+}
+
+.Toastify__toast--error {
+  @apply bg-system-red01 font-pretendard text-heading05 text-white;
+}
+
+.Toastify__toast-icon {
+  @apply h-16 w-16;
+}
+
+.Toastify__toast-icon svg {
+  @apply h-16 w-16;
+  fill: white;
+}
+
+/* 프로그래스 바를 화면 중앙에 위치하도록 수정 */
+#nprogress .bar {
+  position: fixed;
+  top: 50%; /* 화면 중간에 배치 */
+  left: 50%;
+  transform: translate(-50%, -50%); /* 정확한 중앙 정렬 */
+  width: 50%; /* 프로그래스 바의 너비 */
+  height: 4px; /* 프로그래스 바의 높이 */
+  background: #ffac39; /* 바의 색상 */
+  z-index: 1031;
+}
+
+/* NProgress 기본 스피너 비활성화 */
+#nprogress .spinner {
+  display: none; /* 기본 스피너를 숨깁니다 */
+}
+
+/* 새로운 스피너를 화면 중앙에 배치 */
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border-top: 4px solid #ffac39;
+  border-right: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 스피너 애니메이션 */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 플로팅 효과 애니메이션 */
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.floating {
+  animation: floating 3s ease-in-out infinite;
 }
