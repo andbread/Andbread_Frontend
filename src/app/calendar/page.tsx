@@ -7,10 +7,7 @@ import Calendar from '@/components/calendar/calendar'
 import DetailHeader from '@/components/common/header/DetailHeader'
 import { Nbread } from '@/types/nbread'
 
-interface CalendarPageProps {
-  nbreads: Nbread[]
-}
-export default function CalendarPage({}: CalendarPageProps) {
+export default function CalendarPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [nbreadList, setNbreadList] = useState<Nbread[]>([])
 
