@@ -97,7 +97,7 @@ const InviteAcceptModal = ({ isOpen, onClose }: InviteAcceptProps) => {
 
   const handleHomeRedirect = () => {
     sessionStorage.removeItem('group_id')
-    router.replace('/home')
+    router.replace('/')
   }
 
   const handleNbreadRedirect = () => {

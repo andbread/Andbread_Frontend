@@ -1,97 +1,145 @@
-import Icon from '@/components/common/icon/Icon'
+'use client'
+import { useEffect, useState } from 'react'
+import { getUserNbreads } from '@/lib/nbread'
+import Header from '@/components/home/Header'
+import MonthlyNbread from '@/components/home/MonthlyNbread'
+import MyNbread from '@/components/home/MyNbread'
+import { Nbread } from '@/types/nbread'
+import useUserStore from '@/stores/useAuthStore'
+import { getParticipants } from '@/lib/participant'
+import Spinner from '@/components/common/spinner/Spinner'
+import InvitationToNbreadModal from '@/components/inviteAccept/InvitationToNbreadModal'
+import { getUser } from '@/lib/auth'
+import { insertParticipant } from '@/lib/participant'
+import { useToast } from '@/components/common/toast/Toast'
+const HomePage = () => {
+  const user = useUserStore((state) => state.user)
+  const [nbreadList, setNbreadList] = useState<Nbread[]>([])
+  const [totalAmount, setTotalAmount] = useState(0)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isModalOpen, setModalOpen] = useState<boolean>(false)
+  const [groupId, setGroupId] = useState<string>()
+  const currentMonth = new Date().getMonth() + 1
+  // Nbread 및 Participant 정보를 DB로부터 fetch
+  const fetchNbreads = async (userId: string) => {
+    const nbreads = await getUserNbreads(userId)
 
-export default function Page() {
+    const nbreadsWithParticipants = await Promise.all(
+      nbreads.map(async (nbread) => {
+        const participants = await getParticipants(nbread.id)
+        return { ...nbread, participants }
+      }),
+    )
+    setNbreadList(nbreadsWithParticipants)
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    if (!user) return
+    fetchNbreads(user.id)
+  }, [user])
+
+  // NbreadList가 업데이트된 후 totalAmount 계산
+  useEffect(() => {
+    const total = nbreadList.reduce(
+      (sum: number, nbread: Nbread) =>
+        sum + Math.floor(nbread.amount / Math.max(nbread.participantCount, 1)),
+      0,
+    )
+    setTotalAmount(total)
+  }, [nbreadList])
+
+  const inviteAccept = () => {
+    const fetchInviteData = async () => {
+      const accessToken = sessionStorage.getItem('access_token')
+      if (!accessToken) {
+      } else {
+        const data = await getUser(accessToken)
+
+        if (data.data.user) {
+          const provider = data.data.user.app_metadata.provider as
+            | 'kakao'
+            | 'google'
+
+          const userInfo = {
+            id: data.data.user.id,
+            email: data.data.user.email || '',
+            socialType: provider,
+            name: data.data.user.user_metadata.full_name || '',
+            profileImage: data.data.user.user_metadata.avatar_url || '',
+          }
+          const user = {
+            user: userInfo,
+            isLeader: false,
+          }
+          if (groupId) {
+            const data = await insertParticipant(user, groupId)
+            sessionStorage.removeItem('group_id')
+            let inviteToast = ''
+            if (data?.isInsert === '참여') {
+              inviteToast = '성공'
+            } else {
+              if (data?.isInsert === '이미 참여') {
+                inviteToast = '이미 참여'
+              } else {
+                inviteToast = '만료'
+              }
+            }
+            if (inviteToast === '성공') {
+              useToast.success('엔빵 참여가 완료됐어요.')
+            } else {
+              if (inviteToast === '이미 참여') {
+                useToast.error('이미 참여 중인 엔빵이에요.')
+              } else {
+                useToast.error('엔빵 초대가 만료됐어요.')
+              }
+            }
+          }
+        }
+      }
+    }
+    fetchInviteData()
+
+    setTimeout(() => {
+      if (!user) return
+      fetchNbreads(user.id)
+      setModalOpen(false)
+    }, 1000)
+  }
+
+  useEffect(() => {
+    const groupId = sessionStorage.getItem('group_id')
+    if (groupId) {
+      setGroupId(groupId)
+      setModalOpen(true)
+    }
+  }, [])
+
   return (
-    <div>
-      <h1>heading-01 24px</h1>
-      <h2>heading-02 20px</h2>
-      <h3>heading-03 18px</h3>
-      <h4>heading-04 16px</h4>
-      <h5>heading-05 14px</h5>
-      <hr className="my-24"></hr>
-      <p className="text-body01">body-01 16px</p>
-      <p className="text-body02">body-02 14px</p>
-      <p className="text-body03">body-03 12px</p>
-      <p className="text-body04">body-04 11px</p>
-      <p className="text-body05">body-05 10px</p>
-      <p className="text-body06">body-06 8px</p>
-      <hr className="my-24"></hr>
-      <div className="row-1 flex pb-12">
-        <div className="bg-primary-500 p-8 text-body03">primary-500</div>
-        <div className="bg-primary-400 p-8 text-body03">primary-400</div>
-        <div className="bg-primary-300 p-8 text-body03">primary-300</div>
-        <div className="bg-primary-200 p-8 text-body03">primary-200</div>
-        <div className="bg-primary-100 p-8 text-body03">primary-100</div>
-      </div>
-      <div className="rows-1 flex pb-12">
-        <div className="bg-secondary-300 p-8 text-body03">secondary-300</div>
-        <div className="bg-secondary-200 p-8 text-body03">secondary-200</div>
-        <div className="bg-secondary-100 p-8 text-body03">secondary-100</div>
-      </div>
-      <div className="rows-1 flex">
-        <div className="bg-system-red01 p-8 text-body03">system-red</div>
-        <div className="bg-system-blue01 p-8 text-body03">system-blue</div>
-        <div className="bg-system-yellow p-8 text-body03">system-yellow</div>
-        <div className="bg-system-green p-8 text-body03">system-green</div>
-      </div>
-      <hr className="my-24"></hr>
-      <div className="card">default card style</div>
-      <hr className="my-24"></hr>
-      <div className="columns-1 pb-24">
-        <button className="btn btn-large btn-primary">large primary</button>
-        <button className="btn btn-large btn-secondary">large secondary</button>
-        <button className="btn btn-large btn-warning">large warning</button>
-      </div>
-      <div className="columns-1 pb-24">
-        <button className="btn btn-medium btn-primary">medium primary</button>
-        <button className="btn btn-medium btn-secondary">
-          medium secondary
-        </button>
-      </div>
-      <div className="columns-1">
-        <button className="btn btn-small btn-primary">small primary</button>
-        <button className="btn btn-small btn-secondary">small secondary</button>
-      </div>
-      <hr className="my-24"></hr>
-      <div className="columns-12">
-        <Icon
-          type="angleLeft"
-          width={16}
-          height={16}
-          fill="text-gray-600"
-        ></Icon>
-        <Icon
-          type="angleRight"
-          width={16}
-          height={16}
-          fill="text-gray-600"
-        ></Icon>
-        <Icon type="badge" width={16} height={16} fill="text-gray-600"></Icon>
-        <Icon
-          type="calendar"
-          width={16}
-          height={16}
-          fill="text-gray-600"
-        ></Icon>
-        <Icon type="check" width={16} height={16} fill="text-gray-600"></Icon>
-        <Icon type="copy" width={16} height={16} fill="text-gray-600"></Icon>
-        <Icon type="crossFill" width={16} height={16}></Icon>
-        <Icon type="cross" width={16} height={16} fill="text-gray-600"></Icon>
-        <Icon
-          type="googleLogo"
-          width={16}
-          height={16}
-          fill="text-gray-600"
-        ></Icon>
-        <Icon
-          type="kakaoLogo"
-          width={16}
-          height={16}
-          fill="text-gray-600"
-        ></Icon>
-        <Icon type="plus" width={16} height={16} fill="text-gray-600"></Icon>
-        <Icon type="warning" width={16} height={16} fill="text-gray-600"></Icon>
-      </div>
+    <div className="flex flex-col justify-between p-24 pt-16">
+      <Header />
+      <main className="mt-24 p-4">
+        {isLoading ? (
+          <Spinner isLoading={isLoading} />
+        ) : (
+          <>
+            <MonthlyNbread
+              nbreadList={nbreadList}
+              totalAmount={totalAmount}
+              currentMonth={currentMonth}
+            />
+            <MyNbread nbreadList={nbreadList} />
+          </>
+        )}
+      </main>
+      {/* 초대 링크 페이지에서 로그인 필요문구를 받은 유저에게 보여지는 모달 */}
+      <InvitationToNbreadModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={inviteAccept}
+      />
     </div>
   )
 }
+
+export default HomePage

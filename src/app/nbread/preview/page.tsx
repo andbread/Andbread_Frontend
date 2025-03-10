@@ -50,7 +50,7 @@ const Page = () => {
         clearNbread()
         setPreviewNbreadData(null)
         useToast.success('엔빵 만들기에 성공했어요.')
-        router.push('/home')
+        router.push('/')
       } catch (error) {
         useToast.error('엔빵 만들기에 실패했어요. 다시 시도해주세요.')
         console.error(error)

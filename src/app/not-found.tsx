@@ -24,7 +24,7 @@ const Page = () => {
       <NbreadNotFound />
       <div
         className="mt-64 cursor-pointer text-body01 text-gray-700"
-        onClick={() => router.replace('/home')}
+        onClick={() => router.replace('/')}
       >
         홈으로 가기
       </div>

@@ -5,7 +5,7 @@ import useUserStore from '@/stores/useAuthStore'
 import { updateNbreadRecord } from '@/lib/nbreadRecord'
 import { useToast } from '../common/toast/Toast'
 import { deleteParticipants } from '@/lib/participant'
-import DeleteParticipantModal from '../common/Modal/DeleteParticipantModal'
+import DeleteParticipantModal from '../common/modal/DeleteParticipantModal'
 import { useState } from 'react'
 
 interface NbreadParticipantsListProps {
@@ -108,7 +108,6 @@ const NbreadParticipantsList = ({
               text="친구 초대는 엔빵 수정이 끝난 후에 가능해요."
               iconType="warning"
               size={10}
-              nbreadId={nbreadId}
               tailwindColor="text-gray-00"
             />
           </>
@@ -139,7 +138,6 @@ const NbreadParticipantsList = ({
                 text="친구 추가하기"
                 iconType="plus"
                 size={10}
-                nbreadId={nbreadId}
                 tailwindColor="text-gray-00"
                 onClick={onClickInvite}
               />
