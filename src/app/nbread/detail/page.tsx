@@ -1,6 +1,6 @@
 'use client'
 
-import DetailHeader from '@/components/common/header/detailHeader'
+import DetailHeader from '@/components/common/header/DetailHeader'
 import Tab from '@/components/common/tab/tab'
 import NbreadCard from '@/components/nbread/nbreadCard'
 import NbreadEditCard from '@/components/nbread/nbreadEditCard'

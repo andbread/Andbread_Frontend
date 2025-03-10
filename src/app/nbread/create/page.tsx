@@ -1,6 +1,6 @@
 'use client'
 
-import DetailHeader from '@/components/common/header/detailHeader'
+import DetailHeader from '@/components/common/header/DetailHeader'
 import NbreadEditCard from '@/components/nbread/nbreadEditCard'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
