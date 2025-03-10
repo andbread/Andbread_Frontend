@@ -7,14 +7,16 @@ html {
   @apply overflow-y-hidden;
 }
 
-html,
 body {
-  @apply mx-auto max-h-svh min-h-dvh min-w-[320px] max-w-[600px] overflow-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
+  @apply mx-auto max-h-svh min-h-dvh min-w-[320px] max-w-[600px] overflow-y-auto bg-background font-pretendard text-gray-800 antialiased shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
   /* @apply mx-auto h-[100svh] min-h-screen min-w-[320px] max-w-[600px] overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)]; */
 }
-
 body {
-  @apply max-h-svh min-h-dvh overflow-hidden overscroll-contain bg-background font-pretendard text-gray-800 antialiased;
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 /* 기본 태그 스타일 초기화 및 커스터마이징 */

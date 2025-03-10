@@ -4,7 +4,7 @@ import NbreadText from '@/assets/logo/nbread-text.svg'
 
 const LoginPage = () => {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-around">
+    <div className="flex h-svh w-full flex-col items-center justify-around">
       <div className="w-100% mt-80 flex flex-col items-center gap-16">
         <NbreadsImage />
         <NbreadText />
