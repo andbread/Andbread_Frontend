@@ -8,7 +8,7 @@ import { useRef, useState } from 'react'
 
 interface NbreadParticipantCardProps {
   nbreadId?: string
-  participantId: string
+  participantId?: string
   currentPaymentDate?: string
   profileImageUrl?: string | null
   isNbreadLeader: boolean
@@ -33,7 +33,7 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
     try {
       await updateNbreadRecord(
         props.nbreadId!,
-        props.participantId,
+        props.participantId!,
         !isChecked,
         props.currentPaymentDate!,
       )

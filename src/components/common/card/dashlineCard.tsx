@@ -9,7 +9,6 @@ interface DashlineCardProps {
   tailwindColor: string
   iconType: IconType
   size: number
-  nbreadId: string
   onClick?: () => void
 }
 
