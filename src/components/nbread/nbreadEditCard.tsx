@@ -75,6 +75,8 @@ const NbreadEditCard = ({
             required: '총 금액은 필수 입력 항목이에요.',
           })}
           type="number"
+          inputMode="decimal"
+          pattern="[0-9]*"
           className="text-heading02 text-secondary-200"
           placeholder="총 금액을 입력하세요"
         />

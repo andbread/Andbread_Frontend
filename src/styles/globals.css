@@ -9,11 +9,17 @@ html {
 
 html,
 body {
-  @apply mx-auto h-[100svh] min-h-screen min-w-[320px] max-w-[600px] overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
+  @apply mx-auto max-h-svh min-h-dvh min-w-[320px] max-w-[600px] overflow-y-auto overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
+  /* @apply mx-auto h-[100svh] min-h-screen min-w-[320px] max-w-[600px] overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)]; */
 }
 
 body {
-  @apply h-[100svh] bg-background font-pretendard text-gray-800 antialiased;
+  @apply max-h-svh min-h-dvh overscroll-none bg-background font-pretendard text-gray-800 antialiased;
+}
+
+main,
+div {
+  @apply overflow-hidden;
 }
 
 /* 기본 태그 스타일 초기화 및 커스터마이징 */
