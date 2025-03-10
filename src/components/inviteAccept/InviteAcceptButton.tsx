@@ -9,8 +9,7 @@ const InviteAcceptButton = () => {
     setModalOpen(false)
   }
   const handleHome = () => {
-    
-    router.push('/home')
+    router.push('/')
   }
   return (
     <div className="mb-64 flex flex-col">
