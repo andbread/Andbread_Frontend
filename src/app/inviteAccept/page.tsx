@@ -50,7 +50,7 @@ const InviteAcceptPage = () => {
   }
 
   return (
-    <div className="flex h-full flex-col justify-between px-24">
+    <div className="flex h-svh flex-col justify-between px-24">
       <div className="mb-20 mt-108 text-heading01">
         <span>{leaderName}</span>님이 당신을
         <br />
