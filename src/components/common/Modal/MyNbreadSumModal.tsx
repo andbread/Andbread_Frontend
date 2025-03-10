@@ -30,7 +30,7 @@ const MyNbreadSumModal = ({ isOpen, onClose }: MyNbreadSumModalProps) => {
       <p className="mt-24 text-center text-heading01 text-secondary-300">
         {totalAmount.toLocaleString()}원
       </p>
-      <button onClick={onClose} className="btn btn-primary btn-medium">
+      <button onClick={onClose} className="btn btn-primary btn-medium m-12">
         알겠어요
       </button>
     </Modal>
