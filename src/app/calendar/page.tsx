@@ -10,7 +10,7 @@ import { Nbread } from '@/types/nbread'
 interface CalendarPageProps {
   nbreads: Nbread[]
 }
-const CalendarPage = ({}: CalendarPageProps) => {
+export default function CalendarPage({}: CalendarPageProps) {
   const [userId, setUserId] = useState<string | null>(null)
   const [nbreadList, setNbreadList] = useState<Nbread[]>([])
 
@@ -114,5 +114,3 @@ const CalendarPage = ({}: CalendarPageProps) => {
     </main>
   )
 }
-
-export default CalendarPage
