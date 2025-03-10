@@ -108,7 +108,6 @@ const NbreadParticipantsList = ({
               text="친구 초대는 엔빵 수정이 끝난 후에 가능해요."
               iconType="warning"
               size={10}
-              nbreadId={nbreadId}
               tailwindColor="text-gray-00"
             />
           </>
@@ -139,7 +138,6 @@ const NbreadParticipantsList = ({
                 text="친구 추가하기"
                 iconType="plus"
                 size={10}
-                nbreadId={nbreadId}
                 tailwindColor="text-gray-00"
                 onClick={onClickInvite}
               />
