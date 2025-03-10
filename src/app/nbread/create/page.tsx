@@ -1,6 +1,6 @@
 'use client'
 
-import DetailHeader from '@/components/common/header/detailHeader'
+import DetailHeader from '@/components/common/header/DetailHeader'
 import NbreadEditCard from '@/components/nbread/nbreadEditCard'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -9,7 +9,7 @@ import classNames from 'classnames'
 import { useEffect, useState } from 'react'
 import useNbreadStore from '@/stores/useNbreadStore'
 import useUserStore from '@/stores/useAuthStore'
-import ExitEditConfirmModal from '@/components/common/Modal/ExitEditConfirmModal'
+import ExitEditConfirmModal from '@/components/common/modal/ExitEditConfirmModal'
 
 const Page = () => {
   const router = useRouter()

@@ -4,13 +4,10 @@ import { useState, useEffect, useMemo } from 'react'
 import NbreadCard from '@/components/home/NbreadCard'
 import { getUserNbreads } from '@/lib/nbread/getUserNbread'
 import Calendar from '@/components/calendar/calendar'
-import DetailHeader from '@/components/common/header/detailHeader'
+import DetailHeader from '@/components/common/header/DetailHeader'
 import { Nbread } from '@/types/nbread'
 
-interface CalendarPageProps {
-  nbreads: Nbread[]
-}
-const CalendarPage = ({}: CalendarPageProps) => {
+export default function CalendarPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [nbreadList, setNbreadList] = useState<Nbread[]>([])
 
@@ -114,5 +111,3 @@ const CalendarPage = ({}: CalendarPageProps) => {
     </main>
   )
 }
-
-export default CalendarPage

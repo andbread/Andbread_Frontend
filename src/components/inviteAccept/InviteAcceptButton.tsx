@@ -13,7 +13,7 @@ const InviteAcceptButton = () => {
   }
 
   const handleHome = () => {
-    router.push('/home')
+    router.push('/')
   }
 
   const handleLogin = () => {

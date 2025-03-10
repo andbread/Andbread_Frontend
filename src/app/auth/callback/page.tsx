@@ -42,7 +42,7 @@ const CallbackPage = () => {
           setTimeout(() => {
             setLoading(false)
             localStorage.clear()
-            router.replace('/home')
+            router.replace('/')
           }, 1000)
         }
       } catch (error) {

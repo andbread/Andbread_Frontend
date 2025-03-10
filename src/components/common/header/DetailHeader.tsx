@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import Icon from '../icon/icon'
+import Icon from '../icon/Icon'
 
 interface DetailHeaderProps {
   onClickBack?: () => void

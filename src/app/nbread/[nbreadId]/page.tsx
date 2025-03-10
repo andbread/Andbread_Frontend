@@ -1,6 +1,6 @@
 'use client'
 
-import DetailHeader from '@/components/common/header/detailHeader'
+import DetailHeader from '@/components/common/header/DetailHeader'
 import Tab from '@/components/common/tab/tab'
 import { useToast } from '@/components/common/toast/Toast'
 import NbreadCard from '@/components/nbread/nbreadCard'
@@ -16,7 +16,7 @@ import NbreadDeleteModal from '@/components/common/modal/NbreadDeleteModal'
 import NbreadInviteModal from '@/components/common/modal/NbreadInviteModal'
 import { getNbreadRecords } from '@/lib/nbreadRecord'
 import useUserStore from '@/stores/useAuthStore'
-import QuitNbreadModal from '@/components/common/Modal/QuitNbreadModal'
+import QuitNbreadModal from '@/components/common/modal/QuitNbreadModal'
 import Spinner from '@/components/common/spinner/Spinner'
 
 const Page = () => {
@@ -69,7 +69,7 @@ const Page = () => {
       await deleteNbread(nbreadId)
       setIsNbreadDeleteModalOpen(false)
       useToast.success('엔빵이 삭제되었어요.')
-      router.push('/home')
+      router.push('/')
     } catch (error) {
       console.error(error)
       useToast.error('엔빵 삭제에 실패했어요. 다시 시도해주세요.')
@@ -97,7 +97,7 @@ const Page = () => {
       await deleteParticipants(userData?.id!, nbread!.id)
       setIsQuitNbreadModalOpen(false)
       useToast.success('엔빵 나가기에 성공했어요.')
-      router.replace('/home')
+      router.replace('/')
     } catch (error) {
       useToast.success('엔빵 나가기에 실패했어요.')
     }
