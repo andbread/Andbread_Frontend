@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import LoginConfirmModal from '@/components/common/Modal/LoginConfirmModal'
+import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
 
 const publicRoutes = ['/login', '/auth/callback', '/inviteAccept']
 

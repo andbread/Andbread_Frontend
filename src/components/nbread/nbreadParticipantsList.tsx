@@ -5,7 +5,7 @@ import useUserStore from '@/stores/useAuthStore'
 import { updateNbreadRecord } from '@/lib/nbreadRecord'
 import { useToast } from '../common/toast/Toast'
 import { deleteParticipants } from '@/lib/participant'
-import DeleteParticipantModal from '../common/Modal/DeleteParticipantModal'
+import DeleteParticipantModal from '../common/modal/DeleteParticipantModal'
 import { useState } from 'react'
 
 interface NbreadParticipantsListProps {

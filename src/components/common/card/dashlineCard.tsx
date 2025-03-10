@@ -1,5 +1,5 @@
 'use client'
-import Icon, { IconType } from '../icon/icon'
+import Icon, { IconType } from '../icon/Icon'
 
 import { useEffect, useState } from 'react'
 import { getNbread } from '@/lib/nbread'
