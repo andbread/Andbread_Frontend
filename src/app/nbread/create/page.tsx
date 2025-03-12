@@ -67,7 +67,7 @@ const Page = () => {
         />
       </section>
       <button
-        className={classNames('btn btn-large mb-20', {
+        className={classNames('btn btn-large mb-20 mt-48', {
           'btn-disabled': !isValid,
           'btn-primary': isValid,
         })}
