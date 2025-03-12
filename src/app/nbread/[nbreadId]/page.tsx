@@ -141,7 +141,7 @@ const Page = () => {
   }
 
   return (
-    <main className="h-full-y-auto relative p-24">
+    <main className="h-full p-24">
       <section>
         <DetailHeader />
         {nbread && (
