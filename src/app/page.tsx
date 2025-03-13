@@ -40,8 +40,8 @@ const HomePage = () => {
       })
     )
 
-    setMonthlyNbreadList(monthlyNbreadsWithParticipants)
-    setMyNbreadList(myNbreadsWithParticipants)
+    setMonthlyNbreadList(monthlyNbreadsWithParticipants as Nbread[])
+    setMyNbreadList(myNbreadsWithParticipants as Nbread[])
     setIsLoading(false)
   }
 
