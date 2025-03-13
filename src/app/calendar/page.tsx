@@ -29,9 +29,14 @@ export default function CalendarPage() {
     if (!userId) return
     const fetchNbreads = async () => {
       try {
-        const nbreads = await getUserNbreads(userId)
-        setNbreadList(nbreads)
-        setLoading(false)
+        const { monthlyNbreads, myNbreads } = await getUserNbreads(userId)
+
+      const uniqueNbreadList = Array.from(
+        new Map([...monthlyNbreads, ...myNbreads].map((nbread) => [nbread.id, nbread])).values()
+      )
+
+      setNbreadList(uniqueNbreadList)
+      setLoading(false)
       } catch (error) {
         console.error('🚨 엔빵 데이터 가져오기 실패:', error)
         setLoading(false)
