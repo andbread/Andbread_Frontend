@@ -14,7 +14,8 @@ import { insertParticipant } from '@/lib/participant'
 import { useToast } from '@/components/common/toast/Toast'
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
-  const [nbreadList, setNbreadList] = useState<Nbread[]>([])
+  const [monthlyNbreadList, setMonthlyNbreadList] = useState<Nbread[]>([])
+  const [myNbreadList, setMyNbreadList] = useState<Nbread[]>([])
   const [totalAmount, setTotalAmount] = useState(0)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isModalOpen, setModalOpen] = useState<boolean>(false)
@@ -22,15 +23,25 @@ const HomePage = () => {
   const currentMonth = new Date().getMonth() + 1
   // Nbread 및 Participant 정보를 DB로부터 fetch
   const fetchNbreads = async (userId: string) => {
-    const nbreads = await getUserNbreads(userId)
+    const { monthlyNbreads, myNbreads } = await getUserNbreads(userId)
 
-    const nbreadsWithParticipants = await Promise.all(
-      nbreads.map(async (nbread) => {
+    // 참여자 정보 추가
+    const monthlyNbreadsWithParticipants = await Promise.all(
+      monthlyNbreads.map(async (nbread) => {
         const participants = await getParticipants(nbread.id)
         return { ...nbread, participants }
-      }),
+      })
     )
-    setNbreadList(nbreadsWithParticipants)
+
+    const myNbreadsWithParticipants = await Promise.all(
+      myNbreads.map(async (nbread) => {
+        const participants = await getParticipants(nbread.id)
+        return { ...nbread, participants }
+      })
+    )
+
+    setMonthlyNbreadList(monthlyNbreadsWithParticipants)
+    setMyNbreadList(myNbreadsWithParticipants)
     setIsLoading(false)
   }
 
@@ -41,13 +52,13 @@ const HomePage = () => {
 
   // NbreadList가 업데이트된 후 totalAmount 계산
   useEffect(() => {
-    const total = nbreadList.reduce(
+    const total = monthlyNbreadList.reduce(
       (sum: number, nbread: Nbread) =>
         sum + Math.floor(nbread.amount / Math.max(nbread.participantCount, 1)),
       0,
     )
     setTotalAmount(total)
-  }, [nbreadList])
+  }, [monthlyNbreadList])
 
   const inviteAccept = () => {
     const fetchInviteData = async () => {
@@ -124,11 +135,11 @@ const HomePage = () => {
         ) : (
           <>
             <MonthlyNbread
-              nbreadList={nbreadList}
+              nbreadList={monthlyNbreadList}
               totalAmount={totalAmount}
               currentMonth={currentMonth}
             />
-            <MyNbread nbreadList={nbreadList} />
+            <MyNbread nbreadList={myNbreadList} />
           </>
         )}
       </main>
