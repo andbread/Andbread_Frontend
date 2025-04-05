@@ -208,11 +208,12 @@ const Page = () => {
           onClose={() => setIsNbreadDeleteModalOpen(false)}
           onSubmit={() => handleDeleteNbread(nbread!.id)}
         />
-        <NbreadInviteModal
+        {/* 친구 초대 버튼 클릭시 초대 링크 공유 모달 임시 주석 처리 */}
+        {/* <NbreadInviteModal
           isOpen={isNbreadInviteModalOpen}
           onClose={() => setIsNbreadInviteModalOpen(false)}
           nbreadId={params.nbreadId as string}
-        />
+        /> */}
         <QuitNbreadModal
           isOpen={isQuitNbreadModalOpen}
           onClose={() => setIsQuitNbreadModalOpen(false)}
