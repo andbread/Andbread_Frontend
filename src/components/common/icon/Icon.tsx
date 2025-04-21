@@ -10,6 +10,7 @@ import GoogleLogo from '@/assets/icons/login-google.svg'
 import KakaoLogo from '@/assets/icons/login-kakao.svg'
 import Plus from '@/assets/icons/plus.svg'
 import Warning from '@/assets/icons/warning.svg'
+import Search from '@/assets/icons/search.svg'
 
 const iconMap = {
   angleLeft: AngleLeft,
@@ -24,6 +25,7 @@ const iconMap = {
   kakaoLogo: KakaoLogo,
   plus: Plus,
   warning: Warning,
+  search: Search
 } as const
 
 // iconMap의 key를 type으로 변경

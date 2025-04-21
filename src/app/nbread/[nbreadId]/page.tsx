@@ -18,6 +18,7 @@ import { getNbreadRecords } from '@/lib/nbreadRecord'
 import useUserStore from '@/stores/useAuthStore'
 import QuitNbreadModal from '@/components/common/modal/QuitNbreadModal'
 import Spinner from '@/components/common/spinner/Spinner'
+import InviteBottomSheet from '@/components/invite/InviteBottomSheet'
 
 const Page = () => {
   const userData = useUserStore((state) => state.user)
@@ -32,7 +33,7 @@ const Page = () => {
     useState<boolean>(false)
   const [isQuitNbreadModalOpen, setIsQuitNbreadModalOpen] =
     useState<boolean>(false)
-
+  const [isInviteBottomSheetOpen,setIsInviteBottomSheetOpen] = useState(false)
   const params = useParams()
   const router = useRouter()
 
@@ -181,7 +182,8 @@ const Page = () => {
                 leaderId={nbread.leaderId!}
                 isEditing={isEditing}
                 paymentAmount={nbread.paymentAmount!}
-                onClickInvite={() => setIsNbreadInviteModalOpen(true)}
+                // onClickInvite={() => setIsNbreadInviteModalOpen(true)}
+                onClickInvite={() => setIsInviteBottomSheetOpen(true)}
                 updateParticipantData={() => fetchNbreadData()}
               />
             )}
@@ -214,6 +216,9 @@ const Page = () => {
           onClose={() => setIsNbreadInviteModalOpen(false)}
           nbreadId={params.nbreadId as string}
         /> */}
+        <InviteBottomSheet 
+        isOpen={isInviteBottomSheetOpen}
+        onClose={() => setIsInviteBottomSheetOpen(false)}/>
         <QuitNbreadModal
           isOpen={isQuitNbreadModalOpen}
           onClose={() => setIsQuitNbreadModalOpen(false)}
