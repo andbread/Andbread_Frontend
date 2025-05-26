@@ -42,3 +42,7 @@ next-env.d.ts
 
 # github
 .github
+
+# pwa
+public/sw.js*
+public/workbox-*.js*

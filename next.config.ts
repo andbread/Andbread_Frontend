@@ -9,8 +9,18 @@ const nextConfig: NextConfig = {
     return config
   },
   images: {
-    domains: ["k.kakaocdn.net", "lh3.googleusercontent.com", "img1.kakaocdn.net", "t1.kakaocdn.net"],
+    domains: [
+      'k.kakaocdn.net',
+      'lh3.googleusercontent.com',
+      'img1.kakaocdn.net',
+      't1.kakaocdn.net',
+    ],
   },
 }
 
-export default nextConfig
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+})
+
+module.exports = withPWA(nextConfig)
