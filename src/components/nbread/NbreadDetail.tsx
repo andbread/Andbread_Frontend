@@ -142,9 +142,8 @@ const nbreadDetail = () => {
   }
 
   return (
-    <main className="h-full p-24">
+    <main className="h-full">
       <section>
-        <DetailHeader />
         {nbread && (
           <>
             <div className="flex flex-row items-center justify-between pb-12 pt-24">
