@@ -10,7 +10,7 @@ import { deleteNbread, getNbread, updateNbread } from '@/lib/nbread'
 import { deleteParticipants, getParticipants } from '@/lib/participant'
 import { Nbread, NbreadRecord } from '@/types/nbread'
 import { useRouter, useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import NbreadDeleteModal from '@/components/common/modal/NbreadDeleteModal'
 import NbreadInviteModal from '@/components/common/modal/NbreadInviteModal'
@@ -19,10 +19,14 @@ import useUserStore from '@/stores/useAuthStore'
 import QuitNbreadModal from '@/components/common/modal/QuitNbreadModal'
 import Spinner from '@/components/common/spinner/Spinner'
 import InviteBottomSheet from '@/components/invite/InviteBottomSheet'
-import PostBoard from '@/components/community/NbreadTabs'
-const nbreadDetail = () => {
+
+interface nbreadDetailProps {
+  nbreadData: Nbread
+  setNbreadData: Dispatch<SetStateAction<Nbread | null>>
+}
+
+const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
   const userData = useUserStore((state) => state.user)
-  const [nbread, setNbread] = useState<Nbread | null>(null)
   const [nbreadRecords, setNbreadRecords] = useState<NbreadRecord[] | null>(
     null,
   )
@@ -33,7 +37,7 @@ const nbreadDetail = () => {
     useState<boolean>(false)
   const [isQuitNbreadModalOpen, setIsQuitNbreadModalOpen] =
     useState<boolean>(false)
-  const [isInviteBottomSheetOpen,setIsInviteBottomSheetOpen] = useState(false)
+  const [isInviteBottomSheetOpen, setIsInviteBottomSheetOpen] = useState(false)
   const params = useParams()
   const router = useRouter()
 
@@ -49,10 +53,10 @@ const nbreadDetail = () => {
 
   // handleSubmit 콜백함수
   const onSubmit = async (editedNbreadData: Nbread) => {
-    if (nbread === editedNbreadData) return
+    if (nbreadData === editedNbreadData) return
 
     await updateNbread(editedNbreadData)
-    setNbread({ ...editedNbreadData })
+    setNbreadData({ ...editedNbreadData })
     useToast.success('엔빵 정보가 수정되었어요.')
   }
 
@@ -78,24 +82,24 @@ const nbreadDetail = () => {
   }
 
   // 엔빵 및 참여자 정보를 DB로부터 불러오는 함수
-  const fetchNbreadData = async () => {
+  const fetchNbreadParticipantData = async () => {
     const nbreadId = params.nbreadId as string
 
-    const [nbreadData, participants] = await Promise.all([
-      getNbread(nbreadId),
-      getParticipants(nbreadId),
-    ])
-
+    const participants = await getParticipants(nbreadId)
     const paymentAmount =
       Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
 
-    setNbread({ ...nbreadData, paymentAmount, participants })
+    setNbreadData({
+      ...nbreadData,
+      paymentAmount: paymentAmount,
+      participants: participants,
+    })
   }
 
   // 엔빵 탈퇴 처리 함수
   const onSubmitQuitNbread = async () => {
     try {
-      await deleteParticipants(userData?.id!, nbread!.id)
+      await deleteParticipants(userData?.id!, nbreadData!.id)
       setIsQuitNbreadModalOpen(false)
       useToast.success('엔빵 나가기에 성공했어요.')
       router.replace('/')
@@ -106,30 +110,25 @@ const nbreadDetail = () => {
 
   useEffect(() => {
     setIsLoading(true)
-
-    if (!params.nbreadId) {
-      useToast.error('잘못된 URL 주소입니다. 다시 시도해주세요.')
-      router.back()
-      return
-    }
-
-    fetchNbreadData()
+    fetchNbreadParticipantData()
   }, [])
 
   useEffect(() => {
     const fetchNbreadRecordData = async () => {
       const nbreadRecordsData = await getNbreadRecords(
-        nbread!.id,
-        nbread!.currentPaymentDate!,
+        nbreadData!.id,
+        nbreadData!.currentPaymentDate!,
       )
       setNbreadRecords(nbreadRecordsData)
     }
 
-    if (nbread) {
-      reset(nbread)
+    const paymentAmount =
+      Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
+    if (nbreadData) {
+      reset(nbreadData)
       fetchNbreadRecordData()
     }
-  }, [nbread])
+  }, [nbreadData])
 
   useEffect(() => {
     if (nbreadRecords) {
@@ -144,47 +143,36 @@ const nbreadDetail = () => {
   return (
     <main className="h-full">
       <section>
-        {nbread && (
+        {nbreadData && (
           <>
-            <div className="flex flex-row items-center justify-between pb-12 pt-24">
-              <h2 className="">
-                {isEditing ? '엔빵 수정하기' : nbread?.title}
-              </h2>
-              <div className="h-20">
-                {userData?.id === nbread.leaderId && (
-                  <Tab
-                    content={isEditing ? '저장하기' : '수정하기'}
-                    size="large"
-                    isClicked={isEditing}
-                    onClick={() => handleEditingNbread()}
-                  />
-                )}
-              </div>
-            </div>
-                <PostBoard/>
             {isEditing ? (
               <NbreadEditCard
                 register={register}
                 setValue={setValue}
                 getValues={getValues}
-                defaultNbreadValue={nbread}
+                defaultNbreadValue={nbreadData}
+                handleEditingNbread={handleEditingNbread}
               />
             ) : (
-              <NbreadCard nbreadData={nbread as Nbread} />
+              <NbreadCard
+                nbreadData={nbreadData as Nbread}
+                userData={userData}
+                handleEditingNbread={handleEditingNbread}
+              />
             )}
             {nbreadRecords && (
               <NbreadParticipantsList
-                nbreadId={nbread.id}
+                nbreadId={nbreadData.id}
                 nbreadRecords={nbreadRecords!}
-                currentPaymentDate={nbread.currentPaymentDate!}
-                participants={nbread.participants!}
-                participantMaxCount={nbread.participantCount}
-                leaderId={nbread.leaderId!}
+                currentPaymentDate={nbreadData.currentPaymentDate!}
+                participants={nbreadData.participants!}
+                participantMaxCount={nbreadData.participantCount}
+                leaderId={nbreadData.leaderId!}
                 isEditing={isEditing}
-                paymentAmount={nbread.paymentAmount!}
+                paymentAmount={nbreadData.paymentAmount!}
                 // onClickInvite={() => setIsNbreadInviteModalOpen(true)}
                 onClickInvite={() => setIsInviteBottomSheetOpen(true)}
-                updateParticipantData={() => fetchNbreadData()}
+                updateParticipantData={() => fetchNbreadParticipantData()}
               />
             )}
           </>
@@ -197,7 +185,7 @@ const nbreadDetail = () => {
             엔빵 삭제하기
           </button>
         )}
-        {userData?.id !== nbread?.leaderId && (
+        {userData?.id !== nbreadData?.leaderId && (
           <button
             className="btn btn-large btn-warning"
             onClick={() => setIsQuitNbreadModalOpen(true)}
@@ -208,7 +196,7 @@ const nbreadDetail = () => {
         <NbreadDeleteModal
           isOpen={isNbreadDeleteModalOpen}
           onClose={() => setIsNbreadDeleteModalOpen(false)}
-          onSubmit={() => handleDeleteNbread(nbread!.id)}
+          onSubmit={() => handleDeleteNbread(nbreadData!.id)}
         />
         {/* 친구 초대 버튼 클릭시 초대 링크 공유 모달 임시 주석 처리 */}
         {/* <NbreadInviteModal
@@ -216,9 +204,10 @@ const nbreadDetail = () => {
           onClose={() => setIsNbreadInviteModalOpen(false)}
           nbreadId={params.nbreadId as string}
         /> */}
-        <InviteBottomSheet 
-        isOpen={isInviteBottomSheetOpen}
-        onClose={() => setIsInviteBottomSheetOpen(false)}/>
+        <InviteBottomSheet
+          isOpen={isInviteBottomSheetOpen}
+          onClose={() => setIsInviteBottomSheetOpen(false)}
+        />
         <QuitNbreadModal
           isOpen={isQuitNbreadModalOpen}
           onClose={() => setIsQuitNbreadModalOpen(false)}

@@ -8,12 +8,14 @@ import {
   UseFormRegister,
   UseFormSetValue,
 } from 'react-hook-form'
+import Tab from '../common/tab/tab'
 
 interface NbreadEditCardProps {
   register: UseFormRegister<Nbread>
   setValue: UseFormSetValue<Nbread>
   getValues: UseFormGetValues<Nbread>
   defaultNbreadValue?: Nbread
+  handleEditingNbread: () => void
 }
 
 const NbreadEditCard = ({
@@ -21,6 +23,7 @@ const NbreadEditCard = ({
   setValue,
   getValues,
   defaultNbreadValue,
+  handleEditingNbread,
 }: NbreadEditCardProps) => {
   const [amount, setAmount] = useState<number | undefined>(
     defaultNbreadValue ? defaultNbreadValue.amount : 0,
@@ -68,18 +71,31 @@ const NbreadEditCard = ({
     <>
       <div className="card px-24 pb-32">
         {/* ------------ 총 금액 ------------ */}
-        <div className="pb-4 text-body03 text-gray-400">총 금액</div>
-        <input
-          {...register('amount', {
-            onChange: (event) => setAmount(Number(event?.target.value)),
-            required: '총 금액은 필수 입력 항목이에요.',
-          })}
-          type="number"
-          inputMode="decimal"
-          pattern="[0-9]*"
-          className="text-heading02 text-secondary-200"
-          placeholder="총 금액을 입력하세요"
-        />
+        <div className="flex flex-col">
+          <div className="flex flex-row justify-between">
+            <div className="pb-4 text-body03 text-gray-400">총 금액</div>
+            <div className="h-20">
+              <Tab
+                content={'저장하기'}
+                size="small"
+                isClicked={true}
+                onClick={() => handleEditingNbread()}
+                colorScheme="primary"
+              />
+            </div>
+          </div>
+          <input
+            {...register('amount', {
+              onChange: (event) => setAmount(Number(event?.target.value)),
+              required: '총 금액은 필수 입력 항목이에요.',
+            })}
+            type="number"
+            inputMode="decimal"
+            pattern="[0-9]*"
+            className="text-heading02 text-secondary-200"
+            placeholder="총 금액을 입력하세요"
+          />
+        </div>
         <div className="flex flex-col gap-16 pt-32">
           {/* ------------ 타이틀 ------------ */}
           <div className="flex flex-row items-center justify-between">
