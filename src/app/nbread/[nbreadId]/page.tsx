@@ -14,6 +14,7 @@ import useUserStore from '@/stores/useAuthStore'
 import Spinner from '@/components/common/spinner/Spinner'
 import Tabbar from '@/components/common/tabbar/tabbar'
 import ChatRoom from '@/components/chat/ChatRoom'
+import Community from '@/components/community/Community'
 
 const Page = () => {
   const [nbread, setNbread] = useState<Nbread | null>(null)
@@ -92,7 +93,7 @@ const Page = () => {
       case 0:
         return <NbreadDetail nbreadData={nbread} setNbreadData={setNbread} />
       case 1:
-        return <div>게시판 내용</div>
+        return <Community />
       case 2:
         return <ChatRoom />
     }
