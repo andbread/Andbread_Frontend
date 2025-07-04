@@ -9,12 +9,14 @@ import { useEffect, useState, useRef } from 'react'
 import useUserStore from '@/stores/useAuthStore'
 import { insertChatMessage } from '@/lib/chatMessage/insertChatMessage'
 import { supabase } from '@/lib/supabaseClient'
+import Spinner from '../common/spinner/Spinner'
 
-const Page = () => {
+const ChatRoom = () => {
   const params = useParams()
   const router = useRouter()
   const user = useUserStore((state) => state.user)
   const bottomRef = useRef<HTMLDivElement | null>(null)
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const [nbreadId, setNbreadId] = useState<string>('')
   const [inputText, setInputText] = useState<string>('')
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
@@ -25,7 +27,7 @@ const Page = () => {
     const data = await getChatMessages(nbreadId)
     const sortedData = data.sort(
       (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     )
     setChatMessages(sortedData)
     setHasFetched(true)
@@ -44,9 +46,23 @@ const Page = () => {
     }, 100)
   }
 
+  // useEffect(() => {
+  //   if (scrollState) {
+  //     bottomRef.current?.scrollIntoView({ block: 'end' })
+  //     setScrollState(false)
+  //   }
+  // }, [chatMessages])
+
+  const scrollToBottom = () => {
+    const container = scrollContainerRef.current
+    if (container) {
+      container.scrollTop = container.scrollHeight
+    }
+  }
+
   useEffect(() => {
     if (scrollState) {
-      bottomRef.current?.scrollIntoView({ block: 'end' })
+      scrollToBottom()
       setScrollState(false)
     }
   }, [chatMessages])
@@ -73,7 +89,7 @@ const Page = () => {
             createdAt: payload.new.created_at,
           }
           setChatMessages((prev) => [...prev, newChatMessage])
-        }
+        },
       )
       .subscribe()
 
@@ -126,19 +142,19 @@ const Page = () => {
   }
 
   if (!hasFetched) {
-    return <div>메시지 로딩 중</div>
+    return <Spinner isLoading={true} />
   }
 
   return (
-    <div className="flex h-screen flex-col justify-between p-24">
-      <div className="flex-1 overflow-y-auto">
+    <div ref={scrollContainerRef} className="mb-48 h-full w-full">
+      <div className="flex h-full w-full flex-col justify-between overflow-y-auto pb-48">
         {chatMessages.length === 0 ? (
           <div>아직 메시지가 없어요.</div>
         ) : (
           chatMessages.map((chatMessage, index) =>
             chatMessage.userId === user?.id ? (
               <div key={index} className="flex flex-row justify-end">
-                <div className="flex items-end text-body03 text-gray-400">
+                <div className="mb-4 flex items-end text-body03 text-gray-400">
                   {isLastInMinuteGroup(index) &&
                     new Date(chatMessage.createdAt).toLocaleString('ko-KR', {
                       timeZone: 'Asia/Seoul',
@@ -146,15 +162,16 @@ const Page = () => {
                       minute: '2-digit',
                     })}
                 </div>
-                <div className="ml-5 flex items-center rounded-[16px] border border-gray-100 bg-primary-500 px-20 py-16">
+                <div className="mb-4 ml-8 flex items-center rounded-16 border border-gray-100 bg-primary-500 px-16 py-12 text-body02">
                   {chatMessage.content}
                 </div>
               </div>
             ) : (
               <div key={index}>
                 {index === 0 ||
-                chatMessages[index - 1].userId !== chatMessages[index].userId ? (
-                  <div className="flex flex-row items-center justify-start gap-12">
+                chatMessages[index - 1].userId !==
+                  chatMessages[index].userId ? (
+                  <div className="mt-16 flex flex-row items-center justify-start gap-12">
                     <Avatar
                       size="small"
                       profileImageUrl={chatMessage.userProfileImage}
@@ -163,10 +180,10 @@ const Page = () => {
                   </div>
                 ) : null}
                 <div className="ml-32 flex flex-row">
-                  <div className="mr-5 rounded-[16px] border border-gray-100 bg-white px-20 py-16">
+                  <div className="shadow-avatar mb-4 mr-8 rounded-16 border-gray-100 bg-white px-16 py-12 text-body02">
                     {chatMessage.content}
                   </div>
-                  <div className="flex items-end text-body03 text-gray-400">
+                  <div className="mb-4 flex items-end text-body03 text-gray-400">
                     {isLastInMinuteGroup(index) &&
                       new Date(chatMessage.createdAt).toLocaleString('ko-KR', {
                         timeZone: 'Asia/Seoul',
@@ -176,27 +193,29 @@ const Page = () => {
                   </div>
                 </div>
               </div>
-            )
+            ),
           )
         )}
         <div ref={bottomRef}></div>
       </div>
 
-      <input
-        className="h-48 rounded-8 border bg-gray-200"
-        placeholder="메세지를 입력하세요"
-        type="text"
-        value={inputText}
-        onChange={(event) => setInputText(event.target.value)}
-        onKeyPress={(event) => {
-          if (event.key === 'Enter' && inputText.trim() !== '') {
-            sendChatMessages(inputText)
-            setInputText('')
-          }
-        }}
-      />
+      <div className="absolute bottom-0 left-0 h-80 w-full bg-gray-50">
+        <input
+          className="mx-20 h-48 w-[calc(100%-40px)] rounded-8 bg-gray-200 px-20"
+          placeholder="메세지를 입력하세요"
+          type="text"
+          value={inputText}
+          onChange={(event) => setInputText(event.target.value)}
+          onKeyPress={(event) => {
+            if (event.key === 'Enter' && inputText.trim() !== '') {
+              sendChatMessages(inputText)
+              setInputText('')
+            }
+          }}
+        />
+      </div>
     </div>
   )
 }
 
-export default Page
+export default ChatRoom

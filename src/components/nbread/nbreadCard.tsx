@@ -1,10 +1,18 @@
 import { Nbread } from '@/types/nbread'
+import { User } from '@/types/user'
+import Tab from '../common/tab/tab'
 
 interface NbreadCardProps {
   nbreadData: Nbread | null
+  userData: User | null
+  handleEditingNbread: () => void
 }
 
-const NbreadCard = ({ nbreadData }: NbreadCardProps) => {
+const NbreadCard = ({
+  nbreadData,
+  userData,
+  handleEditingNbread,
+}: NbreadCardProps) => {
   const paymentAmount =
     Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
 
@@ -13,10 +21,25 @@ const NbreadCard = ({ nbreadData }: NbreadCardProps) => {
       <div className="card min-h-200 px-24 pb-32">
         {nbreadData ? (
           <>
-            <div className="pb-4 text-body03 text-gray-600">총 금액</div>
-            <div className="text-heading01 text-secondary-200">
-              {Number(nbreadData.amount).toLocaleString()}원
-            </div>
+            <header className="flex flex-row justify-between">
+              <div className="flex flex-col">
+                <div className="pb-4 text-body03 text-gray-600">총 금액</div>
+                <div className="text-heading01 text-secondary-200">
+                  {Number(nbreadData.amount).toLocaleString()}원
+                </div>
+              </div>
+              <div className="h-20">
+                {userData?.id === nbreadData.leaderId && (
+                  <Tab
+                    content={'수정하기'}
+                    size="small"
+                    isClicked={false}
+                    onClick={() => handleEditingNbread()}
+                    colorScheme="primary"
+                  />
+                )}
+              </div>
+            </header>
             <hr className="mt-20 border-gray-100" />
             <div className="flex flex-col gap-16 pt-20">
               <div className="flex flex-row items-center justify-between">
