@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-interface BottomSheetProps {
+export interface BottomSheetProps {
   isOpen: boolean
   onClose: () => void
   children: React.ReactNode
@@ -52,19 +52,25 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     <>
       <div
         className={`fixed inset-0 z-40 transition duration-500 ease-in-out ${
-          isOpen ? 'bg-black bg-opacity-50' : 'pointer-events-none bg-black bg-opacity-0'
+          isOpen
+            ? 'cursor-default bg-black bg-opacity-50'
+            : 'pointer-events-none bg-black bg-opacity-0'
         }`}
-        onClick={onClose}
+        onClick={() => {
+          setTimeout(() => {
+            onClose()
+          }, 0)
+        }}
       >
         <div
           className={`fixed inset-0 z-50 flex flex-col items-center transition-transform duration-500 ease-in-out ${
-            isOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none'
+            isOpen ? 'translate-y-0' : 'pointer-events-none translate-y-full'
           }`}
-         
         >
           <div
             className="shadow-xl absolute bottom-0 mx-auto h-auto w-full max-w-[600px] rounded-t-2xl bg-white transition-transform duration-300 ease-out"
             style={{ transform: `translateY(${translateY}px)` }}
+            onClick={(e) => e.stopPropagation()}
           >
             {/* 드래그 핸들러 */}
             <div className="h-[40px] w-full">
@@ -77,8 +83,12 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
               />
             </div>
 
-            <div className="h-full overflow-y-auto"
-             onClick={(e) => e.stopPropagation()}>{children}</div>
+            <div
+              className="h-full overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {children}
+            </div>
           </div>
         </div>
       </div>

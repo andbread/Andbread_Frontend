@@ -142,7 +142,7 @@ const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
 
   return (
     <main className="h-full">
-      <section>
+      <section className="pb-40">
         {nbreadData && (
           <>
             {isEditing ? (
