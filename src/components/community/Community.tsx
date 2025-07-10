@@ -1,5 +1,6 @@
 import { Post } from '@/types/post'
 import PostCard from './PostCard'
+import CreatePostButton from './CreatePostButton'
 
 const dummyPosts: Post[] = [
   {
@@ -45,6 +46,7 @@ const Community = () => {
       {dummyPosts.map((post, index) => (
         <PostCard key={index} postData={post}></PostCard>
       ))}
+      <CreatePostButton />
     </div>
   )
 }
