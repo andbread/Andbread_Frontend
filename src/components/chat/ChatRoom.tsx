@@ -46,12 +46,12 @@ const ChatRoom = () => {
     }, 100)
   }
 
-  // useEffect(() => {
-  //   if (scrollState) {
-  //     bottomRef.current?.scrollIntoView({ block: 'end' })
-  //     setScrollState(false)
-  //   }
-  // }, [chatMessages])
+  useEffect(() => {
+    if (scrollState) {
+      bottomRef.current?.scrollIntoView({ block: 'end' })
+      setScrollState(false)
+    }
+  }, [chatMessages])
 
   const scrollToBottom = () => {
     const container = scrollContainerRef.current
@@ -146,8 +146,8 @@ const ChatRoom = () => {
   }
 
   return (
-    <div ref={scrollContainerRef} className="mb-48 h-full w-full">
-      <div className="flex h-full w-full flex-col justify-between overflow-y-auto pb-48">
+    <div ref={scrollContainerRef} className="w-full">
+      <div className="flex h-full w-full flex-col justify-between">
         {chatMessages.length === 0 ? (
           <div>아직 메시지가 없어요.</div>
         ) : (
@@ -171,7 +171,7 @@ const ChatRoom = () => {
                 {index === 0 ||
                 chatMessages[index - 1].userId !==
                   chatMessages[index].userId ? (
-                  <div className="mt-16 flex flex-row items-center justify-start gap-12">
+                  <div className="flex flex-row items-center justify-start gap-12">
                     <Avatar
                       size="small"
                       profileImageUrl={chatMessage.userProfileImage}
@@ -198,6 +198,8 @@ const ChatRoom = () => {
         )}
         <div ref={bottomRef}></div>
       </div>
+      {/* 채팅 메시지 하단 여백 추가 (input에 가려지지 않도록) */}
+      <div className="h-92" />
 
       <div className="absolute bottom-0 left-0 h-80 w-full bg-gray-50">
         <input

@@ -100,11 +100,11 @@ const Page = () => {
   }
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="jusfity-between flex h-screen w-full flex-col overflow-y-hidden">
       <div className="pl-24 pt-24">
         <DetailHeader />
       </div>
-      <div className="flex flex-col overflow-y-hidden px-24">
+      <div className="mb-16 flex flex-col px-24">
         <header>
           {nbread && (
             <div className="flex flex-row items-center justify-between pb-12 pt-24">
@@ -119,8 +119,9 @@ const Page = () => {
           onTabChange={setSelectedTab}
         />
       </div>
-      <div className="h-16" />
-      <div className="h-full w-full px-24 pt-4">{nbreadTabContent()}</div>
+      <div className="mt-4 h-full w-full overflow-y-auto px-24 pt-4">
+        {nbreadTabContent()}
+      </div>
     </div>
   )
 }
