@@ -91,16 +91,24 @@ const Page = () => {
   const nbreadTabContent = () => {
     switch (selectedTab) {
       case 0:
-        return <NbreadDetail nbreadData={nbread} setNbreadData={setNbread} />
+        return (
+          <div className="mt-4 h-full w-full overflow-y-auto px-24 pt-4">
+            <NbreadDetail nbreadData={nbread} setNbreadData={setNbread} />
+          </div>
+        )
       case 1:
-        return <Community />
+        return (
+          <div className="mt-4 h-full w-full overflow-y-auto px-24 pt-4">
+            <Community />
+          </div>
+        )
       case 2:
         return <ChatRoom />
     }
   }
 
   return (
-    <div className="jusfity-between flex h-screen w-full flex-col overflow-y-hidden">
+    <div className="jusfity-between relative flex h-screen w-full flex-col overflow-y-hidden">
       <div className="pl-24 pt-24">
         <DetailHeader />
       </div>
@@ -119,9 +127,8 @@ const Page = () => {
           onTabChange={setSelectedTab}
         />
       </div>
-      <div className="mt-4 h-full w-full overflow-y-auto px-24 pt-4">
-        {nbreadTabContent()}
-      </div>
+
+      {nbreadTabContent()}
     </div>
   )
 }

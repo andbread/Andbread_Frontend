@@ -146,8 +146,11 @@ const ChatRoom = () => {
   }
 
   return (
-    <div ref={scrollContainerRef} className="w-full">
-      <div className="flex h-full w-full flex-col justify-between">
+    <div
+      ref={scrollContainerRef}
+      className="mt-4 h-screen w-full overflow-y-auto px-24"
+    >
+      <div className="flex w-full flex-col justify-between">
         {chatMessages.length === 0 ? (
           <div>아직 메시지가 없어요.</div>
         ) : (
