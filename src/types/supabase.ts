@@ -7,8 +7,58 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: '12.2.3 (519615d)'
+  }
   public: {
     Tables: {
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          nbread_id: string
+          user_id: string | null
+          user_name: string
+          user_profile_image: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          nbread_id: string
+          user_id?: string | null
+          user_name: string
+          user_profile_image?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          nbread_id?: string
+          user_id?: string | null
+          user_name?: string
+          user_profile_image?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'chat_messages_nbread_id_fkey'
+            columns: ['nbread_id']
+            isOneToOne: false
+            referencedRelation: 'nbread'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'chat_messages_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'user'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       nbread: {
         Row: {
           amount: number
@@ -50,6 +100,7 @@ export type Database = {
       }
       nbread_records: {
         Row: {
+          created_at: string | null
           id: number
           is_paid: boolean
           nbread_id: string
@@ -57,6 +108,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          created_at?: string | null
           id?: number
           is_paid?: boolean
           nbread_id: string
@@ -64,6 +116,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          created_at?: string | null
           id?: number
           is_paid?: boolean
           nbread_id?: string
@@ -123,6 +176,38 @@ export type Database = {
           },
         ]
       }
+      post: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: number
+          profile_image: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: number
+          profile_image?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: number
+          profile_image?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'post_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'user'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       user: {
         Row: {
           email: string
@@ -130,6 +215,7 @@ export type Database = {
           name: string
           profile_image: string | null
           social_type: string
+          tag: string
         }
         Insert: {
           email: string
@@ -137,6 +223,7 @@ export type Database = {
           name: string
           profile_image?: string | null
           social_type: string
+          tag: string
         }
         Update: {
           email?: string
@@ -144,6 +231,7 @@ export type Database = {
           name?: string
           profile_image?: string | null
           social_type?: string
+          tag?: string
         }
         Relationships: []
       }
