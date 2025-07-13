@@ -92,7 +92,7 @@ const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
   return (
     <>
       <BottomSheet isOpen={isOpen} onClose={onClose}>
-        <div className="flex h-[60%] w-full flex-col px-[20px]">
+        <div className="flex h-[80vh] w-full flex-col px-[20px]">
           
           <div className="flex w-full items-center justify-start rounded-[8px] bg-gray-100 pr-[15px]">
             <textarea
