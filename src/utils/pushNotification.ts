@@ -15,7 +15,7 @@ export const sendPushNotification = (title: string, body: string) => {
     navigator.serviceWorker.ready.then((registration) => {
       registration.showNotification(title, {
         body,
-        icon: '/icons/favicon/favicon-16x16.png',
+        icon: '/pwa-icons/icon512_rounded.png',
       })
     })
   }
