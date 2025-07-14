@@ -15,7 +15,7 @@ interface NbreadEditCardProps {
   setValue: UseFormSetValue<Nbread>
   getValues: UseFormGetValues<Nbread>
   defaultNbreadValue?: Nbread
-  handleEditingNbread: () => void
+  handleEditingNbread?: () => void
 }
 
 const NbreadEditCard = ({
@@ -79,7 +79,7 @@ const NbreadEditCard = ({
                 content={'저장하기'}
                 size="small"
                 isClicked={true}
-                onClick={() => handleEditingNbread()}
+                onClick={() => handleEditingNbread!()}
                 colorScheme="primary"
               />
             </div>

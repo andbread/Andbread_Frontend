@@ -73,6 +73,7 @@ const InviteAcceptModal = ({ isOpen, onClose }: InviteAcceptProps) => {
           socialType: provider,
           name: data.data.user.user_metadata.full_name || '',
           profileImage: data.data.user.user_metadata.avatar_url || '',
+          tag: data.data.user.user_metadata.tag || '',
         }
         setUser(userInfo)
         const user = { user: userInfo, isLeader: false }
