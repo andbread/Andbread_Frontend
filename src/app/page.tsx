@@ -12,6 +12,11 @@ import InvitationToNbreadModal from '@/components/inviteAccept/InvitationToNbrea
 import { getUser } from '@/lib/auth'
 import { insertParticipant } from '@/lib/participant'
 import { useToast } from '@/components/common/toast/Toast'
+import {
+  requestNotificationPermission,
+  sendPushNotification,
+} from '@/utils/pushNotification'
+
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
   const [nbreadList, setNbreadList] = useState<Nbread[]>([])
@@ -37,6 +42,9 @@ const HomePage = () => {
   useEffect(() => {
     if (!user) return
     fetchNbreads(user.id)
+
+    requestNotificationPermission()
+    sendPushNotification('테스트 알림', '테스트 알림입니다.')
   }, [user])
 
   // NbreadList가 업데이트된 후 totalAmount 계산
@@ -67,6 +75,7 @@ const HomePage = () => {
             socialType: provider,
             name: data.data.user.user_metadata.full_name || '',
             profileImage: data.data.user.user_metadata.avatar_url || '',
+            tag: data.data.user.user_metadata.tag || '',
           }
           const user = {
             user: userInfo,
