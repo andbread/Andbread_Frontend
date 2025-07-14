@@ -36,6 +36,55 @@ const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
       name: '머스크',
       status: '초대 하기',
     },
+    {
+      id: 7,
+      avatar: 'https://example.com/avatar-1.png',
+      name: '머스크',
+      status: '초대 하기',
+    },
+    {
+      id: 8,
+      avatar: 'https://example.com/avatar-1.png',
+      name: '머스크',
+      status: '초대 하기',
+    },
+    {
+      id: 9,
+      avatar: 'https://example.com/avatar-1.png',
+      name: '머스크',
+      status: '초대 하기',
+    },
+    {
+      id: 10,
+      avatar: 'https://example.com/avatar-1.png',
+      name: '머스크',
+      status: '초대 하기',
+    },
+    {
+      id: 11,
+      avatar: 'https://example.com/avatar-1.png',
+      name: '머스크',
+      status: '초대 하기',
+    },
+    {
+      id: 12,
+      avatar: 'https://example.com/avatar-1.png',
+      name: '머스크',
+      status: '초대 하기',
+    },
+    {
+      id: 13,
+      avatar: 'https://example.com/avatar-1.png',
+      name: '머스크',
+      status: '초대 하기',
+    },
+    {
+      id: 14,
+      avatar: 'https://example.com/avatar-1.png',
+      name: '머스크',
+      status: '초대 하기',
+    },
+
   ]
 
    
@@ -43,7 +92,7 @@ const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
   return (
     <>
       <BottomSheet isOpen={isOpen} onClose={onClose}>
-        <div className="flex h-[700px] w-full flex-col px-[20px]">
+        <div className="flex h-[80vh] w-full flex-col px-[20px]">
           
           <div className="flex w-full items-center justify-start rounded-[8px] bg-gray-100 pr-[15px]">
             <textarea
@@ -66,7 +115,7 @@ const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
           <div className="h-[2px] w-full bg-gray-100" />
           <div className="flex flex-col pt-[30px] ">
             <p className="text-body03 text-gray-500 mb-[20px]">팔로잉</p>
-            <div className="flex flex-col overflow-y-auto max-h-[400px]">
+            <div className="flex flex-col  max-h-[400px]">
               {userFollowingData.map((user) => (
                 <InviteUserListItem
                   key={user.id}
