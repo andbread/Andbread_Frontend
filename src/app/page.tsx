@@ -45,8 +45,8 @@ const HomePage = () => {
     fetchNbreads(user.id)
 
     registerServiceWorker()
-    requestNotificationPermission()
-    sendTestPushNotification('테스트 알림', '테스트 알림입니다.')
+    requestNotificationPermission(user.id)
+    // sendTestPushNotification('테스트 알림', '테스트 알림입니다.')
   }, [user])
 
   // NbreadList가 업데이트된 후 totalAmount 계산
