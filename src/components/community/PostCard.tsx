@@ -3,7 +3,7 @@ import Avatar from '../common/avatar/avatar'
 import Icon from '../common/icon/Icon'
 import { useEffect, useState } from 'react'
 import UpdatePostBottomSheet from './UpdatePostBottomSheet'
-
+import DropdownMenu from './DropdownMenu'
 interface PostCardProps {
   postData: Post
 }
@@ -11,8 +11,10 @@ interface PostCardProps {
 const PostCard = ({ postData }: PostCardProps) => {
   const [isUpdatePostBottomSheetOpen, setIsUpdatePostBottomSheetOpen] =
     useState<boolean>(false)
+  const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState<boolean>(false)
 
   return (
+    
     <div className="card flex w-full flex-col gap-20">
       <div className="flex w-full flex-row justify-between">
         <div className="flex flex-row items-start gap-8">
@@ -24,12 +26,13 @@ const PostCard = ({ postData }: PostCardProps) => {
             </div>
           </div>
         </div>
-        <div className="cursor-pointer">
+        <div className="cursor-pointer"
+        onClick={() =>{console.log(isDropdownMenuOpen); setIsDropdownMenuOpen(true)}}>
           <Icon type="menuDots" width={20} height={20} />
         </div>
       </div>
       <div className="text-paragraph">{postData.content}</div>
-
+      
       {/* 바텀시트 */}
       <UpdatePostBottomSheet
         isOpen={isUpdatePostBottomSheetOpen}
@@ -38,6 +41,9 @@ const PostCard = ({ postData }: PostCardProps) => {
         }}
         postData={postData}
       />
+      <DropdownMenu
+      isOpen={isDropdownMenuOpen}
+      onClose={() => {setIsDropdownMenuOpen(false)}}/>
     </div>
   )
 }
