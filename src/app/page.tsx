@@ -12,11 +12,11 @@ import InvitationToNbreadModal from '@/components/inviteAccept/InvitationToNbrea
 import { getUser } from '@/lib/auth'
 import { insertParticipant } from '@/lib/participant'
 import { useToast } from '@/components/common/toast/Toast'
-import {
-  requestNotificationPermission,
-  sendTestPushNotification,
-} from '@/utils/pushNotification'
+import { requestNotificationPermission } from '@/utils/requestNotificationPermission'
 import { registerServiceWorker } from '@/utils/registerServiceWorker'
+import { testSendPaymentNotification } from '@/utils/testSendPaymentNotification'
+import { supabase } from '@/lib/supabaseClient'
+import { getFCMDeviceToken } from '@/utils/firebase/getFCMDeviceToken'
 
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
@@ -26,6 +26,7 @@ const HomePage = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false)
   const [groupId, setGroupId] = useState<string>()
   const currentMonth = new Date().getMonth() + 1
+
   // Nbread 및 Participant 정보를 DB로부터 fetch
   const fetchNbreads = async (userId: string) => {
     const nbreads = await getUserNbreads(userId)
@@ -44,9 +45,9 @@ const HomePage = () => {
     if (!user) return
     fetchNbreads(user.id)
 
-    registerServiceWorker()
     requestNotificationPermission(user.id)
-    // sendTestPushNotification('테스트 알림', '테스트 알림입니다.')
+    // testSendPaymentNotification()
+    // test()
   }, [user])
 
   // NbreadList가 업데이트된 후 totalAmount 계산
