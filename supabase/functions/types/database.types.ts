@@ -374,3 +374,5 @@ export type NbreadRecordsRow =
   Database['public']['Tables']['nbread_records']['Row']
 export type NotificationRow =
   Database['public']['Tables']['notification']['Row']
+export type ChatMessageRow =
+  Database['public']['Tables']['chat_messages']['Row']
