@@ -1,0 +1,25 @@
+export interface Notification {
+  user_id: string
+  title: string
+  message: string
+  url: string
+  is_read: boolean
+  type: 'payment' | 'invite' | 'invite_accept' | 'follow'
+}
+
+export type TableRecord<T> = T
+
+export type InsertPayload<T> = {
+  type: 'INSERT'
+  table: string
+  schema: string
+  record: TableRecord<T>
+  old_record: null
+}
+export type UpdatePayload<T> = {
+  type: 'UPDATE'
+  table: string
+  schema: string
+  record: TableRecord<T>
+  old_record: TableRecord<T>
+}
