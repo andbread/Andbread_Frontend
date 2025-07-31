@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getMessaging } from 'firebase/messaging'
+import { getMessaging, isSupported } from 'firebase/messaging'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -11,12 +11,30 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
-const app = initializeApp(firebaseConfig)
-let messaging: ReturnType<typeof getMessaging> | null = null
+const setupMessaging = async () => {
+  const supported = await isSupported()
+  if (!supported) {
+    console.warn('Firebase Messaging is not supported in this browser.')
+    return null
+  }
 
-// 브라우저 환경에서만 messaging 초기화
-if (typeof window !== 'undefined') {
-  messaging = getMessaging(app)
+  const messaging = getMessaging()
+  return messaging
 }
 
-export { app, messaging }
+const app = initializeApp(firebaseConfig)
+
+// messaging을 외부에서 초기화하게 export
+const initMessaging = async () => {
+  if (typeof window === 'undefined') return null
+
+  const supported = await isSupported()
+  if (!supported) {
+    console.warn('Firebase Messaging is not supported in this browser.')
+    return null
+  }
+
+  return getMessaging()
+}
+
+export { app, initMessaging }
