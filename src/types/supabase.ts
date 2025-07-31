@@ -59,6 +59,35 @@ export type Database = {
           },
         ]
       }
+      fcm_token: {
+        Row: {
+          created_at: string
+          fcm_token: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          fcm_token: string
+          id?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          fcm_token?: string
+          id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'push_subscription_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'user'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       nbread: {
         Row: {
           amount: number
@@ -98,6 +127,45 @@ export type Database = {
         }
         Relationships: []
       }
+      nbread_invite: {
+        Row: {
+          created_at: string
+          id: string
+          invited_user_id: string
+          nbread_id: string
+          state: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invited_user_id: string
+          nbread_id: string
+          state: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invited_user_id?: string
+          nbread_id?: string
+          state?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'nbread_invite_invited_user_id_fkey'
+            columns: ['invited_user_id']
+            isOneToOne: false
+            referencedRelation: 'user'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'nbread_invite_nbread_id_fkey'
+            columns: ['nbread_id']
+            isOneToOne: false
+            referencedRelation: 'nbread'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       nbread_records: {
         Row: {
           created_at: string | null
@@ -133,6 +201,47 @@ export type Database = {
           },
           {
             foreignKeyName: 'nbread_records_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'user'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      notification: {
+        Row: {
+          created_at: string
+          id: number
+          is_read: boolean
+          message: string
+          title: string
+          type: string
+          url: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          is_read: boolean
+          message: string
+          title: string
+          type: string
+          url: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          is_read?: boolean
+          message?: string
+          title?: string
+          type?: string
+          url?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'notification_user_id_fkey'
             columns: ['user_id']
             isOneToOne: false
             referencedRelation: 'user'
@@ -263,3 +372,5 @@ export type ParticipantRow = Database['public']['Tables']['participant']['Row']
 export type NbreadRow = Database['public']['Tables']['nbread']['Row']
 export type NbreadRecordsRow =
   Database['public']['Tables']['nbread_records']['Row']
+export type NotificationRow =
+  Database['public']['Tables']['notification']['Row']
