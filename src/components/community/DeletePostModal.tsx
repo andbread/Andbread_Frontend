@@ -1,14 +1,27 @@
 import Modal from '../common/modal/Modal'
+import { deletePost } from '@/lib/\bpost/deletePost'
+import { useToast } from '../common/toast/Toast'
 interface DeletePostModalProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: () => void
+  postId: number
+  onSuccess: () => void
 }
 const DeletePostModal = ({
   isOpen,
   onClose,
   onSubmit,
+  postId,
+  onSuccess,
 }: DeletePostModalProps) => {
+    const handleDeletePost = async () =>{
+        console.log(postId)
+        await deletePost(postId)
+        onClose();
+        onSuccess?.()
+        useToast.success("게시글을 삭제했어요.")
+    }
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
          <div className="flex flex-col items-start p-8">
@@ -28,7 +41,7 @@ const DeletePostModal = ({
             취소하기
           </button>
           <button
-            onClick={onSubmit}
+            onClick={handleDeletePost}
             className="btn btn-small btn-warning text-heading06"
           >
             삭제하기

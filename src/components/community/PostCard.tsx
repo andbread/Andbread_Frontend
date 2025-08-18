@@ -8,15 +8,16 @@ import DeletePostModal from './DeletePostModal'
 import { useRef } from 'react'
 interface PostCardProps {
   postData: Post
+  onSuccess: () => void
 }
 
-const PostCard = ({ postData }: PostCardProps) => {
+const PostCard = ({ postData,onSuccess }: PostCardProps) => {
   const [isUpdatePostBottomSheetOpen, setIsUpdatePostBottomSheetOpen] =
     useState<boolean>(false)
   const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 })
-
+  const [postState, setPostState] = useState('')
   const dotsButtonRef = useRef<HTMLDivElement | null>(null)
    const handleDotsClick = () => {
     if (dotsButtonRef.current) {
@@ -55,15 +56,19 @@ const PostCard = ({ postData }: PostCardProps) => {
           setIsUpdatePostBottomSheetOpen(false)
         }}
         postData={postData}
+        onSuccess={onSuccess}
+        postState={postState}
       />
       <DropdownMenu
       top={dropdownPosition.top}
         left={dropdownPosition.left}
-      onUpdate={() => {setIsUpdatePostBottomSheetOpen(true),setIsDropdownMenuOpen(false)}}
+      onUpdate={() => {setIsUpdatePostBottomSheetOpen(true),setIsDropdownMenuOpen(false),setPostState('update')}}
       onDelete={() => {setIsDropdownMenuOpen(false),setIsDeleteModalOpen(true)}}
       isOpen={isDropdownMenuOpen}
       onClose={() => {setIsDropdownMenuOpen(false)}}/>
       <DeletePostModal
+      postId={postData.id}
+       onSuccess={onSuccess}
       isOpen={isDeleteModalOpen}
       onClose={() => {setIsDeleteModalOpen(false)}}
       onSubmit={() => {setIsDeleteModalOpen(false)}}/>
