@@ -12,7 +12,7 @@ import Plus from '@/assets/icons/plus.svg'
 import Warning from '@/assets/icons/warning.svg'
 import Search from '@/assets/icons/search.svg'
 import MenuDots from '@/assets/icons/menu-dots.svg'
-
+import Profile from '@/assets/icons/profile.svg'
 const iconMap = {
   angleLeft: AngleLeft,
   angleRight: AngleRight,
@@ -28,6 +28,7 @@ const iconMap = {
   warning: Warning,
   search: Search,
   menuDots: MenuDots,
+  profile: Profile,
 } as const
 
 // iconMap의 key를 type으로 변경
