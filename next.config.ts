@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     })
     return config
   },
+
   images: {
     domains: [
       'k.kakaocdn.net',
@@ -18,16 +19,5 @@ const nextConfig: NextConfig = {
     ],
   },
 }
-
-// const withPWA = require('next-pwa')({
-//   dest: 'public',
-//   disable: process.env.NODE_ENV === 'development',
-//   register: true,
-//   scope: '/',
-//   sw: 'sw.js',
-//   customWorkerDir: 'src/worker',
-// })
-
-// module.exports = withPWA(nextConfig)
 
 export default nextConfig

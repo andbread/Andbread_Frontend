@@ -2,6 +2,8 @@ import { getToken } from 'firebase/messaging'
 import { initMessaging } from './initFirebase'
 import { upsertFcmToken } from '@/lib/fcmToken/upsertFcmToken'
 
+// TODO getToken 요청 실패 시 최대 3회까지 재시도하도록 수정
+
 export async function getFCMDeviceToken(
   userId: string,
   registration: ServiceWorkerRegistration,
@@ -12,10 +14,7 @@ export async function getFCMDeviceToken(
     serviceWorkerRegistration: registration,
   })
 
-  console.log(fcmDeviceToken)
-
   if (fcmDeviceToken) {
-    const data = upsertFcmToken(userId, fcmDeviceToken)
-    console.log(data)
+    upsertFcmToken(userId, fcmDeviceToken)
   }
 }

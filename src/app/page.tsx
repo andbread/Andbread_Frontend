@@ -13,10 +13,11 @@ import { getUser } from '@/lib/auth'
 import { insertParticipant } from '@/lib/participant'
 import { useToast } from '@/components/common/toast/Toast'
 import { requestNotificationPermission } from '@/utils/requestNotificationPermission'
-import { registerServiceWorker } from '@/utils/registerServiceWorker'
-import { testSendPaymentNotification } from '@/utils/testSendPaymentNotification'
-import { supabase } from '@/lib/supabaseClient'
-import { getFCMDeviceToken } from '@/utils/firebase/getFCMDeviceToken'
+
+// TODO
+// [ ] iOS 알림 허용 요청 UI 구현
+// [ ] console.log 삭제, 코드 불필요한 부분 정리
+// [ ] 구독 내역 갱신 로직 수정
 
 const HomePage = () => {
   const user = useUserStore((state) => state.user)

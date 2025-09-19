@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
         .eq('nbread_id', nbreadId)
 
     if (participantError || !participantData) {
-      console.log(participantError)
+      console.error(participantError)
       return new Response(
         JSON.stringify({ error: 'Failed to get participants' }),
         {

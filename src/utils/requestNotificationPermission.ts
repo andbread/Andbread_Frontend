@@ -36,6 +36,7 @@ export const requestNotificationPermission = async (userId: string) => {
       }
     }
   } else {
-    console.log('알림을 받을 수 없는 환경')
+    // TODO 알림 관련 팝업 UI 구현 필요
+    console.error('알림을 받을 수 없는 환경')
   }
 }
