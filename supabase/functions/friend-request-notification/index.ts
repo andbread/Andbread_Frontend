@@ -8,49 +8,47 @@ import {
 import { getFcmAccessToken } from '../utils/getFCMToken.ts'
 import { sendFCMNotification } from '../utils/sendFCMNotification.ts'
 import { insertNotificationResult } from '../utils/insertNotificationResult.ts'
-import { UpdatePayload } from '../types/types.ts'
-import { FriendRequerstRow } from '../types/database.types.ts'
-
-interface WebhookPayload {
-  type: 'INSERT'
-  table: string
-  record: FriendRequerstRow
-  old_record: FriendRequerstRow
-  schema: 'public'
-}
-
 Deno.serve(async (req) => {
-  const payload: WebhookPayload = await req.json()
-
-  if (payload.old_record.is_paid === true || payload.record.is_paid === false) {
-    return new Response(null, { status: 204, headers: corsHeaders })
-  }
-
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', {
+      headers: corsHeaders,
+    })
   }
-
   if (req.method !== 'POST') {
     return new Response('Method Not Allowed', {
       status: 405,
       headers: corsHeaders,
     })
   }
-
+  let payload
   try {
+    payload = await req.json()
+  } catch (e) {
+    return new Response(
+      JSON.stringify({
+        error: 'Invalid payload',
+      }),
+      {
+        status: 400,
+        headers: corsHeaders,
+      },
+    )
+  }
+  try {
+    // 1. 친구 요청자 및 응답자 정보 저장
     const senderId = payload.record.sender_id
     const receiverId = payload.record.receiver_id
     const { data: senderNameData, error: senderNameError } =
       await supabaseClient
         .from('user')
         .select('name')
-        .eq('sender_id', id)
+        .eq('id', senderId)
         .single()
-
     if (senderNameError || !senderNameData) {
-      console.error(senderNameError)
       return new Response(
-        JSON.stringify({ error: 'Failed to get sender name' }),
+        JSON.stringify({
+          error: 'Failed to get sender name',
+        }),
         {
           status: 500,
           headers: corsHeaders,
@@ -58,49 +56,61 @@ Deno.serve(async (req) => {
       )
     }
 
-    const title = `🍞 ${senderNameData}님의 친구 요청`
-    const message = `${senderNameData}님이 친구 요청을 보냈어요.`
-
-    // 1. 친구 요청을 받은 유저의 fcm 토큰 조회
+    // 2. 친구 요청 메시지 생성
+    const senderName = senderNameData.name
+    const title = `🍞 ${senderName}님의 친구 요청`
+    const message = `${senderName}님이 친구 요청을 보냈어요.`
     const { data: fcmDeviceTokenData, error: fcmDeviceTokenError } =
       await supabaseClient
         .from('fcm_token')
         .select('*')
-        .eq('receiver_id', receiverId)
-
+        .eq('user_id', receiverId)
     if (fcmDeviceTokenError || !fcmDeviceTokenData) {
-      return new Response(JSON.stringify({ error: 'No FCM tokens found' }), {
-        status: 500,
-        headers: corsHeaders,
-      })
+      return new Response(
+        JSON.stringify({
+          error: 'No FCM tokens found',
+        }),
+        {
+          status: 500,
+          headers: corsHeaders,
+        },
+      )
     }
 
-    // 2. FCM 서버에 알림 전송
+    // 3. 친구 요청 응답자의 FCM 토큰 조회
     const fcmAccessToken = await getFcmAccessToken({
-      clientEmail: firebaseClientEmail!,
-      privateKey: firebasePrivateKey!,
+      clientEmail: firebaseClientEmail,
+      privateKey: firebasePrivateKey,
     })
 
-    const result = sendFCMNotification(
-      fcmDeviceTokenData,
-      fcmAccessToken,
-      title,
-      message,
+    const fcmDeviceTokens = fcmDeviceTokenData.map((row) => row.fcm_token)
+
+    // 4. 친구 요청 응답자에 대해 FCM 알림 발송
+    const notificationPromises = fcmDeviceTokens.map((token) =>
+      sendFCMNotification(token, fcmAccessToken, title, message),
     )
 
-    // 3. FCM 알림 성공 여부에 따라 DB에 알림 저장
-    if (result.status === 'SUCCESS') {
-      await insertNotificationResult({
-        user_id: receiverId,
-        message,
-        title,
-        is_read: false,
-        type: 'friend_request',
-      })
-    }
+    const results = await Promise.all(notificationPromises)
 
+    // 5. 알림 발송 결과를 서버에 저장
+    await Promise.all(
+      results
+        .filter((result) => result.status === 'SUCCESS')
+        .map((_, idx) =>
+          insertNotificationResult({
+            user_id: fcmDeviceTokenData[idx].user_id,
+            message,
+            title,
+            is_read: false,
+            type: 'friend_request',
+            url: '',
+          }),
+        ),
+    )
     return new Response(
-      JSON.stringify({ message: 'Notification sent successfully' }),
+      JSON.stringify({
+        message: 'Notification sent successfully',
+      }),
       {
         status: 200,
         headers: corsHeaders,
@@ -108,9 +118,14 @@ Deno.serve(async (req) => {
     )
   } catch (e) {
     console.error('Unexpected error:', e)
-    return new Response(JSON.stringify({ error: 'Unexpected error' }), {
-      status: 500,
-      headers: corsHeaders,
-    })
+    return new Response(
+      JSON.stringify({
+        error: 'Unexpected error',
+      }),
+      {
+        status: 500,
+        headers: corsHeaders,
+      },
+    )
   }
 })

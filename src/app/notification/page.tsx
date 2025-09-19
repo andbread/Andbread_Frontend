@@ -15,7 +15,10 @@ const Page = () => {
   const fetchNotifications = async () => {
     setIsLoading(true)
     const data = await getNotification(userData!.id)
-    setNotificationData(data)
+    const sortedDataByCreatedAt = data.sort(
+      (a, b) => Number(new Date(b.created_at)) - Number(new Date(a.created_at)),
+    )
+    setNotificationData(sortedDataByCreatedAt)
     setIsLoading(false)
   }
 

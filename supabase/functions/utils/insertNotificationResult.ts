@@ -15,11 +15,7 @@ export const insertNotificationResult = async (
         type: notificationData.type,
       })
 
-    if (
-      insertNotificationData === null ||
-      !insertNotificationData ||
-      insertNotificationError
-    ) {
+    if (insertNotificationError) {
       console.error('Insert Notification Error:', insertNotificationError)
       return insertNotificationError
     }
