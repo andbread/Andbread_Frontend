@@ -6,7 +6,6 @@ import { upsertFcmToken } from '@/lib/fcmToken/upsertFcmToken'
 
 export const requestNotificationPermission = async (userId: string) => {
   if ('Notification' in window) {
-    window.alert(Notification.permission)
     if (
       Notification.permission === 'default' ||
       Notification.permission === 'denied'

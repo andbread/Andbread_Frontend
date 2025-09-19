@@ -8,7 +8,7 @@ html {
 }
 
 body {
-  @apply mx-auto h-full max-h-svh min-h-dvh w-full min-w-[320px] max-w-[600px] overflow-y-auto bg-background font-pretendard text-gray-800 antialiased shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
+  @apply mx-auto h-[100svh] max-h-svh min-h-dvh w-full min-w-[320px] max-w-[600px] overflow-y-auto bg-background font-pretendard text-gray-800 antialiased shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
   /* @apply mx-auto h-[100svh] min-h-screen min-w-[320px] max-w-[600px] overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)]; */
 }
 body {
