@@ -376,3 +376,5 @@ export type NotificationRow =
   Database['public']['Tables']['notification']['Row']
 export type ChatMessageRow =
   Database['public']['Tables']['chat_messages']['Row']
+export type FriendRequestRow =
+  Database['public']['Tables']['friend_request']['Row']
