@@ -1,10 +1,11 @@
 import { supabase } from './supabaseClient'
 import { adminSupabase } from './supabaseAdminClient'
-import { LoginProvider } from '@/types/user'
+import { LoginProvider, User } from '@/types/user'
 import useUserStore from '@/stores/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/common/toast/Toast'
 
+// 1. 로그인 함수
 export const login = async (provider: LoginProvider['provider']) => {
   const redirectToUrl = process.env.NEXT_PUBLIC_REDIRECT_URL
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -25,6 +26,7 @@ export const login = async (provider: LoginProvider['provider']) => {
   return data
 }
 
+// 2. 로그아웃 함수
 export const logout = async (router: ReturnType<typeof useRouter>) => {
   const data = await supabase.auth.signOut()
   useUserStore.getState().clearUser()
@@ -36,6 +38,7 @@ export const logout = async (router: ReturnType<typeof useRouter>) => {
   }, 1000)
 }
 
+// 3. 계정 탈퇴 함수
 export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
   const data = await supabase.auth.getUser()
   const user = data.data.user?.id
@@ -51,6 +54,8 @@ export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
     router.replace('/login')
   }, 1000)
 }
+
+// 4. 유저 이름을 받아오는 함수
 export const getUserName = async (leaderId: string) => {
   try {
     if (!leaderId) {
@@ -76,7 +81,10 @@ export const getUserName = async (leaderId: string) => {
     return null // 에러 발생 시 null 반환
   }
 }
+
+// 5. 유저 정보를 받아오는 함수
 export const getUser = async (accessToken: string) => {
   const data = await supabase.auth.getUser(accessToken)
+
   return data
 }

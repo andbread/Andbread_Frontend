@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
+  // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: '12.2.3 (519615d)'
@@ -87,54 +87,6 @@ export type Database = {
             referencedColumns: ['id']
           },
         ]
-      }
-      friend: {
-        Row: {
-          created_at: string
-          id: number
-          user_id_1: string
-          user_id_2: string
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          user_id_1: string
-          user_id_2: string
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          user_id_1?: string
-          user_id_2?: string
-        }
-        Relationships: []
-      }
-      friend_request: {
-        Row: {
-          created_at: string
-          id: number
-          receiver_id: string
-          responded_at: string | null
-          sender_id: string
-          status: string
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          receiver_id: string
-          responded_at?: string | null
-          sender_id: string
-          status: string
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          receiver_id?: string
-          responded_at?: string | null
-          sender_id?: string
-          status?: string
-        }
-        Relationships: []
       }
       nbread: {
         Row: {
@@ -338,28 +290,22 @@ export type Database = {
           content: string | null
           created_at: string
           id: number
-          nbread_id: string
           profile_image: string | null
           user_id: string | null
-          user_name: string | null
         }
         Insert: {
           content?: string | null
           created_at?: string
           id?: number
-          nbread_id: string
           profile_image?: string | null
           user_id?: string | null
-          user_name?: string | null
         }
         Update: {
           content?: string | null
           created_at?: string
           id?: number
-          nbread_id?: string
           profile_image?: string | null
           user_id?: string | null
-          user_name?: string | null
         }
         Relationships: [
           {
@@ -428,5 +374,7 @@ export type NbreadRecordsRow =
   Database['public']['Tables']['nbread_records']['Row']
 export type NotificationRow =
   Database['public']['Tables']['notification']['Row']
+export type ChatMessageRow =
+  Database['public']['Tables']['chat_messages']['Row']
 export type FriendRequestRow =
   Database['public']['Tables']['friend_request']['Row']

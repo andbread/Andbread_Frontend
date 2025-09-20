@@ -17,6 +17,12 @@ const Header = () => {
       </div>
       <div className="flex h-full flex-row items-center gap-16">
         <div
+          onClick={() => router.push('/notification')}
+          className="mr-4 cursor-pointer"
+        >
+          <Icon type="alarm" width={24} height={24} fill="text-gray-600" />
+        </div>
+        <div
           onClick={() => router.push('/calendar')}
           className="mb-2 cursor-pointer"
         >

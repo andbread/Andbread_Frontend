@@ -4,7 +4,6 @@ import ProtectRoute from './protectRoute'
 import Toast from '@/components/common/toast/Toast'
 import GoogleAnalytics from '@/lib/GoogleAnalytics'
 
-
 export const metadata: Metadata = {
   title: '엔빵',
   description: '구독 공유 관리 서비스',
@@ -15,8 +14,8 @@ export const metadata: Metadata = {
     url: 'https://nbread-nbread.vercel.app/',
     images: [
       {
-        url: 'https://nbread-nbread.vercel.app/assets/logo/open-graph-logo.png', 
-        alt: '엔빵 로고',  
+        url: 'https://nbread-nbread.vercel.app/assets/logo/open-graph-logo.png',
+        alt: '엔빵 로고',
       },
     ],
   },
