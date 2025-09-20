@@ -12,6 +12,13 @@ import InvitationToNbreadModal from '@/components/inviteAccept/InvitationToNbrea
 import { getUser } from '@/lib/auth'
 import { insertParticipant } from '@/lib/participant'
 import { useToast } from '@/components/common/toast/Toast'
+import { requestNotificationPermission } from '@/utils/requestNotificationPermission'
+
+// TODO
+// [ ] iOS 알림 허용 요청 UI 구현
+// [ ] console.log 삭제, 코드 불필요한 부분 정리
+// [ ] 구독 내역 갱신 로직 수정
+
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
   const [nbreadList, setNbreadList] = useState<Nbread[]>([])
@@ -20,6 +27,7 @@ const HomePage = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false)
   const [groupId, setGroupId] = useState<string>()
   const currentMonth = new Date().getMonth() + 1
+
   // Nbread 및 Participant 정보를 DB로부터 fetch
   const fetchNbreads = async (userId: string) => {
     const nbreads = await getUserNbreads(userId)
@@ -37,6 +45,10 @@ const HomePage = () => {
   useEffect(() => {
     if (!user) return
     fetchNbreads(user.id)
+
+    requestNotificationPermission(user.id)
+    // testSendPaymentNotification()
+    // test()
   }, [user])
 
   // NbreadList가 업데이트된 후 totalAmount 계산
@@ -67,6 +79,7 @@ const HomePage = () => {
             socialType: provider,
             name: data.data.user.user_metadata.full_name || '',
             profileImage: data.data.user.user_metadata.avatar_url || '',
+            tag: data.data.user.user_metadata.tag || '',
           }
           const user = {
             user: userInfo,

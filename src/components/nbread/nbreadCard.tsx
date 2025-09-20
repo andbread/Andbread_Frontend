@@ -5,7 +5,7 @@ import Tab from '../common/tab/tab'
 interface NbreadCardProps {
   nbreadData: Nbread | null
   userData: User | null
-  handleEditingNbread: () => void
+  handleEditingNbread?: () => void
 }
 
 const NbreadCard = ({
@@ -34,7 +34,7 @@ const NbreadCard = ({
                     content={'수정하기'}
                     size="small"
                     isClicked={false}
-                    onClick={() => handleEditingNbread()}
+                    onClick={() => handleEditingNbread!()}
                     colorScheme="primary"
                   />
                 )}

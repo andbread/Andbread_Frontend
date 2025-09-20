@@ -26,6 +26,7 @@ export const getParticipants = async (
       profileImage: item.user.profile_image,
       email: item.user.email,
       socialType: item.user.social_type as 'kakao' | 'google',
+      tag: Number(item.user.tag),
     },
     isLeader: item.is_leader,
   }))

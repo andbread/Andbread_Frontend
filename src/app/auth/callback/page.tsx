@@ -29,7 +29,10 @@ const CallbackPage = () => {
         }
 
         if (data.user) {
-          const getUserInfo = await supabase.from('user').select('*').eq('id',data.user.id)
+          const getUserInfo = await supabase
+            .from('user')
+            .select('*')
+            .eq('id', data.user.id)
           const provider = data.user.app_metadata.provider as 'kakao' | 'google'
 
           const userInfo = {
@@ -38,7 +41,7 @@ const CallbackPage = () => {
             socialType: provider,
             name: data.user.user_metadata.full_name || '',
             profileImage: data.user.user_metadata.avatar_url || '',
-            tag: getUserInfo.data?.[0]?.tag || ''
+            tag: getUserInfo.data?.[0]?.tag || '',
           }
           setUser(userInfo) // 사용자 정보 세션 스토리지에 저장
           setTimeout(() => {
