@@ -6,7 +6,6 @@ import DefaultAvatar from '@/assets/avatar.svg'
 import { getInviteUser } from '@/lib/invite/getInviteUser'
 import { useParams } from 'next/navigation'
 interface InviteBottomSheetProps {
-
   isOpen: boolean
   onClose: () => void
 }
@@ -15,18 +14,18 @@ interface User {
   name: string
   status: string
 }
-const InviteBottomSheet = ({ isOpen, onClose}: InviteBottomSheetProps) => {
+const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
   const [searchData, setSearchData] = useState('') // 검색칸 입력 데이터
   const [fetchSearchData, setFetchSearchData] = useState<User[]>([]) // Api 반환 데이터
   const searchCache = useRef<Record<string, User[]>>({})
   const params = useParams()
   const [nbreadId, setNbreadId] = useState<string>('')
-  
+
   const userFollowingData = [
     { id: 0, avatar: DefaultAvatar, name: '유성현', status: '초대 하기' },
     { id: 1, avatar: DefaultAvatar, name: '신혜민', status: '초대 하기' },
     { id: 2, avatar: DefaultAvatar, name: '강보석', status: '초대 하기' },
-    { 
+    {
       id: 3,
       avatar: DefaultAvatar,
       name: '송수빈',
@@ -34,7 +33,7 @@ const InviteBottomSheet = ({ isOpen, onClose}: InviteBottomSheetProps) => {
     },
     {
       id: 4,
-      avatar:DefaultAvatar,
+      avatar: DefaultAvatar,
       name: '빌게이츠',
       status: '초대 완료',
     },
@@ -100,10 +99,10 @@ const InviteBottomSheet = ({ isOpen, onClose}: InviteBottomSheetProps) => {
     },
   ]
   useEffect(() => {
-    if(isOpen){
+    if (isOpen) {
       setSearchData('')
     }
-  },[isOpen])
+  }, [isOpen])
 
   useEffect(() => {
     if (searchData.length == 4) {
@@ -157,7 +156,7 @@ const InviteBottomSheet = ({ isOpen, onClose}: InviteBottomSheetProps) => {
                 <p className="text-pretendard text-[16px]">
                   회원 태그를 검색해 초대할 수 있어요
                 </p>
-                <p className="text-pretendard cursor-pointer text-[14px] text-secondary-100 underline ">
+                <p className="text-pretendard cursor-pointer text-[14px] text-secondary-100 underline">
                   초대하고 싶은 사람이 회원이 아니에요
                 </p>
               </div>
@@ -175,8 +174,8 @@ const InviteBottomSheet = ({ isOpen, onClose}: InviteBottomSheetProps) => {
             )}
           </div>
           <div className="flex flex-col">
-          <div className="h-[2px] w-full bg-gray-100 mb-30" />
-            <p className="mb-[20px] text-body03 text-gray-500 ">팔로잉</p>
+            <div className="mb-30 h-[2px] w-full bg-gray-100" />
+            <p className="mb-[20px] text-body03 text-gray-500">팔로잉</p>
             <div className="flex max-h-[400px] flex-col">
               {userFollowingData.map((user) => (
                 <InviteUserListItem
