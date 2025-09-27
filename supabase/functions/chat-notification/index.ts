@@ -128,9 +128,11 @@ Deno.serve(async (req) => {
         user_id,
         message,
         title,
-        url: '',
         is_read: false,
         type: 'payment',
+        data: {
+          nbreadId: nbreadId,
+        },
       })
     })
     return new Response(

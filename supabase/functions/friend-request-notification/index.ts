@@ -8,6 +8,7 @@ import {
 import { getFcmAccessToken } from '../utils/getFCMToken.ts'
 import { sendFCMNotification } from '../utils/sendFCMNotification.ts'
 import { insertNotificationResult } from '../utils/insertNotificationResult.ts'
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', {
@@ -24,6 +25,7 @@ Deno.serve(async (req) => {
   try {
     payload = await req.json()
   } catch (e) {
+    console.error(e)
     return new Response(
       JSON.stringify({
         error: 'Invalid payload',
@@ -79,7 +81,7 @@ Deno.serve(async (req) => {
 
     // 3. 친구 요청 응답자의 FCM 토큰 조회
     const fcmAccessToken = await getFcmAccessToken({
-      clientEmail: firebaseClientEmail,
+      clientEmail: firebaseClientEmail!,
       privateKey: firebasePrivateKey,
     })
 
@@ -99,11 +101,14 @@ Deno.serve(async (req) => {
         .map((_, idx) =>
           insertNotificationResult({
             user_id: fcmDeviceTokenData[idx].user_id,
-            message,
-            title,
+            message: message,
+            title: title,
             is_read: false,
             type: 'friend_request',
-            url: '',
+            data: {
+              sender_id: senderId,
+              sender_name: senderName,
+            },
           }),
         ),
     )

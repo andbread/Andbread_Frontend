@@ -1,10 +1,12 @@
+import { Json } from './database.types.ts'
+
 export interface Notification {
   user_id: string
   title: string
   message: string
-  url: string
   is_read: boolean
-  type: 'payment' | 'invite' | 'invite_accept' | 'follow'
+  type: 'payment' | 'invite' | 'invite_accept' | 'friend_request'
+  data: Json
 }
 
 export type TableRecord<T> = T
