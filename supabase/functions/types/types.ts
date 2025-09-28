@@ -5,7 +5,12 @@ export interface Notification {
   title: string
   message: string
   is_read: boolean
-  type: 'payment' | 'invite' | 'invite_accept' | 'friend_request'
+  type:
+    | 'payment'
+    | 'invite'
+    | 'invite_accept'
+    | 'friend_request'
+    | 'friend_response'
   data: Json
 }
 
