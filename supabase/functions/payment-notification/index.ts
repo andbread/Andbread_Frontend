@@ -8,7 +8,6 @@ import {
 import { getFcmAccessToken } from '../utils/getFCMToken.ts'
 import { sendFCMNotification } from '../utils/sendFCMNotification.ts'
 import { insertNotificationResult } from '../utils/insertNotificationResult.ts'
-import { UpdatePayload } from '../types/types.ts'
 import { NbreadRecordsRow } from '../types/database.types.ts'
 
 interface WebhookPayload {
@@ -147,12 +146,14 @@ Deno.serve(async (req) => {
 
     notifiedUserMap.forEach((_, user_id) => {
       insertNotificationResult({
-        user_id,
-        message,
-        title,
-        url: '',
+        user_id: user_id,
+        message: message,
+        title: title,
         is_read: false,
         type: 'payment',
+        data: {
+          nbread_id: nbreadId,
+        },
       })
     })
     return new Response(

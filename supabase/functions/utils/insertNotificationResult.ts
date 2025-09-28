@@ -10,7 +10,7 @@ export const insertNotificationResult = async (
         user_id: notificationData.user_id,
         title: notificationData.title,
         message: notificationData.message,
-        url: notificationData.url,
+        data: notificationData.data,
         is_read: notificationData.is_read,
         type: notificationData.type,
       })
