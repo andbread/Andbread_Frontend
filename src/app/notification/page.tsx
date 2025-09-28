@@ -6,12 +6,16 @@ import useUserStore from '@/stores/useAuthStore'
 import { Notification } from '@/types/notification'
 import Icon from '@/components/common/icon/Icon'
 import Spinner from '@/components/common/spinner/Spinner'
-
+import FriendAcceptModal from '@/components/friend/FriendAcceptModal'
 const Page = () => {
   const [notificationData, setNotificationData] = useState<Notification[]>([])
+  const [selectedNotifycationId,setSelectedNotifycationId] = useState<number | null>(null)
+  const [selectedNotifycationType,setSelectedNotifycationType] = useState<string | null>(null)
+  const [selectedNotifycationSenderName,setSelectedNotifycationSenderName] = useState<string | null>(null)
+  const [selectedNotifycationSenderId,setSelectedNotifycationSenderId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const userData = useUserStore((state) => state.user)
-
+  const [isAcceptModalOpen, setIsAcceptModalOpen]= useState(false)
   const fetchNotifications = async () => {
     setIsLoading(true)
     const data = await getNotification(userData!.id)
@@ -48,7 +52,11 @@ const Page = () => {
       fetchNotifications()
     }
   }, [userData])
-
+  useEffect(() => {
+    if(selectedNotifycationType === 'friend_request'){
+      setIsAcceptModalOpen(true)
+    }
+  },[selectedNotifycationType])
   if (isLoading) {
     return <Spinner isLoading={isLoading} />
   }
@@ -70,11 +78,16 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-between gap-8 px-20">
+      <div className="flex flex-col justify-between gap-8 px-20"
+     
+      >
         {notificationData.map((data, index) => (
+          
           <div
             className="card card-clickable relative flex cursor-pointer flex-row justify-between"
             key={data.id}
+             onClick={() => {
+               setSelectedNotifycationId(data.id); setSelectedNotifycationType(data.type); setSelectedNotifycationSenderName(data.sender_name);setSelectedNotifycationSenderId(data.url)}}
           >
             <div className="flex w-full flex-col gap-4">
               <div className="text-body01 text-gray-800">{data.title}</div>
@@ -101,6 +114,15 @@ const Page = () => {
           </div>
         ))}
       </div>
+      <FriendAcceptModal
+      senderUserId={selectedNotifycationSenderId}
+      // type={selectedNotifycationType}
+      id={selectedNotifycationId}
+      isOpen={isAcceptModalOpen}
+      onClose={() => {setIsAcceptModalOpen(false); setSelectedNotifycationType(null)}}
+      senderUserName={selectedNotifycationSenderName} 
+      receiverId={userData?.id as string}
+      /> 
     </div>
   )
 }

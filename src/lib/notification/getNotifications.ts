@@ -30,9 +30,9 @@ export const getNotification = async (userId: string) => {
         url: notification.url,
         type: notification.type,
         is_read: notification.is_read,
+        sender_name: notification.sender_name
       }),
     )
-
     return notifications
   } catch (error) {
     console.error('Error fetching nbread:', error)

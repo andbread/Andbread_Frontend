@@ -48,6 +48,11 @@ const PlusFriendListItem = ({
       setColor('text-system-blue01')
       setCursor('cursor-pointer')
     }
+    else if(status =='rejected') {
+        setSendStatus('친구 추가하기')
+      setColor('text-system-blue01')
+      setCursor('cursor-pointer')
+    }
     else {
         setSendStatus('')
       setColor('')

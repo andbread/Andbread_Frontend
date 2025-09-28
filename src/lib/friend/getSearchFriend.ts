@@ -11,17 +11,20 @@ export const getSearchFriend = async (tag: string, senderId: string) => {
     if (error) {
       console.error(error)
     }
+    const userIds = user?.map(u => u.id) || [];
     const { data: friends } = await supabase
       .from('friend_request')
       .select('sender_id, receiver_id, status')
-      .eq('sender_id', senderId) // 또는 receiver_id 포함
+      .or(
+      `and(sender_id.eq.${senderId},receiver_id.eq.${userIds}),and(sender_id.eq.${userIds},receiver_id.eq.${senderId})`,
+    )
     return (user ?? []).map((user) => ({
       name: user.name,
       profileImage: user.profile_image,
       senderId: senderId,
       receiverId: user.id,
       status:
-        friends?.find((f) => f.receiver_id === user.id)?.status ||
+        friends?.find((f) => f)?.status ||
         '친구 추가하기',
     }))
   } catch (error) {}

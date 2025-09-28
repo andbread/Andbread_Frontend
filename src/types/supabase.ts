@@ -266,6 +266,7 @@ export type Database = {
           type: string
           url: string
           user_id: string | null
+          sender_name: string
         }
         Insert: {
           created_at?: string
@@ -276,6 +277,7 @@ export type Database = {
           type: string
           url: string
           user_id?: string | null
+          sender_name: string
         }
         Update: {
           created_at?: string
@@ -286,6 +288,7 @@ export type Database = {
           type?: string
           url?: string
           user_id?: string | null
+          sender_name: string
         }
         Relationships: [
           {
