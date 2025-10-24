@@ -28,6 +28,7 @@ export const requestNotificationPermission = async (userId: string) => {
         if (fcmDeviceToken) {
           // TODO fcm 디바이스 토큰을 서버에 저장
           upsertFcmToken(userId, fcmDeviceToken)
+          console.log('fcmDeviceToken',fcmDeviceToken)
         }
       } catch (error) {
         console.error('알림 허용 요청 중 오류 발생: ', error)
