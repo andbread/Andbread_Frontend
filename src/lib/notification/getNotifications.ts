@@ -27,10 +27,9 @@ export const getNotification = async (userId: string) => {
         created_at: notification.created_at,
         title: notification.title,
         message: notification.message,
-        url: notification.url,
+        data: notification.data,
         type: notification.type,
         is_read: notification.is_read,
-        sender_name: notification.sender_name
       }),
     )
     return notifications

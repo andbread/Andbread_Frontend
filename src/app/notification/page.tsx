@@ -87,7 +87,7 @@ const Page = () => {
             className="card card-clickable relative flex cursor-pointer flex-row justify-between"
             key={data.id}
              onClick={() => {
-               setSelectedNotifycationId(data.id); setSelectedNotifycationType(data.type); setSelectedNotifycationSenderName(data.sender_name);setSelectedNotifycationSenderId(data.url)}}
+               setSelectedNotifycationId(data.id); setSelectedNotifycationType(data.type); setSelectedNotifycationSenderName((data.data as any)?.sender_name ?? null);setSelectedNotifycationSenderId((data.data as any)?.sender_id ?? null)}}
           >
             <div className="flex w-full flex-col gap-4">
               <div className="text-body01 text-gray-800">{data.title}</div>
@@ -116,7 +116,6 @@ const Page = () => {
       </div>
       <FriendAcceptModal
       senderUserId={selectedNotifycationSenderId}
-      // type={selectedNotifycationType}
       id={selectedNotifycationId}
       isOpen={isAcceptModalOpen}
       onClose={() => {setIsAcceptModalOpen(false); setSelectedNotifycationType(null)}}
