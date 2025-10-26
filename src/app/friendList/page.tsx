@@ -20,14 +20,7 @@ const FriendListPage = () => {
   const handleFriendPlus = () => {
     setIsModalOpen(true)
   }
-  const friendData = [
-    { id: 1, name: '신혜민', tag: 1111, profile: user.user?.profileImage },
-    { id: 2, name: '김의진', tag: 1112, profile: user.user?.profileImage },
-    { id: 3, name: '강보석', tag: 1113, profile: user.user?.profileImage },
-    { id: 4, name: '송수빈', tag: 1114, profile: user.user?.profileImage },
-    { id: 5, name: '유성현', tag: 1115, profile: user.user?.profileImage },
-    { id: 6, name: '짱똘', tag: 1116, profile: user.user?.profileImage },
-  ]
+  
   const fetchFriendList = async () => {
     console.log(user.user?.id)
     if (user) {
