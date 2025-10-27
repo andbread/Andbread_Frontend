@@ -25,6 +25,7 @@ const FriendCard = ({ profile, name, tag }: friendProps) => {
           <DefaultAvatar className="h-32 w-32rounded-full object-cover" />
         )}
         <p className="text-body-02">{name}</p>
+        <p className="text-body-02 text-secondary-100">#{tag}</p>
       </div>
       <Icon type="angleRight" width={16} height={16} onClick={handleBottomSheetOpen}/>
       <FriendBottomSheet isOpen={isBottomSheet} onClose={handleBottomSheetOpen}
