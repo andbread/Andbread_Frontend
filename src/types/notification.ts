@@ -9,4 +9,5 @@ export interface Notification {
   data: Json | null
   is_read: boolean
   type: string // TODO 알림 타입 수정 필요
+  // sender_name: string
 }
