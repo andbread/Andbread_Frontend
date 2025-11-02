@@ -96,8 +96,8 @@ Deno.serve(async (req) => {
     // 5. 알림 발송 결과를 서버에 저장
     await Promise.all(
       results
-        .filter((result: FriendRequestRow) => result.status === 'SUCCESS')
-        .map((_: FriendRequestRow, idx: number) =>
+        .filter((result) => result.status === 'SUCCESS')
+        .map((_, idx: number) =>
           insertNotificationResult({
             user_id: fcmDeviceTokenData[idx].user_id,
             message: message,
