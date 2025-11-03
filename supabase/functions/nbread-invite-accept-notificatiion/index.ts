@@ -153,7 +153,7 @@ Deno.serve(async (req) => {
         message,
         title,
         is_read: false,
-        type: 'payment',
+        type: 'invite_accept',
         data: {
           nbreadId: nbreadId,
         },
