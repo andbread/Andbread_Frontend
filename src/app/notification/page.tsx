@@ -7,15 +7,24 @@ import { Notification } from '@/types/notification'
 import Icon from '@/components/common/icon/Icon'
 import Spinner from '@/components/common/spinner/Spinner'
 import FriendAcceptModal from '@/components/friend/FriendAcceptModal'
+import { getRelativeTime } from '@/utils/getRelativeTime'
+
 const Page = () => {
   const [notificationData, setNotificationData] = useState<Notification[]>([])
-  const [selectedNotifycationId,setSelectedNotifycationId] = useState<number | null>(null)
-  const [selectedNotifycationType,setSelectedNotifycationType] = useState<string | null>(null)
-  const [selectedNotifycationSenderName,setSelectedNotifycationSenderName] = useState<string | null>(null)
-  const [selectedNotifycationSenderId,setSelectedNotifycationSenderId] = useState<string | null>(null)
+  const [selectedNotifycationId, setSelectedNotifycationId] = useState<
+    number | null
+  >(null)
+  const [selectedNotifycationType, setSelectedNotifycationType] = useState<
+    string | null
+  >(null)
+  const [selectedNotifycationSenderName, setSelectedNotifycationSenderName] =
+    useState<string | null>(null)
+  const [selectedNotifycationSenderId, setSelectedNotifycationSenderId] =
+    useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const userData = useUserStore((state) => state.user)
-  const [isAcceptModalOpen, setIsAcceptModalOpen]= useState(false)
+  const [isAcceptModalOpen, setIsAcceptModalOpen] = useState(false)
+
   const fetchNotifications = async () => {
     setIsLoading(true)
     const data = await getNotification(userData!.id)
@@ -26,37 +35,16 @@ const Page = () => {
     setIsLoading(false)
   }
 
-  function getRelativeTime(utcDateString: string): string {
-    const KST_OFFSET = 9 * 60 * 60 * 1000 // 한국은 UTC+9
-    const now = new Date(Date.now() + KST_OFFSET)
-    const past = new Date(new Date(utcDateString).getTime() + KST_OFFSET)
-
-    const diff = now.getTime() - past.getTime()
-
-    const minutes = Math.floor(diff / (1000 * 60))
-    const hours = Math.floor(diff / (1000 * 60 * 60))
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-    const month = Math.floor(diff / (1000 * 60 * 60 * 24 * 30))
-    const year = Math.floor(diff / (1000 * 60 * 60 * 24 * 30 * 12))
-
-    if (minutes < 1) return '방금 전'
-    if (minutes < 60) return `${minutes}분 전`
-    if (hours < 24) return `${hours}시간 전`
-    if (days < 30) return `${days}일 전`
-    if (month < 12) return `${month}개월 전`
-    return `${year}년 전`
-  }
-
   useEffect(() => {
     if (userData) {
       fetchNotifications()
     }
   }, [userData])
   useEffect(() => {
-    if(selectedNotifycationType === 'friend_request'){
+    if (selectedNotifycationType === 'friend_request') {
       setIsAcceptModalOpen(true)
     }
-  },[selectedNotifycationType])
+  }, [selectedNotifycationType])
   if (isLoading) {
     return <Spinner isLoading={isLoading} />
   }
@@ -78,16 +66,21 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-between gap-8 px-20"
-     
-      >
+      <div className="flex flex-col justify-between gap-8 px-20">
         {notificationData.map((data, index) => (
-          
           <div
             className="card card-clickable relative flex cursor-pointer flex-row justify-between"
             key={data.id}
-             onClick={() => {
-               setSelectedNotifycationId(data.id); setSelectedNotifycationType(data.type); setSelectedNotifycationSenderName((data.data as any)?.sender_name ?? null);setSelectedNotifycationSenderId((data.data as any)?.sender_id ?? null)}}
+            onClick={() => {
+              setSelectedNotifycationId(data.id)
+              setSelectedNotifycationType(data.type)
+              setSelectedNotifycationSenderName(
+                (data.data as any)?.sender_name ?? null,
+              )
+              setSelectedNotifycationSenderId(
+                (data.data as any)?.sender_id ?? null,
+              )
+            }}
           >
             <div className="flex w-full flex-col gap-4">
               <div className="text-body01 text-gray-800">{data.title}</div>
@@ -115,13 +108,16 @@ const Page = () => {
         ))}
       </div>
       <FriendAcceptModal
-      senderUserId={selectedNotifycationSenderId}
-      id={selectedNotifycationId}
-      isOpen={isAcceptModalOpen}
-      onClose={() => {setIsAcceptModalOpen(false); setSelectedNotifycationType(null)}}
-      senderUserName={selectedNotifycationSenderName} 
-      receiverId={userData?.id as string}
-      /> 
+        senderUserId={selectedNotifycationSenderId}
+        id={selectedNotifycationId}
+        isOpen={isAcceptModalOpen}
+        onClose={() => {
+          setIsAcceptModalOpen(false)
+          setSelectedNotifycationType(null)
+        }}
+        senderUserName={selectedNotifycationSenderName}
+        receiverId={userData?.id as string}
+      />
     </div>
   )
 }
