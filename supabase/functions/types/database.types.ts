@@ -424,6 +424,8 @@ export type Database = {
 export type UserRow = Database['public']['Tables']['user']['Row']
 export type ParticipantRow = Database['public']['Tables']['participant']['Row']
 export type NbreadRow = Database['public']['Tables']['nbread']['Row']
+export type NbreadInviteRow =
+  Database['public']['Tables']['nbread_invite']['Row']
 export type NbreadRecordsRow =
   Database['public']['Tables']['nbread_records']['Row']
 export type NotificationRow =
