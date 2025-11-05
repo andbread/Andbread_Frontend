@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import Modal from './Modal'
 import { useNotificationPermission } from '@/hooks/useNotificationPermission'
 
@@ -16,12 +17,17 @@ const NotificationPermissionModal = ({
     showIOSPermissionModal,
     getPermissionAndRegisterToken,
   } = useNotificationPermission(userId)
-  const [isOpen, setIsOpen] = useState<boolean>(true)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const handleCloseButtonPress = () => {
     setIsOpen(false)
     onClose
   }
+
+  useEffect(() => {
+    if (!userId || !permissionState) return
+    setIsOpen(showIOSPermissionModal)
+  }, [userId, permissionState, showIOSPermissionModal])
 
   if (!userId) return null
 
