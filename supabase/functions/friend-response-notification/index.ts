@@ -37,6 +37,7 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const senderId = payload.record.sender_id
     const receiverId = payload.record.receiver_id
     const { data: receiverNameData, error: receiverNameDataError } =
       await supabaseClient
@@ -63,10 +64,7 @@ Deno.serve(async (req) => {
       : `${receiverNameData.name}님이 친구 요청을 거절했어요`
 
     const { data: fcmDeviceTokenData, error: fcmDeviceTokenError } =
-      await supabaseClient
-        .from('fcm_token')
-        .select('*')
-        .eq('user_id', receiverId)
+      await supabaseClient.from('fcm_token').select('*').eq('user_id', senderId)
 
     if (fcmDeviceTokenError || !fcmDeviceTokenData) {
       return new Response(
@@ -98,8 +96,8 @@ Deno.serve(async (req) => {
     // 5. 알림 발송 결과를 서버에 저장
     await Promise.all(
       results
-        .filter((result: FriendRequestRow) => result.status === 'SUCCESS')
-        .map((_: FriendRequestRow, idx: number) =>
+        .filter((result) => result.status === 'SUCCESS')
+        .map((_, idx: number) =>
           insertNotificationResult({
             user_id: fcmDeviceTokenData[idx].user_id,
             message: message,
