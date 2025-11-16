@@ -15,24 +15,31 @@ const NotificationPermissionModal = ({
   const {
     permissionState,
     showIOSPermissionModal,
+    setShowIOSPermissionModal,
     getPermissionAndRegisterToken,
   } = useNotificationPermission(userId)
-  const [isOpen, setIsOpen] = useState<boolean>(false)
 
+  const handleConfirmButtonPress = () => {
+    setShowIOSPermissionModal(false)
+    getPermissionAndRegisterToken()
+  }
   const handleCloseButtonPress = () => {
-    setIsOpen(false)
-    onClose
+    setShowIOSPermissionModal(false)
+    onClose()
   }
 
-  useEffect(() => {
-    if (!userId || !permissionState) return
-    setIsOpen(showIOSPermissionModal)
-  }, [userId, permissionState, showIOSPermissionModal])
+  // useEffect(() => {
+  //   if (!userId || !permissionState) return
+  //   set(showIOSPermissionModal)
+  // }, [userId, permissionState, showIOSPermissionModal])
 
   if (!userId) return null
 
   return (
-    <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+    <Modal
+      isOpen={showIOSPermissionModal}
+      onClose={() => setShowIOSPermissionModal(false)}
+    >
       <div className="flex flex-col items-center p-8">
         <div className="mb-24 flex w-full flex-col gap-8 pl-4">
           <div className="text-heading04 text-gray-800">
@@ -50,7 +57,7 @@ const NotificationPermissionModal = ({
             거절하기
           </button>
           <button
-            onClick={() => getPermissionAndRegisterToken()}
+            onClick={() => handleConfirmButtonPress()}
             className="btn btn-small btn-primary text-heading06"
           >
             허용하기

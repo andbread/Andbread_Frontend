@@ -8,8 +8,9 @@ import { upsertFcmToken } from '@/lib/fcmToken/upsertFcmToken'
 type PermissionState = NotificationPermission | 'unsupported'
 
 export const useNotificationPermission = (userId: string | undefined) => {
-  const [permissionState, setPermissionState] =
-    useState<PermissionState>('default')
+  const [permissionState, setPermissionState] = useState<
+    PermissionState | undefined
+  >(undefined)
   const [showIOSPermissionModal, setShowIOSPermissionModal] =
     useState<boolean>(false)
 
@@ -24,6 +25,8 @@ export const useNotificationPermission = (userId: string | undefined) => {
 
   // OS 권한 상태 확인
   useEffect(() => {
+    if (permissionState) return
+
     if (!('Notification' in window)) {
       setPermissionState('unsupported')
       return
@@ -45,7 +48,6 @@ export const useNotificationPermission = (userId: string | undefined) => {
   // 권한 요청 및 fcm 토큰 발급
   const getPermissionAndRegisterToken = useCallback(async () => {
     if (!('Notification' in window) || !userId) {
-      alert('알림이 지원되지 않는 브라우저')
       setPermissionState('unsupported')
       return
     }
@@ -54,7 +56,6 @@ export const useNotificationPermission = (userId: string | undefined) => {
       const registration = await registerServiceWorker()
       const permission = await Notification.requestPermission()
       setPermissionState(permission)
-      alert(`현재 권한 상태: ${permission}`)
 
       if (permission !== 'granted') return
 
@@ -76,6 +77,7 @@ export const useNotificationPermission = (userId: string | undefined) => {
   return {
     permissionState,
     showIOSPermissionModal,
+    setShowIOSPermissionModal,
     getPermissionAndRegisterToken,
   }
 }
