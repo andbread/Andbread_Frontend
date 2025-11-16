@@ -5,7 +5,6 @@ export const registerServiceWorker = async () => {
         '/firebase-messaging-sw.js',
       )
       console.log('service worker 등록 완료: ', registration)
-      alert('service worker 등록 완료')
       return registration
     } catch (error) {
       console.error('service worker 등록 실패: ', error)
@@ -13,7 +12,6 @@ export const registerServiceWorker = async () => {
     }
   } else {
     console.log('service worker가 지원되지 않음')
-    alert('service worker 미지원')
     return Promise.reject('service worker가 지원되지 않음')
   }
 }
