@@ -49,7 +49,7 @@ export const useNotificationPermission = (userId: string | undefined) => {
   const getPermissionAndRegisterToken = useCallback(async () => {
     if (!('Notification' in window) || !userId) {
       setPermissionState('unsupported')
-      return
+      return 'unsupported'
     }
 
     try {
@@ -57,7 +57,7 @@ export const useNotificationPermission = (userId: string | undefined) => {
       const permission = await Notification.requestPermission()
       setPermissionState(permission)
 
-      if (permission !== 'granted') return
+      if (permission !== 'granted') return permission
 
       const messaging = await initMessaging()
       const fcmDeviceToken = await getToken(messaging!, {
@@ -69,6 +69,7 @@ export const useNotificationPermission = (userId: string | undefined) => {
         await upsertFcmToken(userId, fcmDeviceToken)
         console.log('fcmDeviceToken', fcmDeviceToken)
       }
+      return permission
     } catch (error) {
       console.error('알림 권한 요청 중 오류 발생:', error)
     }

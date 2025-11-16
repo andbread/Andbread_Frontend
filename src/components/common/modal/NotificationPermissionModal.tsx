@@ -2,36 +2,38 @@
 import React, { useEffect, useState } from 'react'
 import Modal from './Modal'
 import { useNotificationPermission } from '@/hooks/useNotificationPermission'
+import { useToast } from '@/components/common/toast/Toast'
 
 interface NotificationPermissionModalProps {
   userId: string | undefined
-  onClose: () => void
+  handlePermissionDenied: () => void
 }
 
 const NotificationPermissionModal = ({
   userId,
-  onClose,
+  handlePermissionDenied,
 }: NotificationPermissionModalProps) => {
   const {
-    permissionState,
     showIOSPermissionModal,
     setShowIOSPermissionModal,
     getPermissionAndRegisterToken,
   } = useNotificationPermission(userId)
 
-  const handleConfirmButtonPress = () => {
+  const handleConfirmButtonPress = async () => {
     setShowIOSPermissionModal(false)
-    getPermissionAndRegisterToken()
-  }
-  const handleCloseButtonPress = () => {
-    setShowIOSPermissionModal(false)
-    onClose()
+    const permission = await getPermissionAndRegisterToken()
+
+    if (permission === 'denied') {
+      handlePermissionDenied()
+      return
+    }
+    useToast.success('알림이 허용되었어요.')
   }
 
-  // useEffect(() => {
-  //   if (!userId || !permissionState) return
-  //   set(showIOSPermissionModal)
-  // }, [userId, permissionState, showIOSPermissionModal])
+  const handleCloseButtonPress = () => {
+    setShowIOSPermissionModal(false)
+    handlePermissionDenied()
+  }
 
   if (!userId) return null
 
@@ -54,7 +56,7 @@ const NotificationPermissionModal = ({
             onClick={() => handleCloseButtonPress()}
             className="btn btn-small btn-secondary text-heading06"
           >
-            거절하기
+            나중에 하기
           </button>
           <button
             onClick={() => handleConfirmButtonPress()}
