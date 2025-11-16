@@ -16,10 +16,9 @@ import { requestNotificationPermission } from '@/utils/requestNotificationPermis
 import NotificationPermissionModal from '@/components/common/modal/NotificationPermissionModal'
 import NotificationDeniedModal from '@/components/common/modal/NotificationDeniedModal'
 import { useNotificationPermission } from '@/hooks/useNotificationPermission'
-// TODO
-// [ ] iOS 알림 허용 요청 UI 구현
-// [ ] console.log 삭제, 코드 불필요한 부분 정리
-// [ ] 구독 내역 갱신 로직 수정
+
+// [ ] OS 알림 허용 후 모달 닫힘
+// [ ] OS 알림 허용 상태 확인해서 모달 열기
 
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
@@ -158,11 +157,11 @@ const HomePage = () => {
       {/* iOS 알림 권한 요청 모달 */}
       <NotificationPermissionModal
         userId={user?.id}
-        onClose={() => console.log('모달 닫힘')}
+        onClose={() => setIsNotificationDeniedModalOpen(true)}
       />
       <NotificationDeniedModal
-        isOpen={false}
-        onClose={() => console.log('모달 닫힘')}
+        isOpen={isNotificationDeniedModalOpen}
+        onClose={() => setIsNotificationDeniedModalOpen(false)}
       />
     </div>
   )

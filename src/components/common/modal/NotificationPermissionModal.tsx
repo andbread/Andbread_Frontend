@@ -2,15 +2,16 @@
 import React, { useEffect, useState } from 'react'
 import Modal from './Modal'
 import { useNotificationPermission } from '@/hooks/useNotificationPermission'
+import { useToast } from '@/components/common/toast/Toast'
 
 interface NotificationPermissionModalProps {
   userId: string | undefined
-  onClose: () => void
+  handlePermissionDenied: () => void
 }
 
 const NotificationPermissionModal = ({
   userId,
-  onClose,
+  handlePermissionDenied,
 }: NotificationPermissionModalProps) => {
   const {
     permissionState,
@@ -19,19 +20,22 @@ const NotificationPermissionModal = ({
     getPermissionAndRegisterToken,
   } = useNotificationPermission(userId)
 
-  const handleConfirmButtonPress = () => {
+  const handleConfirmButtonPress = async () => {
     setShowIOSPermissionModal(false)
-    getPermissionAndRegisterToken()
-  }
-  const handleCloseButtonPress = () => {
-    setShowIOSPermissionModal(false)
-    onClose()
+    await getPermissionAndRegisterToken()
+
+    if (permissionState === 'denied') {
+      handlePermissionDenied()
+      return
+    }
+
+    useToast.success('알림이 허용되었어요.')
   }
 
-  // useEffect(() => {
-  //   if (!userId || !permissionState) return
-  //   set(showIOSPermissionModal)
-  // }, [userId, permissionState, showIOSPermissionModal])
+  const handleCloseButtonPress = () => {
+    setShowIOSPermissionModal(false)
+    handlePermissionDenied()
+  }
 
   if (!userId) return null
 
