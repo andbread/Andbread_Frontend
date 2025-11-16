@@ -157,7 +157,7 @@ const HomePage = () => {
       {/* iOS 알림 권한 요청 모달 */}
       <NotificationPermissionModal
         userId={user?.id}
-        onClose={() => setIsNotificationDeniedModalOpen(true)}
+        handlePermissionDenied={() => setIsNotificationDeniedModalOpen(true)}
       />
       <NotificationDeniedModal
         isOpen={isNotificationDeniedModalOpen}
