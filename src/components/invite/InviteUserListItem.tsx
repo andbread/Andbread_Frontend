@@ -1,28 +1,67 @@
 import DefaultAvatar from '@/assets/avatar.svg'
 import Avatar from '../common/avatar/avatar'
+import { sendInviteRequest } from '@/lib/invite/sendInviteRequest'
+import { useEffect } from 'react'
+import { useState } from 'react'
 interface InviteUserData {
   avatar: string | null
   name: string
   status: string
+  nbreadId: string
+  invitedUserId: string
+  onRefresh?: () => void
 }
-const InviteUserListItem = ({ avatar, name, status }: InviteUserData) => {
-  const getInviteUserStatus = (status: string) => {
-    switch (status) {
-      case '초대 하기':
-        return { color: 'text-system-blue01', cursor: 'cursor-pointer' }
-      case '참여 중':
-        return { color: 'text-gray-400', cursor: null }
-      case '초대 완료':
-        return { color: 'text-gray-400', cursor: null }
-      default:
-        return { color: 'text-black', cursor: 'cursor-pointer' }
+const InviteUserListItem = ({ avatar, name, status,nbreadId,invitedUserId,onRefresh }: InviteUserData) => {
+    const [sendStatus, setSendStatus] = useState(status)
+    const [color, setColor] = useState('')
+    const [cursor, setCursor] = useState('')
+  // const getInviteUserStatus = (status: string) => {
+  //   switch (status) {
+  //     case '초대 하기':
+  //       return { color: 'text-system-blue01', cursor: 'cursor-pointer' }
+  //     case '참여 중':
+  //       return { color: 'text-gray-400', cursor: null }
+  //     case '초대 완료':
+  //       return { color: 'text-gray-400', cursor: null }
+  //     default:
+  //       return { color: 'text-black', cursor: 'cursor-pointer' }
+  //   }
+  // }
+  useEffect(() => {
+    if (status == '초대 완료') {
+      setSendStatus('초대 완료')
+      setColor('text-gray-400')
+      setCursor('cursor-default')
     }
-  }
-  const { color, cursor } = getInviteUserStatus(status)
+    else if(status =='초대 하기'){
+        setSendStatus('초대 하기')
+      setColor('text-system-blue01')
+      setCursor('cursor-pointer')
+    }
+    else if(status =='rejected') {
+        setSendStatus('초대 하기')
+      setColor('text-system-blue01')
+      setCursor('cursor-pointer')
+    }
+    else {
+        setSendStatus('')
+      setColor('')
+      setCursor('')
+    }
+  }, [status])
+  // const { color, cursor } = getInviteUserStatus(status)
 
-  const handleClick = (status: string) => {
-    if (status == '초대 하기') {
+  const handleClick = async(status: string) => {
+    if (status == '초대 하기' || status == 'rejected') {
+      console.log('glgl',status)
+      console.log('현재 엔빵 아디: ',nbreadId)
+      console.log('초대보낼 유저 아이디 : ', invitedUserId)
+      const fetchInvite = await sendInviteRequest(nbreadId,invitedUserId,'pending')
       console.log('초대 보냄')
+      setSendStatus('요청 완료')
+      setColor('text-gray-400')
+      setCursor('cursor-default')
+          if (onRefresh) onRefresh()
     }
   }
   return (
@@ -45,7 +84,7 @@ const InviteUserListItem = ({ avatar, name, status }: InviteUserData) => {
           className={`${color} text-body01 ${cursor}`}
           onClick={() => handleClick(status)}
         >
-          {status}
+          {sendStatus}
         </p>
       </div>
     </div>

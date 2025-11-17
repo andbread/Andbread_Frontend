@@ -19,7 +19,7 @@ import useUserStore from '@/stores/useAuthStore'
 import QuitNbreadModal from '@/components/common/modal/QuitNbreadModal'
 import Spinner from '@/components/common/spinner/Spinner'
 import InviteBottomSheet from '@/components/invite/InviteBottomSheet'
-
+import { getFriendList } from '@/lib/friend/getSearchFriend'
 interface nbreadDetailProps {
   nbreadData: Nbread
   setNbreadData: Dispatch<SetStateAction<Nbread | null>>
@@ -207,6 +207,7 @@ const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
         <InviteBottomSheet
           isOpen={isInviteBottomSheetOpen}
           onClose={() => setIsInviteBottomSheetOpen(false)}
+          user={userData?.id ?? null}
         />
         <QuitNbreadModal
           isOpen={isQuitNbreadModalOpen}

@@ -24,7 +24,7 @@ const FriendListPage = () => {
   const fetchFriendList = async () => {
     console.log(user.user?.id)
     if (user) {
-     const friendList =  await getFriendList(user.user?.id || null)
+     const friendList =  await getFriendList(user.user?.id || null,null)
      console.log('제발용',friendList)
      setFriendsData(friendList)
     }
