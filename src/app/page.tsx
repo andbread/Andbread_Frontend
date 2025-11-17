@@ -13,11 +13,12 @@ import { getUser } from '@/lib/auth'
 import { insertParticipant } from '@/lib/participant'
 import { useToast } from '@/components/common/toast/Toast'
 import { requestNotificationPermission } from '@/utils/requestNotificationPermission'
+import NotificationPermissionModal from '@/components/common/modal/NotificationPermissionModal'
+import NotificationDeniedModal from '@/components/common/modal/NotificationDeniedModal'
+import { useNotificationPermission } from '@/hooks/useNotificationPermission'
 
-// TODO
-// [ ] iOS 알림 허용 요청 UI 구현
-// [ ] console.log 삭제, 코드 불필요한 부분 정리
-// [ ] 구독 내역 갱신 로직 수정
+// [ ] OS 알림 허용 후 모달 닫힘
+// [ ] OS 알림 허용 상태 확인해서 모달 열기
 
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
@@ -26,6 +27,8 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isModalOpen, setModalOpen] = useState<boolean>(false)
   const [groupId, setGroupId] = useState<string>()
+  const [isNotificationDeniedModalOpen, setIsNotificationDeniedModalOpen] =
+    useState<boolean>(false)
   const currentMonth = new Date().getMonth() + 1
 
   // Nbread 및 Participant 정보를 DB로부터 fetch
@@ -150,6 +153,15 @@ const HomePage = () => {
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={inviteAccept}
+      />
+      {/* iOS 알림 권한 요청 모달 */}
+      <NotificationPermissionModal
+        userId={user?.id}
+        handlePermissionDenied={() => setIsNotificationDeniedModalOpen(true)}
+      />
+      <NotificationDeniedModal
+        isOpen={isNotificationDeniedModalOpen}
+        onClose={() => setIsNotificationDeniedModalOpen(false)}
       />
     </div>
   )
