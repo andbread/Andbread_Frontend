@@ -1,4 +1,5 @@
 import Modal from '../common/modal/Modal'
+import { useRouter } from 'next/navigation'
 import { updateAcceptInvite } from '@/lib/invite/updateInvite'
 import { updateRejectedInvite } from '@/lib/invite/updateInvite'
 interface InviteAcceptModalProps {
@@ -10,9 +11,12 @@ interface InviteAcceptModalProps {
   receiverId: string
 }
 const InviteAcceptModal = ({isOpen,onClose,senderNbreadTitle,senderNbreadId,receiverId} : InviteAcceptModalProps) => {
+    const router = useRouter()
     const fetchInviteAccept = async () => {
         const acceptInviteData = await updateAcceptInvite(receiverId,senderNbreadId)
         onClose()
+        router.push(`/nbread/${senderNbreadId}`)
+
     }
     const fetchInviteReject = async () => {
         const rejectInviteData = await updateRejectedInvite(receiverId,senderNbreadId)
