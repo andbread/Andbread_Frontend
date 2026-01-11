@@ -41,44 +41,54 @@ export const useNotificationPermission = (userId: string | undefined) => {
     if (isiOS) {
       setShowIOSPermissionModal(true) // ios인 경우 모달 팝업
     } else {
-      getPermissionAndRegisterToken() // 이외의 경우 바로 알림 권한 요청
+      requestPermission() // 이외의 경우 바로 알림 권한 요청
     }
   }, [isiOS, permissionState])
 
-  // 권한 요청 및 fcm 토큰 발급
-  const getPermissionAndRegisterToken = useCallback(async () => {
-    if (!('Notification' in window) || !userId) {
+  // 권한 요청
+  const requestPermission = useCallback(async () => {
+    if (!('Notification' in window)) {
       setPermissionState('unsupported')
       return 'unsupported'
     }
 
-    try {
-      const registration = await registerServiceWorker()
-      const permission = await Notification.requestPermission()
-      setPermissionState(permission)
+    const permission = await Notification.requestPermission()
+    setPermissionState(permission)
 
-      if (permission !== 'granted') return permission
-
-      const messaging = await initMessaging()
-      const fcmDeviceToken = await getToken(messaging!, {
-        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-        serviceWorkerRegistration: registration,
-      })
-
-      if (fcmDeviceToken) {
-        await upsertFcmToken(userId, fcmDeviceToken)
-        console.log('fcmDeviceToken', fcmDeviceToken)
-      }
-      return permission
-    } catch (error) {
-      console.error('알림 권한 요청 중 오류 발생:', error)
+    // 권한 허용 시 fcm 토큰 발급 및 서버 저장
+    if (permission === 'granted' && userId) {
+      await getFcmTokenAndRegister(userId)
     }
-  }, [userId])
+    return permission
+  }, [])
+
+  // fcm 토큰 발급 및 서버 저장
+  const getFcmTokenAndRegister = useCallback(
+    async (userId: string) => {
+      try {
+        const registration = await registerServiceWorker()
+        const messaging = await initMessaging()
+
+        const fcmDeviceToken = await getToken(messaging!, {
+          vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+          serviceWorkerRegistration: registration,
+        })
+
+        if (fcmDeviceToken) {
+          await upsertFcmToken(userId, fcmDeviceToken)
+          console.log('fcmDeviceToken', fcmDeviceToken)
+        }
+      } catch (error) {
+        console.error('알림 권한 요청 중 오류 발생:', error)
+      }
+    },
+    [userId],
+  )
 
   return {
     permissionState,
     showIOSPermissionModal,
     setShowIOSPermissionModal,
-    getPermissionAndRegisterToken,
+    requestPermission,
   }
 }

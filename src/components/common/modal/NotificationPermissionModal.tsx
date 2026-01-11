@@ -16,12 +16,12 @@ const NotificationPermissionModal = ({
   const {
     showIOSPermissionModal,
     setShowIOSPermissionModal,
-    getPermissionAndRegisterToken,
+    requestPermission,
   } = useNotificationPermission(userId)
 
   const handleConfirmButtonPress = async () => {
     setShowIOSPermissionModal(false)
-    const permission = await getPermissionAndRegisterToken()
+    const permission = await requestPermission()
 
     if (permission === 'denied') {
       handlePermissionDenied()
