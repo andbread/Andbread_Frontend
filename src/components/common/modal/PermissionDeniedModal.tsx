@@ -25,7 +25,7 @@ const PermissionDeniedModal = ({
           </div>
         </div>
       </div>
-      <div className="mt-8 flex flex-row gap-8">
+      <div className="flex flex-row gap-8 p-12">
         <button
           onClick={onClose}
           className="btn btn-small btn-secondary text-heading06"
