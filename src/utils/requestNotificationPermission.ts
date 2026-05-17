@@ -1,17 +1,30 @@
-import { useToast } from '@/components/common/toast/Toast'
 import { registerServiceWorker } from './registerServiceWorker'
 import { getToken } from 'firebase/messaging'
 import { initMessaging } from './firebase/initFirebase'
 import { upsertFcmToken } from '@/lib/fcmToken/upsertFcmToken'
 
+const registerFcmToken = async (userId: string) => {
+  const registration = await registerServiceWorker()
+  const messaging = await initMessaging()
+
+  if (!messaging) return
+
+  const fcmDeviceToken = await getToken(messaging, {
+    vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+    serviceWorkerRegistration: registration,
+  })
+
+  console.log('[FCM] device token:', fcmDeviceToken)
+
+  if (fcmDeviceToken) {
+    await upsertFcmToken(userId, fcmDeviceToken)
+  }
+}
+
 export const requestNotificationPermission = async (userId: string) => {
   if ('Notification' in window) {
-    if (
-      Notification.permission === 'default' ||
-      Notification.permission === 'denied'
-    ) {
+    if (Notification.permission === 'default') {
       try {
-        const registration = await registerServiceWorker()
         const permission = await Notification.requestPermission()
 
         if (permission !== 'granted') {
@@ -19,21 +32,13 @@ export const requestNotificationPermission = async (userId: string) => {
           throw new Error('알림이 허용되지 않음')
         }
 
-        const messaging = await initMessaging()
-        const fcmDeviceToken = await getToken(messaging!, {
-          vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-          serviceWorkerRegistration: registration,
-        })
-
-        if (fcmDeviceToken) {
-          // TODO fcm 디바이스 토큰을 서버에 저장
-          upsertFcmToken(userId, fcmDeviceToken)
-          console.log('fcmDeviceToken',fcmDeviceToken)
-        }
+        await registerFcmToken(userId)
       } catch (error) {
         console.error('알림 허용 요청 중 오류 발생: ', error)
         throw error
       }
+    } else if (Notification.permission === 'granted') {
+      await registerFcmToken(userId)
     }
   } else {
     // TODO 알림 관련 팝업 UI 구현 필요
