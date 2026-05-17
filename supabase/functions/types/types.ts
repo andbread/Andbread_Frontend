@@ -7,6 +7,7 @@ export interface Notification {
   is_read: boolean
   type:
     | 'payment'
+    | 'chat'
     | 'invite'
     | 'invite_accept'
     | 'friend_request'

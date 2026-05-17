@@ -9,6 +9,7 @@ import { getFcmAccessToken } from '../utils/getFCMToken.ts'
 import { sendFCMNotification } from '../utils/sendFCMNotification.ts'
 import { insertNotificationResult } from '../utils/insertNotificationResult.ts'
 import { NbreadRecordsRow } from '../types/database.types.ts'
+import { filterNotificationEnabledUsers } from '../utils/filterNotificationEnabledUsers.ts'
 
 interface WebhookPayload {
   type: 'UPDATE'
@@ -97,13 +98,21 @@ Deno.serve(async (req) => {
     const targetUserIds = participantData
       .map((row) => row.user_id)
       .filter((id) => id !== paidUserId)
+    const enabledTargetUserIds = await filterNotificationEnabledUsers(
+      targetUserIds,
+      'payment_enabled',
+    )
+
+    if (enabledTargetUserIds.length === 0) {
+      return new Response(null, { status: 204, headers: corsHeaders })
+    }
 
     // 3. 해당 user_id들에 대한 FCM 토큰 조회
     const { data: fcmDeviceTokenData, error: fcmDeviceTokenError } =
       await supabaseClient
         .from('fcm_token')
         .select('*')
-        .in('user_id', targetUserIds)
+        .in('user_id', enabledTargetUserIds)
 
     if (
       fcmDeviceTokenError ||

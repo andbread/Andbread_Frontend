@@ -7,7 +7,11 @@ import { upsertFcmToken } from '@/lib/fcmToken/upsertFcmToken'
 
 type PermissionState = NotificationPermission | 'unsupported'
 
-export const useNotificationPermission = (userId: string | undefined) => {
+export const useNotificationPermission = (
+  userId: string | undefined,
+  options: { autoRequest?: boolean } = {},
+) => {
+  const { autoRequest = true } = options
   const [permissionState, setPermissionState] = useState<
     PermissionState | undefined
   >(undefined)
@@ -34,51 +38,68 @@ export const useNotificationPermission = (userId: string | undefined) => {
     setPermissionState(Notification.permission)
   }, [])
 
+  // fcm 토큰 발급 및 서버 저장
+  const getFcmTokenAndRegister = useCallback(
+    async (userId: string) => {
+      try {
+        const registration = await registerServiceWorker()
+        const messaging = await initMessaging()
+
+        const fcmDeviceToken = await getToken(messaging!, {
+          vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+          serviceWorkerRegistration: registration,
+        })
+
+        if (fcmDeviceToken) {
+          await upsertFcmToken(userId, fcmDeviceToken)
+          console.log('[FCM] device token:', fcmDeviceToken)
+        }
+      } catch (error) {
+        console.error('알림 권한 요청 중 오류 발생:', error)
+      }
+    },
+    [userId],
+  )
+
+  // 권한 요청
+  const requestPermission = useCallback(async () => {
+    if (!('Notification' in window)) {
+      setPermissionState('unsupported')
+      return 'unsupported'
+    }
+
+    const permission = await Notification.requestPermission()
+    setPermissionState(permission)
+
+    // 권한 허용 시 fcm 토큰 발급 및 서버 저장
+    if (permission === 'granted' && userId) {
+      await getFcmTokenAndRegister(userId)
+    }
+    return permission
+  }, [getFcmTokenAndRegister, userId])
+
   // os에 따라 권한 요청 분기
   useEffect(() => {
+    if (!autoRequest) return
     if (permissionState !== 'default' || !userId) return
 
     if (isiOS) {
       setShowIOSPermissionModal(true) // ios인 경우 모달 팝업
     } else {
-      getPermissionAndRegisterToken() // 이외의 경우 바로 알림 권한 요청
+      requestPermission() // 이외의 경우 바로 알림 권한 요청
     }
-  }, [isiOS, permissionState])
+  }, [autoRequest, isiOS, permissionState, requestPermission, userId])
 
-  // 권한 요청 및 fcm 토큰 발급
-  const getPermissionAndRegisterToken = useCallback(async () => {
-    if (!('Notification' in window) || !userId) {
-      setPermissionState('unsupported')
-      return 'unsupported'
-    }
+  useEffect(() => {
+    if (permissionState !== 'granted' || !userId) return
 
-    try {
-      const registration = await registerServiceWorker()
-      const permission = await Notification.requestPermission()
-      setPermissionState(permission)
-
-      if (permission !== 'granted') return permission
-
-      const messaging = await initMessaging()
-      const fcmDeviceToken = await getToken(messaging!, {
-        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-        serviceWorkerRegistration: registration,
-      })
-
-      if (fcmDeviceToken) {
-        await upsertFcmToken(userId, fcmDeviceToken)
-        console.log('fcmDeviceToken', fcmDeviceToken)
-      }
-      return permission
-    } catch (error) {
-      console.error('알림 권한 요청 중 오류 발생:', error)
-    }
-  }, [userId])
+    getFcmTokenAndRegister(userId)
+  }, [getFcmTokenAndRegister, permissionState, userId])
 
   return {
     permissionState,
     showIOSPermissionModal,
     setShowIOSPermissionModal,
-    getPermissionAndRegisterToken,
+    requestPermission,
   }
 }
