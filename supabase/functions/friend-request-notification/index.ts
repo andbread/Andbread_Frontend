@@ -8,6 +8,7 @@ import {
 import { getFcmAccessToken } from '../utils/getFCMToken.ts'
 import { sendFCMNotification } from '../utils/sendFCMNotification.ts'
 import { insertNotificationResult } from '../utils/insertNotificationResult.ts'
+import { filterNotificationEnabledUsers } from '../utils/filterNotificationEnabledUsers.ts'
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -62,11 +63,20 @@ Deno.serve(async (req) => {
     const senderName = senderNameData.name
     const title = `🍞 ${senderName}님의 친구 요청`
     const message = `${senderName}님이 친구 요청을 보냈어요`
+    const enabledTargetUserIds = await filterNotificationEnabledUsers(
+      [receiverId],
+      'friend_enabled',
+    )
+
+    if (enabledTargetUserIds.length === 0) {
+      return new Response(null, { status: 204, headers: corsHeaders })
+    }
+
     const { data: fcmDeviceTokenData, error: fcmDeviceTokenError } =
       await supabaseClient
         .from('fcm_token')
         .select('*')
-        .eq('user_id', receiverId)
+        .in('user_id', enabledTargetUserIds)
     if (fcmDeviceTokenError || !fcmDeviceTokenData) {
       return new Response(
         JSON.stringify({
