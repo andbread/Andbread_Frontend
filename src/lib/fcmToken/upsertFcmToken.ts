@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
+import { captureAppError } from '@/lib/sentry'
 
 export const upsertFcmToken = async (userId: string, fcmToken: string) => {
   try {
@@ -17,6 +18,10 @@ export const upsertFcmToken = async (userId: string, fcmToken: string) => {
 
     return data
   } catch (error) {
+    captureAppError(error, {
+      action: 'fcm_token.upsert',
+      tags: { userId },
+    })
     throw error
   }
 }

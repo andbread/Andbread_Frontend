@@ -4,6 +4,7 @@ import { LoginProvider, User } from '@/types/user'
 import useUserStore from '@/stores/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/common/toast/Toast'
+import { captureAppError } from '@/lib/sentry'
 
 // 1. 로그인 함수
 export const login = async (provider: LoginProvider['provider']) => {
@@ -20,6 +21,10 @@ export const login = async (provider: LoginProvider['provider']) => {
   })
 
   if (error) {
+    captureAppError(error, {
+      action: 'auth.login',
+      tags: { provider },
+    })
     throw new Error(error.message)
   }
 
@@ -28,7 +33,12 @@ export const login = async (provider: LoginProvider['provider']) => {
 
 // 2. 로그아웃 함수
 export const logout = async (router: ReturnType<typeof useRouter>) => {
-  const data = await supabase.auth.signOut()
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    captureAppError(error, {
+      action: 'auth.logout',
+    })
+  }
   useUserStore.getState().clearUser()
   sessionStorage.clear()
   setTimeout(() => {
@@ -43,9 +53,21 @@ export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
   const data = await supabase.auth.getUser()
   const user = data.data.user?.id
   if (!user) {
-    throw new Error('유저정보를 찾을수 없음')
+    const error = new Error('유저정보를 찾을수 없음')
+    captureAppError(error, {
+      action: 'auth.delete_account',
+    })
+    throw error
   }
-  await adminSupabase.auth.admin.deleteUser(user), supabase.auth.signOut
+  const { error } = await adminSupabase.auth.admin.deleteUser(user)
+  if (error) {
+    captureAppError(error, {
+      action: 'auth.delete_account',
+      tags: { userId: user },
+    })
+    throw error
+  }
+  await supabase.auth.signOut()
   useUserStore.getState().clearUser()
   sessionStorage.removeItem('user-store')
   localStorage.clear()

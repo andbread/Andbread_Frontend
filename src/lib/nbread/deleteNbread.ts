@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
+import { captureAppError } from '@/lib/sentry'
 
 export const deleteNbread = async (nbreadId: string) => {
   try {
@@ -14,6 +15,10 @@ export const deleteNbread = async (nbreadId: string) => {
 
     return data
   } catch (error) {
+    captureAppError(error, {
+      action: 'nbread.delete',
+      tags: { nbreadId },
+    })
     throw error
   }
 }
