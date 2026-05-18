@@ -9,7 +9,7 @@ import { useRef, useState } from 'react'
 interface NbreadParticipantCardProps {
   nbreadId?: string
   participantId?: string
-  currentPaymentDate?: string
+  startDate?: string
   profileImageUrl?: string | null
   isNbreadLeader: boolean
   name: string
@@ -35,7 +35,7 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
         props.nbreadId!,
         props.participantId!,
         !isChecked,
-        props.currentPaymentDate!,
+        props.startDate!,
       )
 
       useToast.success('완료 여부 업데이트에 성공했어요.')

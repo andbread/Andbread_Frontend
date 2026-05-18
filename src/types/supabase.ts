@@ -139,38 +139,38 @@ export type Database = {
       nbread: {
         Row: {
           amount: number
-          current_payment_date: string | null
+          end_date: string | null
           id: string
           leader_id: string
-          next_payment_date: string | null
           participant_count: number
           payment_date: number
           payment_month: number | null
           payment_period: string
+          start_date: string | null
           title: string
         }
         Insert: {
           amount: number
-          current_payment_date?: string | null
+          end_date?: string | null
           id?: string
           leader_id: string
-          next_payment_date?: string | null
           participant_count: number
           payment_date: number
           payment_month?: number | null
           payment_period: string
+          start_date?: string | null
           title: string
         }
         Update: {
           amount?: number
-          current_payment_date?: string | null
+          end_date?: string | null
           id?: string
           leader_id?: string
-          next_payment_date?: string | null
           participant_count?: number
           payment_date?: number
           payment_month?: number | null
           payment_period?: string
+          start_date?: string | null
           title?: string
         }
         Relationships: []
@@ -252,6 +252,59 @@ export type Database = {
             columns: ['user_id']
             isOneToOne: false
             referencedRelation: 'user'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      nbread_auto_generation_logs: {
+        Row: {
+          created_at: string
+          end_date: string | null
+          error_message: string | null
+          id: number
+          inserted_count: number
+          metadata: Json
+          nbread_id: string | null
+          next_payment_date: string | null
+          payment_date: string | null
+          reason: string | null
+          start_date: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          end_date?: string | null
+          error_message?: string | null
+          id?: number
+          inserted_count?: number
+          metadata?: Json
+          nbread_id?: string | null
+          next_payment_date?: string | null
+          payment_date?: string | null
+          reason?: string | null
+          start_date?: string | null
+          status: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string | null
+          error_message?: string | null
+          id?: number
+          inserted_count?: number
+          metadata?: Json
+          nbread_id?: string | null
+          next_payment_date?: string | null
+          payment_date?: string | null
+          reason?: string | null
+          start_date?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'nbread_auto_generation_logs_nbread_id_fkey'
+            columns: ['nbread_id']
+            isOneToOne: false
+            referencedRelation: 'nbread'
             referencedColumns: ['id']
           },
         ]
@@ -406,6 +459,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_next_nbread_payment_date: {
+        Args: {
+          p_payment_date: string
+          p_payment_period: string
+          p_payment_month: number
+          p_payment_day: number
+        }
+        Returns: string
+      }
+      generate_nbread_records_for_due_group: {
+        Args: {
+          p_nbread_id: string
+          p_today?: string
+        }
+        Returns: Json
+      }
       update_nbread_records: {
         Args: Record<PropertyKey, never>
         Returns: undefined

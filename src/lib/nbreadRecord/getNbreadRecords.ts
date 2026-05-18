@@ -3,9 +3,9 @@ import { Nbread, NbreadRecord } from '@/types/nbread'
 
 export const getNbreadRecords = async (
   nbreadId: string,
-  currentPaymentDate: string,
+  startDate: string,
 ) => {
-  const translatedCurrentPaymentDate = new Date(currentPaymentDate)
+  const translatedStartDate = new Date(startDate)
     .toISOString()
     .split('T')[0]
 
@@ -14,7 +14,7 @@ export const getNbreadRecords = async (
       .from('nbread_records')
       .select('*')
       .eq('nbread_id', nbreadId)
-      .eq('payment_date', translatedCurrentPaymentDate) // payment-date가 currentPaymentDate와 동일한 row만 불러오기
+      .eq('payment_date', translatedStartDate)
 
     if (error) {
       console.error('Error fetching nbread record:', error)
