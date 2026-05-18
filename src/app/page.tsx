@@ -12,10 +12,8 @@ import InvitationToNbreadModal from '@/components/inviteAccept/InvitationToNbrea
 import { getUser } from '@/lib/auth'
 import { insertParticipant } from '@/lib/participant'
 import { useToast } from '@/components/common/toast/Toast'
-import { requestNotificationPermission } from '@/utils/requestNotificationPermission'
 import NotificationPermissionModal from '@/components/common/modal/NotificationPermissionModal'
 import NotificationDeniedModal from '@/components/common/modal/NotificationDeniedModal'
-import { useNotificationPermission } from '@/hooks/useNotificationPermission'
 
 // [ ] OS 알림 허용 후 모달 닫힘
 // [ ] OS 알림 허용 상태 확인해서 모달 열기
@@ -48,8 +46,6 @@ const HomePage = () => {
   useEffect(() => {
     if (!user) return
     fetchNbreads(user.id)
-
-    requestNotificationPermission(user.id)
     // testSendPaymentNotification()
     // test()
   }, [user])

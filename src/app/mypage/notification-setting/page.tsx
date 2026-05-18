@@ -5,6 +5,7 @@ import DetailHeader from '@/components/common/header/DetailHeader'
 import ToggleButton from '@/components/common/toggle/ToggleButton'
 import PermissionDeniedModal from '@/components/common/modal/PermissionDeniedModal'
 import Spinner from '@/components/common/spinner/Spinner'
+import IOSGuideModal from '@/components/common/modal/IOSGuideModal'
 import { getNotificationState } from '@/lib/notification/getNotificationState'
 import { updateNotificationState } from '@/lib/notification/updateNotificationState'
 import useUserStore from '@/stores/useAuthStore'
@@ -37,7 +38,12 @@ const NotificationSettingPage = () => {
     friend: false,
     payment: false,
   })
-  const { requestPermission } = useNotificationPermission(user?.id, {
+  const {
+    requestPermission,
+    showIOSGuideModal,
+    setShowIOSGuideModal,
+    shouldShowIOSGuide,
+  } = useNotificationPermission(user?.id, {
     autoRequest: false,
   })
 
@@ -52,6 +58,10 @@ const NotificationSettingPage = () => {
 
   const ensureNotificationPermission = async () => {
     const permission = await requestPermission()
+
+    if (permission === 'unsupported' && shouldShowIOSGuide) {
+      return false
+    }
 
     if (permission === 'denied' || permission === 'unsupported') {
       setIsPermissionDeniedModalOpen(true)
@@ -168,6 +178,10 @@ const NotificationSettingPage = () => {
       <PermissionDeniedModal
         isOpen={isPermissionDeniedModalOpen}
         onClose={() => setIsPermissionDeniedModalOpen(false)}
+      />
+      <IOSGuideModal
+        isOpen={showIOSGuideModal}
+        onClose={() => setShowIOSGuideModal(false)}
       />
     </div>
   )
