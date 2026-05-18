@@ -1,25 +1,27 @@
-import { useState } from "react";
 interface ToggleProps {
-    enabled:boolean
-    onClick: ()=> void
+  enabled: boolean
+  onClick: () => void
+  ariaLabel?: string
 }
-const ToggleButton = ({onClick,enabled}:ToggleProps) => {
-    const [isEnabled, setIsEnabled] = useState(enabled)
-    const handleClick = () => {
-        setIsEnabled(!isEnabled); 
-        onClick();                
-    };
-    return (
-        <button onClick={handleClick}
-        className={`relative inline-flex h-20 w-40 items-center rounded-full transition-colors ${
-        isEnabled ? "bg-secondary-100" : "bg-gray-300"
+
+const ToggleButton = ({ onClick, enabled, ariaLabel }: ToggleProps) => {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={ariaLabel}
+      aria-pressed={enabled}
+      className={`relative inline-flex h-20 w-40 items-center rounded-full transition-colors ${
+        enabled ? 'bg-secondary-100' : 'bg-gray-300'
       }`}
-        ><span
+    >
+      <span
         className={`inline-block h-16 w-16 transform rounded-full bg-white transition-transform ${
-          isEnabled ? "translate-x-22" : "translate-x-2"
+          enabled ? 'translate-x-22' : 'translate-x-2'
         }`}
       />
-        </button>
-    )
+    </button>
+  )
 }
-export default ToggleButton;
+
+export default ToggleButton

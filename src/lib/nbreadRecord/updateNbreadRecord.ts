@@ -5,9 +5,9 @@ export const updateNbreadRecord = async (
   nbreadId: string,
   userId: string,
   isPaid: boolean,
-  currentPaymentDate: string,
+  startDate: string,
 ) => {
-  const translatedCurrentPaymentDate = new Date(currentPaymentDate)
+  const translatedStartDate = new Date(startDate)
     .toISOString()
     .split('T')[0]
 
@@ -19,7 +19,7 @@ export const updateNbreadRecord = async (
       })
       .eq('nbread_id', nbreadId)
       .eq('user_id', userId)
-      .eq('payment_date', translatedCurrentPaymentDate) // payment-date가 currentPaymentDate와 동일한 row만 업데이트(가장 최신 row만 업데이트)
+      .eq('payment_date', translatedStartDate)
 
     if (error) {
       console.error('Error updating nbread record:', error)

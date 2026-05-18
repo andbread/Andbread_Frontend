@@ -117,7 +117,7 @@ const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
     const fetchNbreadRecordData = async () => {
       const nbreadRecordsData = await getNbreadRecords(
         nbreadData!.id,
-        nbreadData!.currentPaymentDate!,
+        nbreadData!.startDate!,
       )
       setNbreadRecords(nbreadRecordsData)
     }
@@ -164,7 +164,7 @@ const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
               <NbreadParticipantsList
                 nbreadId={nbreadData.id}
                 nbreadRecords={nbreadRecords!}
-                currentPaymentDate={nbreadData.currentPaymentDate!}
+                startDate={nbreadData.startDate!}
                 participants={nbreadData.participants!}
                 participantMaxCount={nbreadData.participantCount}
                 leaderId={nbreadData.leaderId!}

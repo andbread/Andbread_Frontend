@@ -9,6 +9,7 @@ import { getFcmAccessToken } from '../utils/getFCMToken.ts'
 import { sendFCMNotification } from '../utils/sendFCMNotification.ts'
 import { insertNotificationResult } from '../utils/insertNotificationResult.ts'
 import { FriendRequestRow } from '../types/database.types.ts'
+import { filterNotificationEnabledUsers } from '../utils/filterNotificationEnabledUsers.ts'
 
 interface WebhookPayload {
   type: 'UPDATE'
@@ -62,9 +63,20 @@ Deno.serve(async (req) => {
     const message = requestAccepted
       ? `${receiverNameData.name}님이 친구 요청을 수락했어요`
       : `${receiverNameData.name}님이 친구 요청을 거절했어요`
+    const enabledTargetUserIds = await filterNotificationEnabledUsers(
+      [senderId],
+      'friend_enabled',
+    )
+
+    if (enabledTargetUserIds.length === 0) {
+      return new Response(null, { status: 204, headers: corsHeaders })
+    }
 
     const { data: fcmDeviceTokenData, error: fcmDeviceTokenError } =
-      await supabaseClient.from('fcm_token').select('*').eq('user_id', senderId)
+      await supabaseClient
+        .from('fcm_token')
+        .select('*')
+        .in('user_id', enabledTargetUserIds)
 
     if (fcmDeviceTokenError || !fcmDeviceTokenData) {
       return new Response(

@@ -47,7 +47,8 @@ export const getUserNbreads = async (userId: string): Promise<Nbread[]> => {
       paymentPeriod: nbread.payment_period as 'year' | 'month',
       leaderId: nbread.leader_id,
       participants: null,
-      currentPaymentDate: nbread.current_payment_date,
+      startDate: nbread.start_date,
+      endDate: nbread.end_date,
     }),
   )
 
@@ -58,7 +59,7 @@ export const getUserNbreads = async (userId: string): Promise<Nbread[]> => {
         .from('nbread_records')
         .select('*', { count: 'exact' })
         .eq('nbread_id', nbread.id)
-        .eq('payment_date', nbread.currentPaymentDate)
+        .eq('payment_date', nbread.startDate)
         .eq('is_paid', true)
 
       if (error) {

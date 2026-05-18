@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "update-types": "supabase gen types typescript --project-id whsygotpggvtadynqwmv --schema public > src/types/supabase.ts"
+    "update-types": "supabase gen types typescript --project-id yyisakaqnaoomehqlyjz --schema public > src/types/supabase.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.14",
@@ -16,7 +16,7 @@
     "classnames": "^2.5.1",
     "firebase": "^12.0.0",
     "google-auth-library": "^10.2.0",
-    "next": "^15.1.11",
+    "next": "^15.5.18",
     "nprogress": "^0.2.0",
     "react": "^19.0.3",
     "react-dom": "^19.0.3",
@@ -34,7 +34,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.1.4",
+    "eslint-config-next": "^15.5.18",
     "eslint-config-prettier": "^10.0.1",
     "postcss": "^8",
     "prettier": "^3.4.2",

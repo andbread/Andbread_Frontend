@@ -67,7 +67,7 @@ const Page = () => {
     const fetchNbreadRecordData = async () => {
       const nbreadRecordsData = await getNbreadRecords(
         nbread!.id,
-        nbread!.currentPaymentDate!,
+        nbread!.startDate!,
       )
       setNbreadRecords(nbreadRecordsData)
     }
