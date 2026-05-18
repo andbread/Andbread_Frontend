@@ -8,7 +8,13 @@ import { captureAppError } from '@/lib/sentry'
 
 // 1. 로그인 함수
 export const login = async (provider: LoginProvider['provider']) => {
-  const redirectToUrl = process.env.NEXT_PUBLIC_REDIRECT_URL
+  const appUrl =
+    (typeof window !== 'undefined' ? window.location.origin : undefined) ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.NEXT_PUBLIC_VERCEL_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : 'http://localhost:3000')
+  const redirectToUrl = `${appUrl}/auth/callback`
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
