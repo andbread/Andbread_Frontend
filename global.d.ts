@@ -15,4 +15,8 @@ export declare global {
     Kakao: any // Kakao 객체를 any 타입으로 선언
     MSStream?: any
   }
+
+  interface Navigator {
+    standalone?: boolean
+  }
 }
