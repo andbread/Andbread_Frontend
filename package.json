@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "update-types": "supabase gen types typescript --project-id whsygotpggvtadynqwmv --schema public > src/types/supabase.ts"
+    "update-types": "supabase gen types typescript --project-id yyisakaqnaoomehqlyjz --schema public > src/types/supabase.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.14",

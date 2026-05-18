@@ -42,7 +42,7 @@ const NbreadInviteModal = ({
         title: `${user?.name}님이 엔빵으로 초대했어요!`,
         description: '참여하기를 클릭해 초대를 수락해보세요.',
         imageUrl:
-          'https://whsygotpggvtadynqwmv.supabase.co/storage/v1/object/public/service-image//nbread-service-image-text.png',
+          'https://yyisakaqnaoomehqlyjz.supabase.co/storage/v1/object/public/service-image//nbread-service-image-text.png',
         link: {
           mobileWebUrl: inviteLink, // 모바일 웹에서 열릴 URL
           webUrl: inviteLink, // 웹에서 열릴 URL
@@ -89,7 +89,7 @@ const NbreadInviteModal = ({
         <div className="flex flex-col items-center gap-8 pb-12">
           <button
             onClick={handleCopyLink}
-            className="btn btn-medium text-heading06 bg-system-blue01 hover:bg-system-blue02 text-white"
+            className="btn btn-medium text-heading06 bg-system-blue01 text-white hover:bg-system-blue02"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">
               <Icon type="copy" width={14} height={14} fill="text-white" />
