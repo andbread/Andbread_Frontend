@@ -30,6 +30,18 @@ input:focus {
   border-bottom: 1.6px solid theme('colors.primary.500');
 }
 
+.input-gray-no-line {
+  @apply rounded-8 border-0 bg-gray-100 px-16 py-0;
+  border-bottom: 0;
+  /* &:focus {
+    border: 1px solid theme('colors.primary.500');
+  } */
+}
+
+.input-gray-no-line:focus {
+  border-bottom: 0;
+}
+
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   @apply hidden;

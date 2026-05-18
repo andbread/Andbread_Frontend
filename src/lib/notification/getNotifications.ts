@@ -32,6 +32,7 @@ export const getNotification = async (userId: string) => {
         is_read: notification.is_read,
       }),
     )
+    console.log('notificationsType : ',notifications)
     return notifications
   } catch (error) {
     console.error('Error fetching nbread:', error)

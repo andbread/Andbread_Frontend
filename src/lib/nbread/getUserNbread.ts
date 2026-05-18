@@ -10,12 +10,13 @@ export const getUserNbreads = async (userId: string): Promise<Nbread[]> => {
     .from('participant')
     .select('nbread_id')
     .eq('user_id', userId)
-
+  
   if (participantError) {
     console.error(
       '❌ Failed to fetch participant entries:',
       participantError.message,
     )
+    
     return []
   }
 

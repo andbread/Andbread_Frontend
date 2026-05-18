@@ -2,105 +2,42 @@ import BottomSheet from '../common/bottomsheet/BottomSheet'
 import { useEffect, useState, useRef } from 'react'
 import Icon from '../common/icon/Icon'
 import InviteUserListItem from './InviteUserListItem'
-import DefaultAvatar from '@/assets/avatar.svg'
 import { getInviteUser } from '@/lib/invite/getInviteUser'
 import { useParams } from 'next/navigation'
+import { FriendListItem, getFriendList } from '@/lib/friend/getSearchFriend'
 interface InviteBottomSheetProps {
   isOpen: boolean
   onClose: () => void
+  user: string | null
 }
 interface User {
   avatar: any
   name: string
   status: string
+  userId: string
 }
-const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
+const InviteBottomSheet = ({
+  isOpen,
+  onClose,
+  user,
+}: InviteBottomSheetProps) => {
   const [searchData, setSearchData] = useState('') // 검색칸 입력 데이터
   const [fetchSearchData, setFetchSearchData] = useState<User[]>([]) // Api 반환 데이터
   const searchCache = useRef<Record<string, User[]>>({})
+  const [friendListData, setFriendData] = useState<FriendListItem[]>([])
   const params = useParams()
-  const [nbreadId, setNbreadId] = useState<string>('')
+  const fetchFriendList = async () => {
+    const fetchFriendListData = await getFriendList(
+      user,
+      params.nbreadId as string,
+    )
+    setFriendData(fetchFriendListData)
+  }
 
-  const userFollowingData = [
-    { id: 0, avatar: DefaultAvatar, name: '유성현', status: '초대 하기' },
-    { id: 1, avatar: DefaultAvatar, name: '신혜민', status: '초대 하기' },
-    { id: 2, avatar: DefaultAvatar, name: '강보석', status: '초대 하기' },
-    {
-      id: 3,
-      avatar: DefaultAvatar,
-      name: '송수빈',
-      status: '초대 하기',
-    },
-    {
-      id: 4,
-      avatar: DefaultAvatar,
-      name: '빌게이츠',
-      status: '초대 완료',
-    },
-    {
-      id: 5,
-      avatar: DefaultAvatar,
-      name: '이재용',
-      status: '참여 중',
-    },
-    {
-      id: 6,
-      avatar: DefaultAvatar,
-      name: '머스크',
-      status: '초대 하기',
-    },
-    {
-      id: 7,
-      avatar: DefaultAvatar,
-      name: '머스크',
-      status: '초대 하기',
-    },
-    {
-      id: 8,
-      avatar: DefaultAvatar,
-      name: '머스크',
-      status: '초대 하기',
-    },
-    {
-      id: 9,
-      avatar: DefaultAvatar,
-      name: '머스크',
-      status: '초대 하기',
-    },
-    {
-      id: 10,
-      avatar: DefaultAvatar,
-      name: '머스크',
-      status: '초대 하기',
-    },
-    {
-      id: 11,
-      avatar: DefaultAvatar,
-      name: '머스크',
-      status: '초대 하기',
-    },
-    {
-      id: 12,
-      avatar: DefaultAvatar,
-      name: '머스크',
-      status: '초대 하기',
-    },
-    {
-      id: 13,
-      avatar: DefaultAvatar,
-      name: '머스크',
-      status: '초대 하기',
-    },
-    {
-      id: 14,
-      avatar: DefaultAvatar,
-      name: '머스크',
-      status: '초대 하기',
-    },
-  ]
   useEffect(() => {
     if (isOpen) {
       setSearchData('')
+      fetchFriendList()
     }
   }, [isOpen])
 
@@ -118,12 +55,14 @@ const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
         }
         const apiDataRaw =
           (await getInviteUser(searchData, params.nbreadId as string)) || []
+        console.log('검색 유저! : ', apiDataRaw)
         const apiData: User[] = apiDataRaw.map((u) => ({
           avatar: u.profile_image, // profile_image → avatar로 매핑
           name: u.name,
           status: u.status,
+          userId: u.id,
         }))
-
+        console.log('제발 상태야~~ :', apiData)
         // 캐시에 저장
         console.log(apiData)
         searchCache.current[searchData] = apiData
@@ -133,7 +72,24 @@ const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
       return () => clearTimeout(typingSearchData)
     }
   }, [searchData])
+  const refreshLists = async () => {
+    // ✅ 1. 팔로잉 갱신
+    await fetchFriendList()
 
+    // ✅ 2. 검색 결과 갱신 (검색어가 있을 때만)
+    if (searchData.length === 4) {
+      const apiDataRaw =
+        (await getInviteUser(searchData, params.nbreadId as string)) || []
+      const apiData: User[] = apiDataRaw.map((u) => ({
+        avatar: u.profile_image,
+        name: u.name,
+        status: u.status,
+        userId: u.id,
+      }))
+
+      setFetchSearchData(apiData)
+    }
+  }
   return (
     <>
       <BottomSheet isOpen={isOpen} onClose={onClose}>
@@ -165,9 +121,12 @@ const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
                 {fetchSearchData.map((user, index) => (
                   <InviteUserListItem
                     key={index}
+                    invitedUserId={user.userId}
                     avatar={user.avatar}
                     name={user.name}
                     status={user.status}
+                    nbreadId={params.nbreadId as string}
+                    onRefresh={refreshLists}
                   />
                 ))}
               </div>
@@ -177,12 +136,15 @@ const InviteBottomSheet = ({ isOpen, onClose }: InviteBottomSheetProps) => {
             <div className="mb-30 h-[2px] w-full bg-gray-100" />
             <p className="mb-[20px] text-body03 text-gray-500">팔로잉</p>
             <div className="flex max-h-[400px] flex-col">
-              {userFollowingData.map((user) => (
+              {friendListData?.map((user) => (
                 <InviteUserListItem
                   key={user.id}
-                  avatar={user.avatar}
+                  avatar={user.profileImage}
+                  invitedUserId={user.id}
                   name={user.name}
-                  status={user.status}
+                  status={user.inviteState!}
+                  nbreadId={params.nbreadId as string}
+                  onRefresh={refreshLists}
                 />
               ))}
             </div>

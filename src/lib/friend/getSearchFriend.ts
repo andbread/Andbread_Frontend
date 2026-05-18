@@ -1,5 +1,13 @@
 import { supabase } from '../supabaseClient'
 
+export interface FriendListItem {
+  name: string
+  profileImage: string | null
+  tag: string
+  id: string
+  inviteState?: string
+}
+
 export const getSearchFriend = async (tag: string, senderId: string) => {
   try {
     const { data: user, error } = await supabase
@@ -10,25 +18,49 @@ export const getSearchFriend = async (tag: string, senderId: string) => {
 
     if (error) {
       console.error(error)
+      return []
     }
     const userIds = user?.map((u) => u.id) || []
-    const { data: friends } = await supabase
+
+    if (userIds.length === 0) {
+      return []
+    }
+
+    const userIdsFilter = userIds.join(',')
+    const { data: friends, error: friendsError } = await supabase
       .from('friend_request')
       .select('sender_id, receiver_id, status')
       .or(
-        `and(sender_id.eq.${senderId},receiver_id.eq.${userIds}),and(sender_id.eq.${userIds},receiver_id.eq.${senderId})`,
+        `and(sender_id.eq.${senderId},receiver_id.in.(${userIdsFilter})),and(sender_id.in.(${userIdsFilter}),receiver_id.eq.${senderId})`,
       )
+
+    if (friendsError) {
+      console.error(friendsError)
+      return []
+    }
+
     return (user ?? []).map((user) => ({
       name: user.name,
       profileImage: user.profile_image,
       senderId: senderId,
       receiverId: user.id,
-      status: friends?.find((f) => f)?.status || '친구 추가하기',
+      status:
+        friends?.find(
+          (friend) =>
+            (friend.sender_id === senderId && friend.receiver_id === user.id) ||
+            (friend.sender_id === user.id && friend.receiver_id === senderId),
+        )?.status || '친구 추가하기',
     }))
-  } catch (error) {}
+  } catch (error) {
+    console.error(error)
+    return []
+  }
 }
-export const getFriendList = async (user: string | null) => {
-  if (!user) return
+export const getFriendList = async (
+  user: string | null,
+  nbreadId: string | null,
+): Promise<FriendListItem[]> => {
+  if (!user) return []
   try {
     const { data, error } = await supabase
       .from('friend')
@@ -42,31 +74,76 @@ export const getFriendList = async (user: string | null) => {
     const friends =
       data?.map((f) => (f.user_id_1 === user ? f.user_id_2 : f.user_id_1)) || []
 
-    console.log('친구리스트 목록', friends)
-    // return friends
-    if (friends) {
+    if (friends.length > 0) {
       const { data, error } = await supabase
         .from('user')
-        .select('name,profile_image,tag')
-        .eq('id', friends)
+        .select('name,profile_image,tag,id')
+        .in('id', friends)
 
-        if(error) {
-          console.error('error~~~~ : ',error)
-          return
+      if (error) {
+        console.error('error~~~~ : ', error)
+        return []
+      }
+      const friendInfoList = data || []
+
+      // 필요에 따라 map으로 구조 변환
+      const processedFriends: FriendListItem[] = friendInfoList.map((f) => ({
+        name: f.name,
+        profileImage: f.profile_image,
+        tag: f.tag,
+        id: f.id,
+      }))
+
+      const friendIds = processedFriends.map((f) => f.id)
+      let inviteData: any[] = []
+      if (nbreadId) {
+        const { data, error } = await supabase
+          .from('nbread_invite')
+          .select('state,invited_user_id')
+          .in('invited_user_id', friendIds)
+          .eq('nbread_id', nbreadId)
+        if (error) {
+          console.error('error~~', error)
+          return []
         }
-       const friendInfoList = data || []
+        inviteData = data || []
+        const mergedFriends = processedFriends.map((friend) => {
+          const invite = inviteData.find((i) => i.invited_user_id === friend.id)
+          return {
+            ...friend,
+            inviteState: invite
+              ? invite.state === 'pending'
+                ? '초대 완료' // ✅ pending → 초대 완료로 변환
+                : invite.state // 그 외 상태는 그대로 유지
+              : '초대 하기', // 초대 기록 없으면 null
+          }
+        })
+        return mergedFriends
+      }
 
-  // 필요에 따라 map으로 구조 변환
-  const processedFriends = friendInfoList.map(f => ({
-    name: f.name,
-    profileImage: f.profile_image,
-    tag: f.tag
-  }))
-  return processedFriends
+      return processedFriends
     }
+    return []
   } catch (error) {
     console.error(error)
     return []
   }
-  return []
+}
+export const getInviteFriendList = async (
+  userId: string,
+  inviteNbreadId: string,
+) => {
+  try {
+    const { data, error } = await supabase
+      .from('nbread_invite')
+      .select('invited_user_id,nbread_id,state')
+      .eq('invited_user_id', userId)
+      .eq('nbread_id', inviteNbreadId)
+
+    if (!data) {
+      console.error('error : ', error)
+      return
+    }
+    return data
+  } catch (error) {}
 }

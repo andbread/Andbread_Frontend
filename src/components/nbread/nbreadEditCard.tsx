@@ -104,7 +104,7 @@ const NbreadEditCard = ({
               {...register('title', {
                 required: '타이틀은 필수 입력 항목이에요.',
               })}
-              className="w-200 text-body02 text-gray-800"
+              className="w-200 border-0 text-body02 text-gray-800"
               placeholder="타이틀을 입력해주세요"
             />
           </div>

@@ -27,18 +27,21 @@ export const getInviteUser = async (tag: string, nbreadId: string) => {
 
           console.log('nbreadData',nbreadData)
         const { data: inviteData } = await supabase
-          .from('invite')
-          .select('status')
-          .eq('user_id', user.id)
+          .from('nbread_invite')
+          .select('state')
+          .eq('invited_user_id', user.id)
           .eq('nbread_id', nbreadId)
           .maybeSingle() // 없으면 null 반환
-          
+          console.log('검색한 유저 데이터 :' ,inviteData)
         let status = '초대 하기'
-        if(nbreadData) {
+        if(nbreadData === 'accept') {
             status = '참여 중'
         }
-        else if(inviteData) {
-            status = inviteData.status
+        else if(inviteData?.state == 'pending') {
+            status = '초대 완료'
+        }
+        else if(inviteData?.state == 'reject') {
+          status = '초대 하기'
         }
         const result = {
           ...user,
