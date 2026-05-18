@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: '엔빵',
   description: '구독 공유 관리 서비스',
   keywords: '구독, 관리, 공유, 엔빵',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/icon.ico',
+    apple: '/apple-touch-icon.png',
+  },
   openGraph: {
     title: '엔빵',
     description: '구독 공유 관리 서비스',
