@@ -45,26 +45,27 @@ export default function CalendarPage() {
     if (!selectedDate) return []
 
     const filtered = nbreadList.filter((nbread) => {
-      const currentPaymentDate = nbread.currentPaymentDate
-        ? new Date(nbread.currentPaymentDate)
-        : null
-      const nextPaymentDate = nbread.paymentDate
+      const startDate = nbread.startDate ? new Date(nbread.startDate) : null
+      const endDate = nbread.endDate ? new Date(nbread.endDate) : null
+      const paymentDate = nbread.paymentDate
         ? new Date(nbread.paymentDate)
         : null
 
-      // currentPaymentDate와 nextPaymentDate가 유효하지 않으면 필터링에서 제외
-      if (!currentPaymentDate && !nextPaymentDate) return false
+      if (!startDate && !endDate && !paymentDate) return false
 
-      // selectedDate와 currentPaymentDate 또는 nextPaymentDate를 비교
       const isSameDate =
-        (currentPaymentDate &&
-          currentPaymentDate.getDate() === selectedDate.getDate() &&
-          currentPaymentDate.getMonth() === selectedDate.getMonth() &&
-          currentPaymentDate.getFullYear() === selectedDate.getFullYear()) ||
-        (nextPaymentDate &&
-          nextPaymentDate.getDate() === selectedDate.getDate() &&
-          nextPaymentDate.getMonth() === selectedDate.getMonth() &&
-          nextPaymentDate.getFullYear() === selectedDate.getFullYear())
+        (startDate &&
+          startDate.getDate() === selectedDate.getDate() &&
+          startDate.getMonth() === selectedDate.getMonth() &&
+          startDate.getFullYear() === selectedDate.getFullYear()) ||
+        (endDate &&
+          endDate.getDate() === selectedDate.getDate() &&
+          endDate.getMonth() === selectedDate.getMonth() &&
+          endDate.getFullYear() === selectedDate.getFullYear()) ||
+        (paymentDate &&
+          paymentDate.getDate() === selectedDate.getDate() &&
+          paymentDate.getMonth() === selectedDate.getMonth() &&
+          paymentDate.getFullYear() === selectedDate.getFullYear())
 
       return isSameDate
     })
