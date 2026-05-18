@@ -2,11 +2,9 @@ import BottomSheet from '../common/bottomsheet/BottomSheet'
 import { useEffect, useState, useRef } from 'react'
 import Icon from '../common/icon/Icon'
 import InviteUserListItem from './InviteUserListItem'
-import DefaultAvatar from '@/assets/avatar.svg'
 import { getInviteUser } from '@/lib/invite/getInviteUser'
 import { useParams } from 'next/navigation'
-import { getFriendList } from '@/lib/friend/getSearchFriend'
-import { getInviteFriendList } from '@/lib/friend/getSearchFriend'
+import { FriendListItem, getFriendList } from '@/lib/friend/getSearchFriend'
 interface InviteBottomSheetProps {
   isOpen: boolean
   onClose: () => void
@@ -18,28 +16,24 @@ interface User {
   status: string
   userId: string
 }
-interface Friend {
-  name: string
-  profileImage: string
-  inviteState?:string
-  tag: string
-  id:string
-  
-}
-const InviteBottomSheet = ({ isOpen, onClose,user }: InviteBottomSheetProps) => {
+const InviteBottomSheet = ({
+  isOpen,
+  onClose,
+  user,
+}: InviteBottomSheetProps) => {
   const [searchData, setSearchData] = useState('') // 검색칸 입력 데이터
   const [fetchSearchData, setFetchSearchData] = useState<User[]>([]) // Api 반환 데이터
   const searchCache = useRef<Record<string, User[]>>({})
-  const [friendListData, setFriendData] = useState<Friend[] | undefined>([])
+  const [friendListData, setFriendData] = useState<FriendListItem[]>([])
   const params = useParams()
-  const [nbreadId, setNbreadId] = useState<string>('')
-  const [invitedUserId,setInvitedUserId] = useState('')
   const fetchFriendList = async () => {
-    const fetchFriendListData = await getFriendList(user, params.nbreadId as string)
+    const fetchFriendListData = await getFriendList(
+      user,
+      params.nbreadId as string,
+    )
     setFriendData(fetchFriendListData)
-    console.log('친구ㅡ 목 : ',friendListData)
   }
- 
+
   useEffect(() => {
     if (isOpen) {
       setSearchData('')
@@ -61,15 +55,14 @@ const InviteBottomSheet = ({ isOpen, onClose,user }: InviteBottomSheetProps) => 
         }
         const apiDataRaw =
           (await getInviteUser(searchData, params.nbreadId as string)) || []
-          console.log('검색 유저! : ',apiDataRaw)
+        console.log('검색 유저! : ', apiDataRaw)
         const apiData: User[] = apiDataRaw.map((u) => ({
           avatar: u.profile_image, // profile_image → avatar로 매핑
           name: u.name,
           status: u.status,
-          userId:u.id,
-
+          userId: u.id,
         }))
-console.log('제발 상태야~~ :',apiData)
+        console.log('제발 상태야~~ :', apiData)
         // 캐시에 저장
         console.log(apiData)
         searchCache.current[searchData] = apiData
@@ -79,23 +72,24 @@ console.log('제발 상태야~~ :',apiData)
       return () => clearTimeout(typingSearchData)
     }
   }, [searchData])
-const refreshLists = async () => {
-  // ✅ 1. 팔로잉 갱신
-  await fetchFriendList()
+  const refreshLists = async () => {
+    // ✅ 1. 팔로잉 갱신
+    await fetchFriendList()
 
-  // ✅ 2. 검색 결과 갱신 (검색어가 있을 때만)
-  if (searchData.length === 4) {
-    const apiDataRaw = await getInviteUser(searchData, params.nbreadId as string) || []
-    const apiData: User[] = apiDataRaw.map((u) => ({
-      avatar: u.profile_image,
-      name: u.name,
-      status: u.status,
-      userId: u.id,
-    }))
-    
-    setFetchSearchData(apiData)
+    // ✅ 2. 검색 결과 갱신 (검색어가 있을 때만)
+    if (searchData.length === 4) {
+      const apiDataRaw =
+        (await getInviteUser(searchData, params.nbreadId as string)) || []
+      const apiData: User[] = apiDataRaw.map((u) => ({
+        avatar: u.profile_image,
+        name: u.name,
+        status: u.status,
+        userId: u.id,
+      }))
+
+      setFetchSearchData(apiData)
+    }
   }
-}
   return (
     <>
       <BottomSheet isOpen={isOpen} onClose={onClose}>

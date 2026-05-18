@@ -4,29 +4,21 @@ import DashlineCard from '@/components/common/card/dashlineCard'
 import PlusFriendBottomSheet from '@/components/friend/PlusFriendBottomSheet'
 import { useEffect, useState } from 'react'
 import FriendCard from '@/components/friend/FriendCard'
-import DefaultAvatar from '@/assets/avatar.svg'
 import useUserStore from '@/stores/useAuthStore'
-import { getFriendList } from '@/lib/friend/getSearchFriend'
-interface FriendProps {
-  name : string
-  profileImage : string
-  tag: number
+import { FriendListItem, getFriendList } from '@/lib/friend/getSearchFriend'
 
-}
 const FriendListPage = () => {
-  const user = useUserStore()
+  const user = useUserStore((state) => state.user)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [friendsData, setFriendsData]= useState<FriendProps[]>()
+  const [friendsData, setFriendsData] = useState<FriendListItem[]>([])
   const handleFriendPlus = () => {
     setIsModalOpen(true)
   }
-  
+
   const fetchFriendList = async () => {
-    console.log(user.user?.id)
     if (user) {
-     const friendList =  await getFriendList(user.user?.id || null,null)
-     console.log('제발용',friendList)
-     setFriendsData(friendList)
+      const friendList = await getFriendList(user.id, null)
+      setFriendsData(friendList)
     }
   }
   useEffect(() => {
@@ -48,7 +40,7 @@ const FriendListPage = () => {
       {friendsData?.map((user, index) => (
         <FriendCard
           key={index}
-          profile={user.profileImage || '/default.png'}
+          profile={user.profileImage || ''}
           name={user.name}
           tag={user.tag}
         />
