@@ -6,7 +6,7 @@ import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
 import { setSentryUser } from '@/lib/sentry'
 import useUserStore from '@/stores/useAuthStore'
 
-const publicRoutes = ['/login', '/auth/callback', '/inviteAccept']
+const publicRoutes = ['/login', '/auth/callback', '/inviteAccept', '/sentry-test']
 
 export default function ProtectRoute({
   children,
