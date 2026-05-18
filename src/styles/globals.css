@@ -113,6 +113,9 @@ a {
   h5 {
     @apply text-heading05;
   }
+  p {
+    @apply text-paragraph;
+  }
 }
 
 @layer components {

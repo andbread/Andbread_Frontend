@@ -17,26 +17,62 @@ export const useNotificationPermission = (
   >(undefined)
   const [showIOSPermissionModal, setShowIOSPermissionModal] =
     useState<boolean>(false)
+  const [showIOSGuideModal, setShowIOSGuideModal] = useState<boolean>(false)
 
   // 현재 접속 기기가 ios인지 확인
   const isiOS = useMemo(() => {
+    if (typeof window === 'undefined') return false
+
+    const userAgent = navigator.userAgent
+    const isIPadOS =
+      navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
+
     return (
-      typeof window !== 'undefined' &&
-      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+      (/iPad|iPhone|iPod/.test(userAgent) || isIPadOS) &&
       !window.MSStream
     )
   }, [])
 
+  const isIOSSafari = useMemo(() => {
+    if (typeof window === 'undefined') return false
+
+    const userAgent = navigator.userAgent
+    const isSafari = /safari/i.test(userAgent)
+    const isOtherIOSBrowser = /CriOS|FxiOS|EdgiOS|OPiOS/i.test(userAgent)
+
+    return isiOS && isSafari && !isOtherIOSBrowser
+  }, [isiOS])
+
+  const isStandalone = useMemo(() => {
+    if (typeof window === 'undefined') return false
+
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true
+    )
+  }, [])
+
+  const shouldShowIOSGuide = isIOSSafari && !isStandalone
+
   // OS 권한 상태 확인
   useEffect(() => {
     if (permissionState) return
+
+    if (shouldShowIOSGuide) {
+      setPermissionState('unsupported')
+
+      if (autoRequest && userId) {
+        setShowIOSGuideModal(true)
+      }
+      return
+    }
 
     if (!('Notification' in window)) {
       setPermissionState('unsupported')
       return
     }
     setPermissionState(Notification.permission)
-  }, [])
+  }, [autoRequest, permissionState, shouldShowIOSGuide, userId])
 
   // fcm 토큰 발급 및 서버 저장
   const getFcmTokenAndRegister = useCallback(
@@ -63,6 +99,12 @@ export const useNotificationPermission = (
 
   // 권한 요청
   const requestPermission = useCallback(async () => {
+    if (shouldShowIOSGuide) {
+      setShowIOSGuideModal(true)
+      setPermissionState('unsupported')
+      return 'unsupported'
+    }
+
     if (!('Notification' in window)) {
       setPermissionState('unsupported')
       return 'unsupported'
@@ -76,19 +118,31 @@ export const useNotificationPermission = (
       await getFcmTokenAndRegister(userId)
     }
     return permission
-  }, [getFcmTokenAndRegister, userId])
+  }, [getFcmTokenAndRegister, shouldShowIOSGuide, userId])
 
   // os에 따라 권한 요청 분기
   useEffect(() => {
     if (!autoRequest) return
     if (permissionState !== 'default' || !userId) return
 
+    if (shouldShowIOSGuide) {
+      setShowIOSGuideModal(true)
+      return
+    }
+
     if (isiOS) {
       setShowIOSPermissionModal(true) // ios인 경우 모달 팝업
     } else {
       requestPermission() // 이외의 경우 바로 알림 권한 요청
     }
-  }, [autoRequest, isiOS, permissionState, requestPermission, userId])
+  }, [
+    autoRequest,
+    isiOS,
+    permissionState,
+    requestPermission,
+    shouldShowIOSGuide,
+    userId,
+  ])
 
   useEffect(() => {
     if (permissionState !== 'granted' || !userId) return
@@ -100,6 +154,9 @@ export const useNotificationPermission = (
     permissionState,
     showIOSPermissionModal,
     setShowIOSPermissionModal,
+    showIOSGuideModal,
+    setShowIOSGuideModal,
+    shouldShowIOSGuide,
     requestPermission,
   }
 }
