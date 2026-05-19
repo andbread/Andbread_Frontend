@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
+import { setSentryUser } from '@/lib/sentry'
+import useUserStore from '@/stores/useAuthStore'
 
 const publicRoutes = ['/login', '/auth/callback', '/inviteAccept']
 
@@ -13,8 +15,13 @@ export default function ProtectRoute({
 }) {
   const router = useRouter()
   const pathname = usePathname()
+  const user = useUserStore((state) => state.user)
   const [isLoginConfirmModalOpen, setIsLoginConfirmModalOpen] =
     useState<boolean>(false)
+
+  useEffect(() => {
+    setSentryUser(user ? { id: user.id } : null)
+  }, [user])
 
   useEffect(() => {
     const user = sessionStorage.getItem('user-store')

@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { Nbread } from '@/types/nbread'
+import { captureAppError } from '@/lib/sentry'
 
 export const insertNbread = async (nbread: Nbread) => {
   try {
@@ -24,6 +25,14 @@ export const insertNbread = async (nbread: Nbread) => {
 
     return data.id
   } catch (error) {
+    captureAppError(error, {
+      action: 'nbread.insert',
+      tags: { leaderId: nbread.leaderId ?? undefined },
+      extra: {
+        paymentPeriod: nbread.paymentPeriod,
+        participantCount: nbread.participantCount,
+      },
+    })
     throw error
   }
 }
