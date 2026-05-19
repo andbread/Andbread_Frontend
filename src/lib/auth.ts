@@ -4,7 +4,7 @@ import { LoginProvider, User } from '@/types/user'
 import useUserStore from '@/stores/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/common/toast/Toast'
-import { captureAppError } from '@/lib/sentry'
+import { captureAppError } from '@/lib/sentry/sentry'
 
 // 1. 로그인 함수
 export const login = async (provider: LoginProvider['provider']) => {

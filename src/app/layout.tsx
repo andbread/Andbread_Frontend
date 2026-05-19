@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import '../styles/globals.css'
 import ProtectRoute from './protectRoute'
 import Toast from '@/components/common/toast/Toast'
-import GoogleAnalytics from '@/lib/GoogleAnalytics'
+import GoogleAnalytics from '@/lib/analytics/GoogleAnalytics'
 
 export const metadata: Metadata = {
   title: '엔빵',

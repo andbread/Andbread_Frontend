@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 // import { User } from '@/types/nbread';
 import { User } from '@/types/user'
-import { setSentryUser } from '@/lib/sentry'
+import { setSentryUser } from '@/lib/sentry/sentry'
 
 interface UserStore {
   user: User | null

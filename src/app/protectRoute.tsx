@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
-import { setSentryUser } from '@/lib/sentry'
+import { setSentryUser } from '@/lib/sentry/sentry'
 import useUserStore from '@/stores/useAuthStore'
 
 const publicRoutes = ['/login', '/auth/callback', '/inviteAccept']

@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { Participant } from '@/types/nbread'
 import { isGetParticipantsUser, participantUsers } from './getParticipants'
 import { getNbread } from '../nbread'
-import { captureAppError } from '@/lib/sentry'
+import { captureAppError } from '@/lib/sentry/sentry'
 
 export const insertParticipant = async (
   participant: Participant,

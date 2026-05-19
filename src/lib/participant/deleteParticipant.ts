@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
-import { captureAppError } from '@/lib/sentry'
+import { captureAppError } from '@/lib/sentry/sentry'
 
 export const deleteParticipants = async (userId: string, nbreadId: string) => {
   const { data, error } = await supabase
