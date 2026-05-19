@@ -9,6 +9,7 @@ import Spinner from '@/components/common/spinner/Spinner'
 import FriendAcceptModal from '@/components/friend/FriendAcceptModal'
 import InviteAcceptModal from '@/components/invite/InviteAcceptModal'
 import { getRelativeTime } from '@/utils/getRelativeTime'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 const Page = () => {
   const [notificationData, setNotificationData] = useState<Notification[]>([])
   const [selectedNotifycationId, setSelectedNotifycationId] = useState<
@@ -32,6 +33,11 @@ const Page = () => {
       (a, b) => Number(new Date(b.created_at)) - Number(new Date(a.created_at)),
     )
     setNotificationData(sortedDataByCreatedAt)
+    if (sortedDataByCreatedAt.length > 0) {
+      trackEvent(GA_EVENTS.RECEIVE_NOTIFICATION, {
+        count: sortedDataByCreatedAt.length,
+      })
+    }
     setIsLoading(false)
   }
 
@@ -74,6 +80,10 @@ const Page = () => {
             className="card card-clickable relative flex cursor-pointer flex-row justify-between"
             key={data.id}
             onClick={() => {
+              trackEvent(GA_EVENTS.CLICK_NOTIFICATION, {
+                notification_type: data.type,
+                notification_id: data.id,
+              })
               setSelectedNotifycationId(data.id)
               setSelectedNotifycationType(data.type)
               if (data.type === 'invite') {

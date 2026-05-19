@@ -1,6 +1,7 @@
 import DefaultAvatar from '@/assets/avatar.svg'
 import { sendFriendRequest } from '@/lib/friend/sendFriendRequest'
 import { useEffect, useState } from 'react'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 interface PlusFriendListItemProps {
   name: string
   status: string
@@ -31,6 +32,9 @@ const PlusFriendListItem = ({
         receiverId,
         status: 'pending',
       })
+      if (fetch) {
+        trackEvent(GA_EVENTS.ADD_FRIEND, { receiver_id: receiverId })
+      }
 
       setSendStatus('요청 완료')
       setColor('text-gray-400')

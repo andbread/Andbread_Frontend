@@ -10,6 +10,7 @@ import { getNotificationState } from '@/lib/notification/getNotificationState'
 import { updateNotificationState } from '@/lib/notification/updateNotificationState'
 import useUserStore from '@/stores/useAuthStore'
 import { useNotificationPermission } from '@/hooks/useNotificationPermission'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 
 type NotificationItem = {
   id: 'chat' | 'invite' | 'friend' | 'payment'
@@ -88,6 +89,10 @@ const NotificationSettingPage = () => {
       friendEnabled: nextEnabled,
       paymentEnabled: nextEnabled,
     })
+    trackEvent(GA_EVENTS.CHANGE_NOTIFICATION_SETTING, {
+      target: 'all',
+      enabled: nextEnabled,
+    })
     setAllEnabled(nextEnabled)
     syncItemStates(nextEnabled)
   }
@@ -104,6 +109,10 @@ const NotificationSettingPage = () => {
 
     await updateNotificationState(user.id, {
       [item.field]: nextEnabled,
+    })
+    trackEvent(GA_EVENTS.CHANGE_NOTIFICATION_SETTING, {
+      target: item.id,
+      enabled: nextEnabled,
     })
     setItemStates((prev) => ({
       ...prev,
