@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
-import { captureAppError } from '@/lib/sentry'
+import { captureAppError } from '@/lib/sentry/sentry'
 
 export const deleteNbread = async (nbreadId: string) => {
   try {

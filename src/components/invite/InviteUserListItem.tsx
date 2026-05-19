@@ -3,6 +3,7 @@ import Avatar from '../common/avatar/avatar'
 import { sendInviteRequest } from '@/lib/invite/sendInviteRequest'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 interface InviteUserData {
   avatar: string | null
   name: string
@@ -57,6 +58,12 @@ const InviteUserListItem = ({ avatar, name, status,nbreadId,invitedUserId,onRefr
       console.log('현재 엔빵 아디: ',nbreadId)
       console.log('초대보낼 유저 아이디 : ', invitedUserId)
       const fetchInvite = await sendInviteRequest(nbreadId,invitedUserId,'pending')
+      if (fetchInvite) {
+        trackEvent(GA_EVENTS.INVITE_MEMBER, {
+          group_id: nbreadId,
+          invited_user_id: invitedUserId,
+        })
+      }
       console.log('초대 보냄')
       setSendStatus('요청 완료')
       setColor('text-gray-400')

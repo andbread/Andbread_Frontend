@@ -4,7 +4,8 @@ import { LoginProvider, User } from '@/types/user'
 import useUserStore from '@/stores/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/common/toast/Toast'
-import { captureAppError } from '@/lib/sentry'
+import { captureAppError } from '@/lib/sentry/sentry'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 
 // 1. 로그인 함수
 export const login = async (provider: LoginProvider['provider']) => {
@@ -47,6 +48,7 @@ export const logout = async (router: ReturnType<typeof useRouter>) => {
   }
   useUserStore.getState().clearUser()
   sessionStorage.clear()
+  trackEvent(GA_EVENTS.LOGOUT)
   setTimeout(() => {
     localStorage.clear()
     useToast.success('로그아웃이 완료되었어요.')

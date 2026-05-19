@@ -4,6 +4,7 @@ import PlusFriendListItem from './PlusFriendListItem'
 import { getSearchFriend } from '@/lib/friend/getSearchFriend'
 import useUserStore from '@/stores/useAuthStore'
 import Spinner from '../common/spinner/Spinner'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 interface PlusFreindeBottomSheetProps {
   isOpen: boolean
   onClose: () => void
@@ -65,6 +66,10 @@ const PlusFriendBottomSheet = ({
     }
 
     const searchFriendData = await getSearchFriend(tag, user.id)
+    trackEvent(GA_EVENTS.SEARCH_FRIEND, {
+      query_length: tag.length,
+      result_count: searchFriendData?.length ?? 0,
+    })
     const formattedData: searchFriendProps[] = (searchFriendData ?? []).map(
       (item) => ({
         name: item.name,

@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from 'react'
 import Modal from '../common/modal/Modal'
 import { updateAcceptFriend,updateRejectedFriend } from '@/lib/friend/updateFriend'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 interface FriendAcceptModalProps {
   id: number | null
 //   type : string | null
@@ -24,6 +25,9 @@ const FriendAcceptModal = ({
       receiverId,
       senderUserId,
     )
+    if (acceptData) {
+      trackEvent(GA_EVENTS.ACCEPT_FRIEND, { sender_id: senderUserId })
+    }
     console.log(acceptData)
     onClose()
   }

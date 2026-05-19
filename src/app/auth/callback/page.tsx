@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import Spinner from '@/components/common/spinner/Spinner'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 
 // NProgress 스피너 비활성화
 NProgress.configure({ showSpinner: false })
@@ -44,6 +45,7 @@ const CallbackPage = () => {
             tag: getUserInfo.data?.[0]?.tag || '',
           }
           setUser(userInfo) // 사용자 정보 세션 스토리지에 저장
+          trackEvent(GA_EVENTS.SIGN_IN, { provider })
           setTimeout(() => {
             setLoading(false)
             localStorage.clear()

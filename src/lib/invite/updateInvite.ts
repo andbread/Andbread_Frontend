@@ -1,5 +1,5 @@
 import { supabase } from '../supabaseClient'
-import { captureAppError } from '@/lib/sentry'
+import { captureAppError } from '@/lib/sentry/sentry'
 
 export const updateAcceptInvite = async (
   receiverId: string,

@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { Nbread } from '@/types/nbread'
-import { captureAppError } from '@/lib/sentry'
+import { captureAppError } from '@/lib/sentry/sentry'
 
 export const insertNbread = async (nbread: Nbread) => {
   try {

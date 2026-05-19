@@ -2,6 +2,7 @@ import Modal from '../common/modal/Modal'
 import { useRouter } from 'next/navigation'
 import { updateAcceptInvite } from '@/lib/invite/updateInvite'
 import { updateRejectedInvite } from '@/lib/invite/updateInvite'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 interface InviteAcceptModalProps {
   id: number | null
   isOpen: boolean
@@ -14,6 +15,11 @@ const InviteAcceptModal = ({isOpen,onClose,senderNbreadTitle,senderNbreadId,rece
     const router = useRouter()
     const fetchInviteAccept = async () => {
         const acceptInviteData = await updateAcceptInvite(receiverId,senderNbreadId)
+        if (acceptInviteData) {
+          trackEvent(GA_EVENTS.ACCEPT_INVITE, {
+            group_id: senderNbreadId,
+          })
+        }
         onClose()
         router.push(`/nbread/${senderNbreadId}`)
 

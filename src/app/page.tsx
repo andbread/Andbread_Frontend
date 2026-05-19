@@ -14,6 +14,7 @@ import { insertParticipant } from '@/lib/participant'
 import { useToast } from '@/components/common/toast/Toast'
 import NotificationPermissionModal from '@/components/common/modal/NotificationPermissionModal'
 import NotificationDeniedModal from '@/components/common/modal/NotificationDeniedModal'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 
 // [ ] OS 알림 허용 후 모달 닫힘
 // [ ] OS 알림 허용 상태 확인해서 모달 열기
@@ -98,6 +99,7 @@ const HomePage = () => {
               }
             }
             if (inviteToast === '성공') {
+              trackEvent(GA_EVENTS.JOIN_GROUP, { group_id: groupId })
               useToast.success('엔빵 참여가 완료됐어요.')
             } else {
               if (inviteToast === '이미 참여') {

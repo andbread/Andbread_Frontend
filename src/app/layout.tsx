@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import '../styles/globals.css'
 import ProtectRoute from './protectRoute'
 import Toast from '@/components/common/toast/Toast'
-import GoogleAnalytics from '@/lib/GoogleAnalytics'
+import GoogleAnalytics from '@/lib/analytics/GoogleAnalytics'
+import PageViewTracker from '@/lib/analytics/PageViewTracker'
+import ClarityProvider from '@/lib/analytics/ClarityProvider'
 
 export const metadata: Metadata = {
   title: '엔빵',
@@ -41,6 +43,8 @@ export default function RootLayout({
       </head>
       <body className={`font-pre`} suppressHydrationWarning>
         <Toast />
+        <ClarityProvider />
+        <PageViewTracker />
         {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
         )}
