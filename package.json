@@ -10,6 +10,7 @@
     "update-types": "supabase gen types typescript --project-id yyisakaqnaoomehqlyjz --schema public > src/types/supabase.ts"
   },
   "dependencies": {
+    "@microsoft/clarity": "^1.0.2",
     "@sentry/nextjs": "^10.53.1",
     "@supabase/supabase-js": "^2.47.14",
     "autoprefixer": "^10.4.20",
