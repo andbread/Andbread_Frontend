@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
+    "generate-sitemap": "next-sitemap",
     "update-types": "supabase gen types typescript --project-id yyisakaqnaoomehqlyjz --schema public > src/types/supabase.ts"
   },
   "dependencies": {
@@ -38,6 +40,7 @@
     "eslint": "^9",
     "eslint-config-next": "^15.5.18",
     "eslint-config-prettier": "^10.0.1",
+    "next-sitemap": "^4.2.3",
     "postcss": "^8",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",

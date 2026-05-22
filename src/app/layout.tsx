@@ -7,24 +7,62 @@ import PageViewTracker from '@/lib/analytics/PageViewTracker'
 import ClarityProvider from '@/lib/analytics/ClarityProvider'
 
 export const metadata: Metadata = {
-  title: '엔빵',
-  description: '구독 공유 관리 서비스',
-  keywords: '구독, 관리, 공유, 엔빵',
+  metadataBase: new URL('https://nbread-nbread.vercel.app'),
+  title: {
+    default: '엔빵',
+    template: '%s | 엔빵',
+  },
+  description:
+    '친구와 함께 쓰는 구독 서비스를 한 번에 관리하고, 결제일과 정산 금액까지 깔끔하게 확인하는 구독 공유 관리 서비스',
+  keywords: [
+    '엔빵',
+    '구독 공유',
+    '구독 관리',
+    '정산 관리',
+    '결제일 관리',
+    'OTT 공유',
+    '요금 분담',
+  ],
+  applicationName: '엔빵',
   manifest: '/manifest.json',
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
   icons: {
     icon: '/icon.ico',
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
     title: '엔빵',
-    description: '구독 공유 관리 서비스',
-    url: 'https://nbread-nbread.vercel.app/',
+    description:
+      '친구와 함께 쓰는 구독 서비스를 한 번에 관리하고, 결제일과 정산 금액까지 깔끔하게 확인하세요.',
+    url: '/',
+    siteName: '엔빵',
+    locale: 'ko_KR',
+    type: 'website',
     images: [
       {
-        url: 'https://nbread-nbread.vercel.app/assets/logo/open-graph-logo.png',
+        url: '/assets/logo/open-graph-logo.png',
+        width: 1200,
+        height: 630,
         alt: '엔빵 로고',
       },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '엔빵',
+    description:
+      '친구와 함께 쓰는 구독 서비스를 한 번에 관리하고, 결제일과 정산 금액까지 깔끔하게 확인하세요.',
+    images: ['/assets/logo/open-graph-logo.png'],
   },
 }
 export default function RootLayout({
