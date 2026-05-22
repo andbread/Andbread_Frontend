@@ -1,0 +1,19 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /auth/
+Disallow: /calendar
+Disallow: /friendList
+Disallow: /inviteAccept
+Disallow: /mypage
+Disallow: /nbread/
+Disallow: /notification
+
+# Host
+Host: https://nbread-nbread.vercel.app
+
+# Sitemaps
+Sitemap: https://nbread-nbread.vercel.app/sitemap.xml
