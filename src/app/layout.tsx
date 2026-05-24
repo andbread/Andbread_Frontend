@@ -5,6 +5,7 @@ import Toast from '@/components/common/toast/Toast'
 import GoogleAnalytics from '@/lib/analytics/GoogleAnalytics'
 import PageViewTracker from '@/lib/analytics/PageViewTracker'
 import ClarityProvider from '@/lib/analytics/ClarityProvider'
+import Footer from '@/components/common/Footer'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nbread-nbread.vercel.app'),
@@ -77,7 +78,6 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
         />
-        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
       </head>
       <body className={`font-pre`} suppressHydrationWarning>
         <Toast />
@@ -87,6 +87,7 @@ export default function RootLayout({
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
         )}
         <ProtectRoute>{children}</ProtectRoute>
+        <Footer />
       </body>
     </html>
   )
