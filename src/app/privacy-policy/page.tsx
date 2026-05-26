@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
       <article className="mx-auto mt-20 max-w-[600px]">
         <h1 className="text-gray-800">개인정보처리방침</h1>
         <p className="mt-12 text-body03 text-gray-500">
-          시행일: 2026년 5월 22일 | 최종 수정일: 2025년 5월 22일
+          시행일: 2026년 5월 26일 | 최종 수정일: 2025년 5월 22일
         </p>
 
         <p className="mt-20 text-paragraph text-gray-700">
