@@ -32,9 +32,8 @@ export default function ProtectRoute({
   }, [pathname])
 
   return (
-    <div className="h-full">
+    <div className="min-h-[100svh]">
       {children}
-      {/* {isProtectedRoute && <Footer/>} */}
       <LoginConfirmModal
         isOpen={isProtectedRoute}
         onClose={() => setIsProtectedRoute(false)}
