@@ -16,8 +16,7 @@ export default function ProtectRoute({
   const router = useRouter()
   const pathname = usePathname()
   const user = useUserStore((state) => state.user)
-  const [isLoginConfirmModalOpen, setIsLoginConfirmModalOpen] =
-    useState<boolean>(false)
+  const [isProtectedRoute, setIsProtectedRoute] = useState<boolean>(false)
 
   useEffect(() => {
     setSentryUser(user ? { id: user.id } : null)
@@ -25,23 +24,24 @@ export default function ProtectRoute({
 
   useEffect(() => {
     const user = sessionStorage.getItem('user-store')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isNotFoundPage = (window as any).__IS_NOT_FOUND_PAGE__
     if (!user && !publicRoutes.includes(pathname) && !isNotFoundPage) {
-      setIsLoginConfirmModalOpen(true)
+      setIsProtectedRoute(true)
     }
   }, [pathname])
 
   return (
-    <>
+    <div className="min-h-[100svh]">
       {children}
       <LoginConfirmModal
-        isOpen={isLoginConfirmModalOpen}
-        onClose={() => setIsLoginConfirmModalOpen(false)}
+        isOpen={isProtectedRoute}
+        onClose={() => setIsProtectedRoute(false)}
         onSubmit={() => {
           router.replace('/login')
-          setIsLoginConfirmModalOpen(false)
+          setIsProtectedRoute(false)
         }}
       />
-    </>
+    </div>
   )
 }
