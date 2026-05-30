@@ -6,6 +6,7 @@ import { insertChatMessage } from '@/lib/chatMessage/insertChatMessage'
 import { supabase } from '@/lib/supabaseClient'
 import useUserStore from '@/stores/useAuthStore'
 import { ChatMessage } from '@/types/chatMessage'
+import { formatChatMessageTime } from '@/utils/formatChatMessageTime'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Spinner from '../common/spinner/Spinner'
@@ -84,6 +85,7 @@ const ChatRoom = () => {
       }
 
       const tempId = `temp-${Date.now()}`
+      const createdAt = new Date().toISOString()
       const optimisticMessage: ChatMessage = {
         id: tempId,
         content,
@@ -91,7 +93,8 @@ const ChatRoom = () => {
         userName: user.name,
         userProfileImage: user.profileImage,
         nbreadId,
-        createdAt: new Date().toISOString(),
+        createdAt,
+        formattedTime: formatChatMessageTime(createdAt),
         status: 'sending',
       }
 
@@ -153,6 +156,7 @@ const ChatRoom = () => {
             userProfileImage: payload.new.user_profile_image,
             nbreadId: payload.new.nbread_id,
             createdAt: payload.new.created_at,
+            formattedTime: formatChatMessageTime(payload.new.created_at),
           }
 
           setChatMessages((prev) => mergeIncomingMessage(prev, newChatMessage))

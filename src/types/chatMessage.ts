@@ -6,5 +6,6 @@ export interface ChatMessage {
   userName: string
   userProfileImage: string | null
   createdAt: string
+  formattedTime: string
   status?: 'sending' | 'failed'
 }

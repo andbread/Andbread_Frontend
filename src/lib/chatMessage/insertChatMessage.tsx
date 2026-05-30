@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabaseClient'
 import { ChatMessage } from '@/types/chatMessage'
 import { User } from '@/types/user'
+import { formatChatMessageTime } from '@/utils/formatChatMessageTime'
 
 export const insertChatMessage = async (
   user: User,
@@ -33,6 +34,7 @@ export const insertChatMessage = async (
       userName: data.user_name,
       userProfileImage: data.user_profile_image,
       createdAt: data.created_at,
+      formattedTime: formatChatMessageTime(data.created_at),
     }
   } catch (error) {
     throw error

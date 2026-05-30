@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { ChatMessage } from '@/types/chatMessage'
+import { formatChatMessageTime } from '@/utils/formatChatMessageTime'
 
 /* getChatMessages: DB로부터 그룹 메시지 내역을 불러옴 */
 export const getChatMessages = async (nbreadId: string) => {
@@ -23,6 +24,7 @@ export const getChatMessages = async (nbreadId: string) => {
       userName: item.user_name,
       userProfileImage: item.user_profile_image,
       createdAt: item.created_at,
+      formattedTime: formatChatMessageTime(item.created_at),
     }))
 
     return chatMessages
