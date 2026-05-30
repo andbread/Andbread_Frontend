@@ -15,11 +15,11 @@ export const getChatMessages = async (nbreadId: string) => {
     }
 
     // 불러온 row data를 ChatMessage 타입으로 매핑
-    const chatMessages: ChatMessage[] = data.map((item, index) => ({
+    const chatMessages: ChatMessage[] = data.map((item) => ({
       id: item.id,
       content: item.content,
       nbreadId: item.nbread_id,
-      userId: item.user_id,
+      userId: item.user_id ?? '',
       userName: item.user_name,
       userProfileImage: item.user_profile_image,
       createdAt: item.created_at,

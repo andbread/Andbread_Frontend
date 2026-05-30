@@ -4,6 +4,7 @@ export interface ChatMessage {
   nbreadId: string
   userId: string
   userName: string
-  userProfileImage: string
+  userProfileImage: string | null
   createdAt: string
+  status?: 'sending' | 'failed'
 }
