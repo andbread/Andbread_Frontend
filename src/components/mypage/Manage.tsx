@@ -2,7 +2,7 @@ import { logout } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import LogoutModal from '../user/LogoutModal'
 import DeleteAccountModal from '../user/DeleteAccountModal'
-import { Dispatch, RefObject, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { deleteAccount } from '@/lib/auth'
 
 interface ManageProps {
