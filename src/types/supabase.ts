@@ -432,25 +432,43 @@ export type Database = {
           email: string
           id: string
           name: string
+          privacy_agreed: boolean
+          privacy_agreed_at: string | null
+          privacy_version: string | null
           profile_image: string | null
           social_type: string
           tag: string
+          terms_agreed: boolean
+          terms_agreed_at: string | null
+          terms_version: string | null
         }
         Insert: {
           email: string
           id?: string
           name: string
+          privacy_agreed?: boolean
+          privacy_agreed_at?: string | null
+          privacy_version?: string | null
           profile_image?: string | null
           social_type: string
           tag: string
+          terms_agreed?: boolean
+          terms_agreed_at?: string | null
+          terms_version?: string | null
         }
         Update: {
           email?: string
           id?: string
           name?: string
+          privacy_agreed?: boolean
+          privacy_agreed_at?: string | null
+          privacy_version?: string | null
           profile_image?: string | null
           social_type?: string
           tag?: string
+          terms_agreed?: boolean
+          terms_agreed_at?: string | null
+          terms_version?: string | null
         }
         Relationships: []
       }
