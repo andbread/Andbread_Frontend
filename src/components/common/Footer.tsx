@@ -6,6 +6,7 @@ import { FOOTER_LINKS } from '@/constants/footerLinks'
 
 const HIDE_FOOTER_PATTERNS: RegExp[] = [
   /^\/nbread\/[^/]+$/, // 채팅/게시판 탭이 포함된 엔빵 상세 페이지
+  /^\/terms-agreement$/,
 ]
 
 const Footer = () => {

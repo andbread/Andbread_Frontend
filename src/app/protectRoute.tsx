@@ -5,8 +5,22 @@ import { usePathname, useRouter } from 'next/navigation'
 import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
 import { setSentryUser } from '@/lib/sentry/sentry'
 import useUserStore from '@/stores/useAuthStore'
+import {
+  getCurrentUserRow,
+  hasRequiredTermsAgreement,
+} from '@/lib/termsAgreement'
 
-const publicRoutes = ['/login', '/auth/callback', '/inviteAccept']
+const publicRoutes = [
+  '/login',
+  '/auth/callback',
+  '/inviteAccept',
+  '/terms-agreement',
+]
+const termsAgreementExemptRoutes = [
+  ...publicRoutes,
+  '/terms-of-service',
+  '/privacy-policy',
+]
 
 export default function ProtectRoute({
   children,
@@ -30,6 +44,24 @@ export default function ProtectRoute({
       setIsProtectedRoute(true)
     }
   }, [pathname])
+
+  useEffect(() => {
+    if (!user?.id || termsAgreementExemptRoutes.includes(pathname)) return
+
+    const redirectIfRequiredTermsNotAgreed = async () => {
+      try {
+        const userRow = await getCurrentUserRow(user.id)
+
+        if (userRow && !hasRequiredTermsAgreement(userRow)) {
+          router.replace('/terms-agreement')
+        }
+      } catch (error) {
+        console.error('Error checking required terms agreement:', error)
+      }
+    }
+
+    redirectIfRequiredTermsNotAgreed()
+  }, [pathname, router, user?.id])
 
   return (
     <div className="min-h-[100svh]">
