@@ -11,6 +11,7 @@ Disallow: /inviteAccept
 Disallow: /mypage
 Disallow: /nbread/
 Disallow: /notification
+Disallow: /terms-agreement
 
 # Host
 Host: https://nbread-nbread.vercel.app

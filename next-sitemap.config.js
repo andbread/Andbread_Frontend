@@ -16,6 +16,7 @@ module.exports = {
     '/mypage/*',
     '/nbread/*',
     '/notification',
+    '/terms-agreement',
   ],
   robotsTxtOptions: {
     policies: [
@@ -33,6 +34,7 @@ module.exports = {
           '/mypage',
           '/nbread/',
           '/notification',
+          '/terms-agreement',
         ],
       },
     ],
