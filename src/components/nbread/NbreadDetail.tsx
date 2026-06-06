@@ -198,15 +198,18 @@ const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
           onClose={() => setIsNbreadDeleteModalOpen(false)}
           onSubmit={() => handleDeleteNbread(nbreadData!.id)}
         />
-        {/* 친구 초대 버튼 클릭시 초대 링크 공유 모달 임시 주석 처리 */}
-        {/* <NbreadInviteModal
+        <NbreadInviteModal
           isOpen={isNbreadInviteModalOpen}
           onClose={() => setIsNbreadInviteModalOpen(false)}
           nbreadId={params.nbreadId as string}
-        /> */}
+        />
         <InviteBottomSheet
           isOpen={isInviteBottomSheetOpen}
           onClose={() => setIsInviteBottomSheetOpen(false)}
+          onClickLinkInvite={() => {
+            setIsInviteBottomSheetOpen(false)
+            setIsNbreadInviteModalOpen(true)
+          }}
           user={userData?.id ?? null}
         />
         <QuitNbreadModal

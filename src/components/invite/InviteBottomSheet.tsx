@@ -8,10 +8,11 @@ import { FriendListItem, getFriendList } from '@/lib/friend/getSearchFriend'
 interface InviteBottomSheetProps {
   isOpen: boolean
   onClose: () => void
+  onClickLinkInvite: () => void
   user: string | null
 }
 interface User {
-  avatar: any
+  avatar: string
   name: string
   status: string
   userId: string
@@ -19,6 +20,7 @@ interface User {
 const InviteBottomSheet = ({
   isOpen,
   onClose,
+  onClickLinkInvite,
   user,
 }: InviteBottomSheetProps) => {
   const [searchData, setSearchData] = useState('') // 검색칸 입력 데이터
@@ -112,9 +114,13 @@ const InviteBottomSheet = ({
                 <p className="text-pretendard text-[16px]">
                   회원 태그를 검색해 초대할 수 있어요
                 </p>
-                <p className="text-pretendard cursor-pointer text-[14px] text-secondary-100 underline">
+                <button
+                  type="button"
+                  onClick={onClickLinkInvite}
+                  className="text-pretendard cursor-pointer text-[14px] text-secondary-100 underline"
+                >
                   초대하고 싶은 사람이 회원이 아니에요
-                </p>
+                </button>
               </div>
             ) : (
               <div className="flex max-h-[400px] flex-col">

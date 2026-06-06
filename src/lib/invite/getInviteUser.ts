@@ -18,34 +18,32 @@ export const getInviteUser = async (tag: string, nbreadId: string) => {
     // 2. 각 유저의 invite 상태 확인
     const usersWithInviteStatus = await Promise.all(
       users.map(async (user) => {
-          const { data: nbreadData } = await supabase
+        const { data: nbreadData } = await supabase
           .from('nbread_records')
           .select('*')
           .eq('user_id', user.id)
           .eq('nbread_id', nbreadId)
           .maybeSingle()
 
-          console.log('nbreadData',nbreadData)
+        console.log('nbreadData', nbreadData)
         const { data: inviteData } = await supabase
           .from('nbread_invite')
-          .select('state')
-          .eq('invited_user_id', user.id)
+          .select('status')
+          .eq('target_user_id', user.id)
           .eq('nbread_id', nbreadId)
           .maybeSingle() // 없으면 null 반환
-          console.log('검색한 유저 데이터 :' ,inviteData)
+        console.log('검색한 유저 데이터 :', inviteData)
         let status = '초대 하기'
-        if(nbreadData === 'accept') {
-            status = '참여 중'
-        }
-        else if(inviteData?.state == 'pending') {
-            status = '초대 완료'
-        }
-        else if(inviteData?.state == 'reject') {
+        if (nbreadData === 'accept') {
+          status = '참여 중'
+        } else if (inviteData?.status == 'pending') {
+          status = '초대 완료'
+        } else if (inviteData?.status == 'rejected') {
           status = '초대 하기'
         }
         const result = {
           ...user,
-          status: status
+          status: status,
         }
 
         console.log('유저 + 초대 상태:', result) // 여기서 확인

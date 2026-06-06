@@ -8,9 +8,9 @@ export const updateAcceptInvite = async (
   let paymentDate = null
   const { data, error } = await supabase
     .from('nbread_invite')
-    .update({ state: 'accepted' })
+    .update({ status: 'accepted' })
     .eq('nbread_id', senderId)
-    .eq('invited_user_id', receiverId)
+    .eq('target_user_id', receiverId)
 
   if (error) {
     console.error('초대 수락 업데이트 실패!', error)
@@ -63,9 +63,9 @@ export const updateRejectedInvite = async (
 ) => {
   const { data, error } = await supabase
     .from('nbread_invite')
-    .update({ state: 'rejected' })
+    .update({ status: 'rejected' })
     .eq('nbread_id', senderId)
-    .eq('invited_user_id', receiverId)
+    .eq('target_user_id', receiverId)
   if (error) {
     console.error('엔빵 거절 에러 : ', error)
     captureAppError(error, {

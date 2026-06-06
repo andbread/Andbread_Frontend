@@ -22,7 +22,11 @@ interface WebhookPayload {
 Deno.serve(async (req) => {
   const payload: WebhookPayload = await req.json()
 
-  if (payload.old_record.state === 'accepted') {
+  // accepted 상태로 처음 전환된 경우에만 수락 알림을 발송한다.
+  if (
+    payload.record.status !== 'accepted' ||
+    payload.old_record.status === 'accepted'
+  ) {
     return new Response(null, { status: 204, headers: corsHeaders })
   }
   if (req.method === 'OPTIONS') {
@@ -37,8 +41,12 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const invitedUserId = payload.record.invited_user_id
+    const invitedUserId = payload.record.target_user_id
     const nbreadId = payload.record.nbread_id
+
+    if (!invitedUserId) {
+      return new Response(null, { status: 204, headers: corsHeaders })
+    }
 
     // 초대받은 유저의 이름을 불러옴
     const { data: invitedUserNameData, error: invitedUserNameDataError } =

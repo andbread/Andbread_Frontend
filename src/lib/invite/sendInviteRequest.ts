@@ -3,83 +3,78 @@ import { captureAppError } from '@/lib/sentry/sentry'
 
 export const sendInviteRequest = async (
   nbreadId: string,
-  invitedUserId: string,
-  state: string,
+  targetUserId: string,
 ) => {
   try {
-    // const {data, error} = await supabase.from('nbread_invite').insert(
-    //     [
-    //         {
-    //             nbread_id: nbreadId,
-    //             invited_user_id: invitedUserId,
-    //             state: "pending"
-    //         },
-    //     ],
-    // )
     const { data, error } = await supabase
       .from('nbread_invite')
-      .select('state')
+      .select('status, invite_token')
       .eq('nbread_id', nbreadId)
-      .eq('invited_user_id', invitedUserId)
+      .eq('target_user_id', targetUserId)
+
     if (error) {
-      console.error('error : ', error)
       captureAppError(error, {
         action: 'invite.select',
-        tags: { nbreadId, invitedUserId, state },
+        tags: { nbreadId, targetUserId },
       })
-      return
+      throw error
     }
-    console.log('data', data)
-    //   return data
+
     if (!data || data.length === 0) {
-      // 데이터 없으면 insert
+      // 친구 초대는 대상 사용자를 연결한 pending 초대 레코드를 먼저 생성한다.
       const { data: insertedData, error } = await supabase
         .from('nbread_invite')
         .insert([
           {
             nbread_id: nbreadId,
-            invited_user_id: invitedUserId,
-            state: state,
+            target_user_id: targetUserId,
+            status: 'pending',
           },
         ])
-        .select('state')
+        .select('status, invite_token')
 
       if (error) {
-        console.error(error)
         captureAppError(error, {
           action: 'invite.insert',
-          tags: { nbreadId, invitedUserId, state },
+          tags: { nbreadId, targetUserId },
         })
+        throw error
       }
+
       return insertedData
-    } else if (data.some((item) => item.state === 'rejected')) {
-      // 기존 데이터 중 rejected이면 update
+    }
+
+    if (data.some((item) => item.status === 'rejected')) {
+      // 거절된 친구 초대는 새 토큰을 발급해 다시 pending 상태로 전환한다.
       const { data: updatedData, error } = await supabase
         .from('nbread_invite')
-        .update({ state })
+        .update({
+          status: 'pending',
+          invite_token: crypto.randomUUID(),
+        })
         .eq('nbread_id', nbreadId)
-        .eq('invited_user_id', invitedUserId)
-        .select('state')
+        .eq('target_user_id', targetUserId)
+        .eq('status', 'rejected')
+        .select('status, invite_token')
 
       if (error) {
-        console.error(error)
         captureAppError(error, {
           action: 'invite.update_pending',
-          tags: { nbreadId, invitedUserId, state },
+          tags: { nbreadId, targetUserId },
         })
+        throw error
       }
+
       return updatedData
     }
 
-    // 이미 pending이나 accepted 상태라면 그대로 반환
-    return data
-    if (error) throw error
+    // pending 또는 accepted 초대가 있으면 중복 레코드를 만들지 않는다.
     return data
   } catch (error) {
     console.error('초대 요청 중 오류 발생:', error)
     captureAppError(error, {
       action: 'invite.send_request',
-      tags: { nbreadId, invitedUserId, state },
+      tags: { nbreadId, targetUserId },
     })
   }
 }

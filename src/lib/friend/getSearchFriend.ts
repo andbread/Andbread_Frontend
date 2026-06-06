@@ -99,8 +99,8 @@ export const getFriendList = async (
       if (nbreadId) {
         const { data, error } = await supabase
           .from('nbread_invite')
-          .select('state,invited_user_id')
-          .in('invited_user_id', friendIds)
+          .select('status,target_user_id')
+          .in('target_user_id', friendIds)
           .eq('nbread_id', nbreadId)
         if (error) {
           console.error('error~~', error)
@@ -108,13 +108,13 @@ export const getFriendList = async (
         }
         inviteData = data || []
         const mergedFriends = processedFriends.map((friend) => {
-          const invite = inviteData.find((i) => i.invited_user_id === friend.id)
+          const invite = inviteData.find((i) => i.target_user_id === friend.id)
           return {
             ...friend,
             inviteState: invite
-              ? invite.state === 'pending'
+              ? invite.status === 'pending'
                 ? '초대 완료' // ✅ pending → 초대 완료로 변환
-                : invite.state // 그 외 상태는 그대로 유지
+                : invite.status // 그 외 상태는 그대로 유지
               : '초대 하기', // 초대 기록 없으면 null
           }
         })
@@ -136,8 +136,8 @@ export const getInviteFriendList = async (
   try {
     const { data, error } = await supabase
       .from('nbread_invite')
-      .select('invited_user_id,nbread_id,state')
-      .eq('invited_user_id', userId)
+      .select('target_user_id,nbread_id,status')
+      .eq('target_user_id', userId)
       .eq('nbread_id', inviteNbreadId)
 
     if (!data) {
