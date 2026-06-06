@@ -1,5 +1,5 @@
 import BottomSheet from '../common/bottomsheet/BottomSheet'
-import { useEffect, useState, useRef } from 'react'
+import { MouseEvent, useEffect, useState, useRef } from 'react'
 import Icon from '../common/icon/Icon'
 import InviteUserListItem from './InviteUserListItem'
 import { getInviteUser } from '@/lib/invite/getInviteUser'
@@ -75,10 +75,10 @@ const InviteBottomSheet = ({
     }
   }, [searchData])
   const refreshLists = async () => {
-    // ✅ 1. 팔로잉 갱신
+    // 팔로잉 갱신
     await fetchFriendList()
 
-    // ✅ 2. 검색 결과 갱신 (검색어가 있을 때만)
+    // 검색 결과 갱신 (검색어가 있을 때만)
     if (searchData.length === 4) {
       const apiDataRaw =
         (await getInviteUser(searchData, params.nbreadId as string)) || []
@@ -92,23 +92,31 @@ const InviteBottomSheet = ({
       setFetchSearchData(apiData)
     }
   }
+
+  const handleClickLinkInvite = (event: MouseEvent<HTMLButtonElement>) => {
+    // BottomSheet 오버레이의 닫기 이벤트로 클릭이 전달되지 않도록 차단한다.
+    event.preventDefault()
+    event.stopPropagation()
+    onClickLinkInvite()
+  }
+
   return (
     <>
       <BottomSheet isOpen={isOpen} onClose={onClose}>
         <div className="flex h-[80vh] w-full flex-col px-[20px]">
-          <div className="flex w-full items-center justify-start rounded-[8px] bg-gray-100 pr-[15px]">
+          <div className="flex w-full items-center justify-center rounded-[8px] bg-gray-100 pr-[15px]">
             <input
-              className="h-[48px] w-full resize-none rounded-[8px] border-none bg-gray-100 px-[30px] pt-[8px] text-[20px] outline-none focus:border-none focus:outline-none focus:ring-0"
+              className="h-48 w-full resize-none rounded-8 border-none bg-gray-100 px-20 text-16 outline-none focus:border-none focus:outline-none focus:ring-0"
               placeholder="태그로 검색하기"
               type="text"
               maxLength={4}
               value={searchData}
               onChange={(e) => setSearchData(e.target.value)}
             ></input>
-            <Icon type="search" width={20} height={20} />
+            <Icon type="search" width={24} height={24} />
           </div>
           <div className="flex flex-col pt-[30px]">
-            <p className="mb-[20px] text-body03 text-gray-500">검색결과</p>
+            <p className="mb-[24px] text-body02 text-gray-500">검색결과</p>
             {fetchSearchData.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-30">
                 <p className="text-pretendard text-[16px]">
@@ -116,8 +124,8 @@ const InviteBottomSheet = ({
                 </p>
                 <button
                   type="button"
-                  onClick={onClickLinkInvite}
-                  className="text-pretendard cursor-pointer text-[14px] text-secondary-100 underline"
+                  onClick={handleClickLinkInvite}
+                  className="text-pretendard cursor-pointer pb-24 text-[14px] text-secondary-100 underline"
                 >
                   초대하고 싶은 사람이 회원이 아니에요
                 </button>
@@ -140,7 +148,7 @@ const InviteBottomSheet = ({
           </div>
           <div className="flex flex-col">
             <div className="mb-30 h-[2px] w-full bg-gray-100" />
-            <p className="mb-[20px] text-body03 text-gray-500">팔로잉</p>
+            <p className="mb-[24px] text-body02 text-gray-500">팔로잉</p>
             <div className="flex max-h-[400px] flex-col">
               {friendListData?.map((user) => (
                 <InviteUserListItem

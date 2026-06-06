@@ -493,6 +493,13 @@ export type Database = {
         }
         Returns: Json
       }
+      respond_to_nbread_invite: {
+        Args: {
+          p_invite_token: string
+          p_response: string
+        }
+        Returns: Json
+      }
       update_nbread_records: {
         Args: Record<PropertyKey, never>
         Returns: undefined

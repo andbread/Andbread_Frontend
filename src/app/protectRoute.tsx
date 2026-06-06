@@ -10,12 +10,7 @@ import {
   hasRequiredTermsAgreement,
 } from '@/lib/termsAgreement'
 
-const publicRoutes = [
-  '/login',
-  '/auth/callback',
-  '/inviteAccept',
-  '/terms-agreement',
-]
+const publicRoutes = ['/login', '/auth/callback', '/terms-agreement']
 const termsAgreementExemptRoutes = [
   ...publicRoutes,
   '/terms-of-service',
@@ -40,7 +35,11 @@ export default function ProtectRoute({
     const user = sessionStorage.getItem('user-store')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isNotFoundPage = (window as any).__IS_NOT_FOUND_PAGE__
-    if (!user && !publicRoutes.includes(pathname) && !isNotFoundPage) {
+    // 토큰 초대 페이지는 로그인 전에도 초대 내용을 확인할 수 있는 공개 경로다.
+    const isPublicRoute =
+      publicRoutes.includes(pathname) || pathname.startsWith('/invite/')
+
+    if (!user && !isPublicRoute && !isNotFoundPage) {
       setIsProtectedRoute(true)
     }
   }, [pathname])

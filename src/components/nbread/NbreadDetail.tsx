@@ -10,7 +10,13 @@ import { deleteNbread, getNbread, updateNbread } from '@/lib/nbread'
 import { deleteParticipants, getParticipants } from '@/lib/participant'
 import { Nbread, NbreadRecord } from '@/types/nbread'
 import { useRouter, useParams } from 'next/navigation'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
 import { useForm } from 'react-hook-form'
 import NbreadDeleteModal from '@/components/common/modal/NbreadDeleteModal'
 import NbreadInviteModal from '@/components/common/modal/NbreadInviteModal'
@@ -40,6 +46,15 @@ const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
   const [isInviteBottomSheetOpen, setIsInviteBottomSheetOpen] = useState(false)
   const params = useParams()
   const router = useRouter()
+
+  const handleClickLinkInvite = useCallback(() => {
+    setIsInviteBottomSheetOpen(false)
+
+    // BottomSheet가 닫힌 다음 렌더링에서 링크 초대 모달을 열어 레이어 충돌을 방지한다.
+    requestAnimationFrame(() => {
+      setIsNbreadInviteModalOpen(true)
+    })
+  }, [])
 
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const {
@@ -206,10 +221,7 @@ const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
         <InviteBottomSheet
           isOpen={isInviteBottomSheetOpen}
           onClose={() => setIsInviteBottomSheetOpen(false)}
-          onClickLinkInvite={() => {
-            setIsInviteBottomSheetOpen(false)
-            setIsNbreadInviteModalOpen(true)
-          }}
+          onClickLinkInvite={handleClickLinkInvite}
           user={userData?.id ?? null}
         />
         <QuitNbreadModal
