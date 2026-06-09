@@ -10,6 +10,9 @@ import { getParticipants } from '@/lib/participant'
 import Spinner from '@/components/common/spinner/Spinner'
 import NotificationPermissionModal from '@/components/common/modal/NotificationPermissionModal'
 import NotificationDeniedModal from '@/components/common/modal/NotificationDeniedModal'
+import ReceivedInviteBanner from '@/components/home/ReceivedInviteBanner'
+import { getPendingInvites } from '@/lib/invite/getPendingInvites'
+import type { PendingInvite } from '@/lib/invite/getPendingInvites'
 
 // [ ] OS 알림 허용 후 모달 닫힘
 // [ ] OS 알림 허용 상태 확인해서 모달 열기
@@ -17,6 +20,7 @@ import NotificationDeniedModal from '@/components/common/modal/NotificationDenie
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
   const [nbreadList, setNbreadList] = useState<Nbread[]>([])
+  const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([])
   const [totalAmount, setTotalAmount] = useState(0)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isNotificationDeniedModalOpen, setIsNotificationDeniedModalOpen] =
@@ -25,16 +29,27 @@ const HomePage = () => {
 
   // Nbread 및 Participant 정보를 DB로부터 fetch
   const fetchNbreads = async (userId: string) => {
-    const nbreads = await getUserNbreads(userId)
+    try {
+      const [nbreads, invites] = await Promise.all([
+        getUserNbreads(userId),
+        // 초대 조회 실패가 기존 홈 엔빵 조회까지 막지 않도록 빈 목록으로 처리한다.
+        getPendingInvites(userId).catch(() => []),
+      ])
 
-    const nbreadsWithParticipants = await Promise.all(
-      nbreads.map(async (nbread) => {
-        const participants = await getParticipants(nbread.id)
-        return { ...nbread, participants }
-      }),
-    )
-    setNbreadList(nbreadsWithParticipants)
-    setIsLoading(false)
+      const nbreadsWithParticipants = await Promise.all(
+        nbreads.map(async (nbread) => {
+          const participants = await getParticipants(nbread.id)
+          return { ...nbread, participants }
+        }),
+      )
+      setNbreadList(nbreadsWithParticipants)
+      setPendingInvites(invites)
+    } catch {
+      setNbreadList([])
+      setPendingInvites([])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -62,6 +77,7 @@ const HomePage = () => {
           <Spinner isLoading={isLoading} />
         ) : (
           <>
+            <ReceivedInviteBanner invites={pendingInvites} />
             <MonthlyNbread
               nbreadList={nbreadList}
               totalAmount={totalAmount}
