@@ -50,26 +50,19 @@ const InviteBottomSheet = ({
         // 캐시에 이미 존재하는 데이터면 API 호출/필터링 생략
         if (searchCache.current[searchData]) {
           setFetchSearchData(searchCache.current[searchData])
-
-          console.log('캐시 사용:', searchData)
-          console.log('캐시 사용:', searchCache)
           return
         }
         const apiDataRaw =
           (await getInviteUser(searchData, params.nbreadId as string)) || []
-        console.log('검색 유저! : ', apiDataRaw)
         const apiData: User[] = apiDataRaw.map((u) => ({
           avatar: u.profile_image, // profile_image → avatar로 매핑
           name: u.name,
           status: u.status,
           userId: u.id,
         }))
-        console.log('제발 상태야~~ :', apiData)
         // 캐시에 저장
-        console.log(apiData)
         searchCache.current[searchData] = apiData
         setFetchSearchData(apiData || [])
-        console.log('API 요청:', searchData)
       }, 1000)
       return () => clearTimeout(typingSearchData)
     }
