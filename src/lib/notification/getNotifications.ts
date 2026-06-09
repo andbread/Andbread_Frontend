@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { Notification } from '@/types/notification'
-import { NbreadRow, NotificationRow } from '@/types/supabase'
+import { NotificationRow } from '@/types/supabase'
 import { PostgrestError } from '@supabase/supabase-js'
 
 type GetNotificationType = {
@@ -14,6 +14,7 @@ export const getNotification = async (userId: string) => {
       .from('notification')
       .select('*')
       .eq('user_id', userId)
+      .order('created_at', { ascending: false })
 
     if (error || !data) {
       console.error('Error get notifications:', error)
@@ -32,10 +33,9 @@ export const getNotification = async (userId: string) => {
         is_read: notification.is_read,
       }),
     )
-    console.log('notificationsType : ',notifications)
     return notifications
   } catch (error) {
-    console.error('Error fetching nbread:', error)
+    console.error('Error fetching notifications:', error)
     throw error
   }
 }
