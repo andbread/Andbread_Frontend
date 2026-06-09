@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import NProgress from 'nprogress'
 import { supabase } from '@/lib/supabaseClient'
 import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
+import { getInternalRedirectPath } from '@/lib/authRedirect'
 import useUserStore from '@/stores/useAuthStore'
 import {
   getCurrentUserRow,
@@ -14,7 +15,7 @@ import {
 
 NProgress.configure({ showSpinner: false })
 
-export const useAuthCallbackFlow = () => {
+export const useAuthCallbackFlow = (next: string | null) => {
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const setUser = useUserStore((state) => state.setUser)
@@ -45,11 +46,15 @@ export const useAuthCallbackFlow = () => {
         localStorage.clear()
 
         if (hasRequiredTermsAgreement(userRow)) {
-          router.replace('/')
+          // 세션과 사용자 정보 저장이 끝난 뒤 로그인 전 페이지로 복귀한다.
+          router.replace(getInternalRedirectPath(next))
           return
         }
 
-        router.replace('/terms-agreement')
+        const redirectPath = getInternalRedirectPath(next)
+        router.replace(
+          `/terms-agreement?next=${encodeURIComponent(redirectPath)}`,
+        )
       } catch (error) {
         console.error('Error handling auth callback:', error)
         setErrorMessage(
@@ -64,7 +69,7 @@ export const useAuthCallbackFlow = () => {
     }
 
     handleAuthCallback()
-  }, [router, setUser])
+  }, [next, router, setUser])
 
   return { loading, errorMessage }
 }

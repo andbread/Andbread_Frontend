@@ -7,18 +7,27 @@ import { captureAppError } from '@/lib/sentry/sentry'
 import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 
 // 1. 로그인 함수
-export const login = async (provider: LoginProvider['provider']) => {
+export const login = async (
+  provider: LoginProvider['provider'],
+  next?: string,
+) => {
   const appUrl =
     (typeof window !== 'undefined' ? window.location.origin : undefined) ??
     process.env.NEXT_PUBLIC_SITE_URL ??
     (process.env.NEXT_PUBLIC_VERCEL_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
       : 'http://localhost:3000')
-  const redirectToUrl = `${appUrl}/auth/callback`
+  const callbackUrl = new URL('/auth/callback', appUrl)
+
+  if (next) {
+    // 로그인 완료 후 복귀할 경로를 OAuth callback까지 전달한다.
+    callbackUrl.searchParams.set('next', next)
+  }
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
-      redirectTo: redirectToUrl,
+      redirectTo: callbackUrl.toString(),
       queryParams: {
         access_type: 'offline',
         prompt: 'consent',
@@ -129,4 +138,18 @@ export const getUser = async (accessToken: string) => {
   const data = await supabase.auth.getUser(accessToken)
 
   return data
+}
+
+// 6. 공개 경로에서 현재 로그인 여부 확인하는 함수
+export const hasAuthenticatedSession = async () => {
+  const { data, error } = await supabase.auth.getSession()
+
+  if (error) {
+    captureAppError(error, {
+      action: 'auth.get_session',
+    })
+    return false
+  }
+
+  return Boolean(data.session)
 }

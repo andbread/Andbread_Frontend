@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
 import NbreadsImage from '@/components/common/nbreadImage/NbreadsImage'
 import Spinner from '@/components/common/spinner/Spinner'
 import { useToast } from '@/components/common/toast/Toast'
 import InviteResponseModal from '@/components/invite/InviteResponseModal'
+import { hasAuthenticatedSession } from '@/lib/auth'
 import {
   getInviteByToken,
   InviteDetails,
@@ -44,30 +46,54 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
   const [selectedResponse, setSelectedResponse] =
     useState<InviteResponse | null>(null)
   const [loadFailed, setLoadFailed] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthLoading, setIsAuthLoading] = useState(true)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
 
   useEffect(() => {
     let isMounted = true
 
-    const fetchInvite = async () => {
+    const initializeInvitePage = async () => {
       try {
-        const data = await getInviteByToken(token)
-        if (isMounted) setInvite(data)
+        const [inviteData, hasSession] = await Promise.all([
+          getInviteByToken(token),
+          hasAuthenticatedSession(),
+        ])
+
+        if (!isMounted) return
+
+        setInvite(inviteData)
+        setIsAuthenticated(hasSession)
+        setIsLoginModalOpen(!hasSession)
       } catch {
         if (isMounted) setLoadFailed(true)
       } finally {
-        if (isMounted) setIsLoading(false)
+        if (isMounted) {
+          setIsLoading(false)
+          setIsAuthLoading(false)
+        }
       }
     }
 
-    fetchInvite()
+    initializeInvitePage()
 
     return () => {
       isMounted = false
     }
   }, [token])
 
+  const selectResponse = (response: InviteResponse) => {
+    // 비로그인 사용자는 초대 응답 대신 로그인 안내 모달로 유도한다.
+    if (!isAuthenticated) {
+      setIsLoginModalOpen(true)
+      return
+    }
+
+    setSelectedResponse(response)
+  }
+
   const handleResponse = async () => {
-    if (!selectedResponse || !invite) return
+    if (!selectedResponse || !invite || !isAuthenticated) return
 
     setIsSubmitting(true)
 
@@ -95,8 +121,6 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
 
       if (message.includes('LOGIN_REQUIRED')) {
         useToast.error('로그인이 필요해요.')
-      } else if (message.includes('LINK_INVITE_USER_NOT_CONNECTED')) {
-        useToast.error('링크 초대 사용자 연결이 필요해요.')
       } else if (message.includes('INVITE_TARGET_MISMATCH')) {
         useToast.error('초대받은 계정으로 로그인해 주세요.')
       } else if (message.includes('INVITE_NOT_PENDING')) {
@@ -110,7 +134,7 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || isAuthLoading) {
     return <Spinner isLoading />
   }
 
@@ -164,13 +188,13 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
       <div className="flex flex-col gap-12">
         <button
           className="btn btn-large btn-primary"
-          onClick={() => setSelectedResponse('accepted')}
+          onClick={() => selectResponse('accepted')}
         >
           초대 수락하기
         </button>
         <button
           className="btn btn-large btn-secondary"
-          onClick={() => setSelectedResponse('rejected')}
+          onClick={() => selectResponse('rejected')}
         >
           거절하기
         </button>
@@ -183,6 +207,14 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
           if (!isSubmitting) setSelectedResponse(null)
         }}
         onSubmit={handleResponse}
+      />
+      <LoginConfirmModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onSubmit={() => {
+          const redirectPath = `/invite/${token}`
+          router.push(`/login?redirect=${encodeURIComponent(redirectPath)}`)
+        }}
       />
     </main>
   )

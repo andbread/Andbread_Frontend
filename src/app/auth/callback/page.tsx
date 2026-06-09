@@ -1,21 +1,15 @@
-'use client'
+import AuthCallbackClient from '@/components/auth/AuthCallbackClient'
 
-import 'nprogress/nprogress.css'
-import Spinner from '@/components/common/spinner/Spinner'
-import { useAuthCallbackFlow } from '@/hooks/useAuthCallbackFlow'
+interface CallbackPageProps {
+  searchParams: Promise<{ next?: string | string[] }>
+}
 
-const CallbackPage = () => {
-  const { loading, errorMessage } = useAuthCallbackFlow()
+const CallbackPage = async ({ searchParams }: CallbackPageProps) => {
+  const { next } = await searchParams
+  const nextPath = typeof next === 'string' ? next : null
 
-  if (errorMessage) {
-    return (
-      <main className="flex min-h-dvh items-center justify-center bg-background px-24">
-        <p className="text-center text-body02 text-gray-600">{errorMessage}</p>
-      </main>
-    )
-  }
-
-  return <Spinner isLoading={loading} />
+  // callback URL의 next 값을 인증 처리 컴포넌트에 전달한다.
+  return <AuthCallbackClient next={nextPath} />
 }
 
 export default CallbackPage
