@@ -99,9 +99,11 @@ export const getFriendList = async (
       if (nbreadId) {
         const { data, error } = await supabase
           .from('nbread_invite')
-          .select('status,target_user_id')
+          .select('status,target_user_id,created_at')
           .in('target_user_id', friendIds)
           .eq('nbread_id', nbreadId)
+          // find가 사용자별 최신 초대를 선택할 수 있도록 최신순으로 정렬한다.
+          .order('created_at', { ascending: false })
         if (error) {
           console.error('error~~', error)
           return []

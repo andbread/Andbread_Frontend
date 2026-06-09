@@ -11,6 +11,7 @@ export const sendInviteRequest = async (
       .select('status, invite_token')
       .eq('nbread_id', nbreadId)
       .eq('target_user_id', targetUserId)
+      .order('created_at', { ascending: false })
 
     if (error) {
       captureAppError(error, {
@@ -20,8 +21,18 @@ export const sendInviteRequest = async (
       throw error
     }
 
+    const activeInvites =
+      data?.filter(
+        (invite) => invite.status === 'pending' || invite.status === 'accepted',
+      ) ?? []
+
+    if (activeInvites.length > 0) {
+      // 처리 중이거나 이미 수락된 초대가 있으면 중복 초대를 생성하지 않는다.
+      return activeInvites
+    }
+
     if (!data || data.length === 0) {
-      // 친구 초대는 대상 사용자를 연결한 pending 초대 레코드를 먼저 생성한다.
+      // 최초 친구 초대는 대상 사용자를 연결한 pending 레코드를 생성한다.
       const { data: insertedData, error } = await supabase
         .from('nbread_invite')
         .insert([
@@ -44,32 +55,27 @@ export const sendInviteRequest = async (
       return insertedData
     }
 
-    if (data.some((item) => item.status === 'rejected')) {
-      // 거절된 친구 초대는 새 토큰을 발급해 다시 pending 상태로 전환한다.
-      const { data: updatedData, error } = await supabase
-        .from('nbread_invite')
-        .update({
+    // 거절되거나 만료된 초대는 기록을 보존하고 새 pending 초대를 생성한다.
+    const { data: insertedData, error: insertError } = await supabase
+      .from('nbread_invite')
+      .insert([
+        {
+          nbread_id: nbreadId,
+          target_user_id: targetUserId,
           status: 'pending',
-          invite_token: crypto.randomUUID(),
-        })
-        .eq('nbread_id', nbreadId)
-        .eq('target_user_id', targetUserId)
-        .eq('status', 'rejected')
-        .select('status, invite_token')
+        },
+      ])
+      .select('status, invite_token')
 
-      if (error) {
-        captureAppError(error, {
-          action: 'invite.update_pending',
-          tags: { nbreadId, targetUserId },
-        })
-        throw error
-      }
-
-      return updatedData
+    if (insertError) {
+      captureAppError(insertError, {
+        action: 'invite.reinvite',
+        tags: { nbreadId, targetUserId },
+      })
+      throw insertError
     }
 
-    // pending 또는 accepted 초대가 있으면 중복 레코드를 만들지 않는다.
-    return data
+    return insertedData
   } catch (error) {
     console.error('초대 요청 중 오류 발생:', error)
     captureAppError(error, {

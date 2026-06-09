@@ -31,7 +31,10 @@ export const getInviteUser = async (tag: string, nbreadId: string) => {
           .select('status')
           .eq('target_user_id', user.id)
           .eq('nbread_id', nbreadId)
-          .maybeSingle() // 없으면 null 반환
+          // 재초대 기록이 여러 개면 가장 최근 초대 상태를 사용한다.
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle()
         console.log('검색한 유저 데이터 :', inviteData)
         let status = '초대 하기'
         if (nbreadData === 'accept') {
