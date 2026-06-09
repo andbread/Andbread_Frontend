@@ -1,6 +1,7 @@
 import NbreadsImage from '@/components/common/nbreadImage/NbreadsImage'
 import LoginButton from '@/components/user/LoginButton'
 import NbreadText from '@/assets/logo/nbread-text.svg'
+import { getSafeRedirectPath } from '@/lib/authRedirect'
 
 interface LoginPageProps {
   searchParams: Promise<{ redirect?: string | string[] }>
@@ -8,7 +9,9 @@ interface LoginPageProps {
 
 const LoginPage = async ({ searchParams }: LoginPageProps) => {
   const { redirect } = await searchParams
-  const redirectPath = typeof redirect === 'string' ? redirect : undefined
+  const redirectPath = getSafeRedirectPath(
+    typeof redirect === 'string' ? redirect : null,
+  )
 
   return (
     <div className="flex h-svh w-full flex-col items-center justify-around">

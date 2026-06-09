@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useToast } from '@/components/common/toast/Toast'
-import { getInternalRedirectPath } from '@/lib/authRedirect'
+import { getSafeRedirectPath } from '@/lib/authRedirect'
 import useUserStore from '@/stores/useAuthStore'
 import {
   agreeRequiredTerms,
@@ -15,7 +15,7 @@ import {
 
 export const useTermsAgreementPage = (next: string | null) => {
   const router = useRouter()
-  const redirectPath = getInternalRedirectPath(next)
+  const redirectPath = getSafeRedirectPath(next)
   const setUser = useUserStore((state) => state.setUser)
   const clearUser = useUserStore((state) => state.clearUser)
   const storeUser = useUserStore((state) => state.user)

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/common/toast/Toast'
 import { captureAppError } from '@/lib/sentry/sentry'
 import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
+import { getSafeRedirectPath } from '@/lib/authRedirect'
 
 // 1. 로그인 함수
 export const login = async (
@@ -20,8 +21,8 @@ export const login = async (
   const callbackUrl = new URL('/auth/callback', appUrl)
 
   if (next) {
-    // 로그인 완료 후 복귀할 경로를 OAuth callback까지 전달한다.
-    callbackUrl.searchParams.set('next', next)
+    // 허용된 초대 경로만 OAuth callback까지 전달한다.
+    callbackUrl.searchParams.set('next', getSafeRedirectPath(next))
   }
 
   const { data, error } = await supabase.auth.signInWithOAuth({

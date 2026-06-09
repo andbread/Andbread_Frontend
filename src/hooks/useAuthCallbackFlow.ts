@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import NProgress from 'nprogress'
 import { supabase } from '@/lib/supabaseClient'
 import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
-import { getInternalRedirectPath } from '@/lib/authRedirect'
+import { getSafeRedirectPath } from '@/lib/authRedirect'
 import useUserStore from '@/stores/useAuthStore'
 import {
   getCurrentUserRow,
@@ -47,11 +47,11 @@ export const useAuthCallbackFlow = (next: string | null) => {
 
         if (hasRequiredTermsAgreement(userRow)) {
           // 세션과 사용자 정보 저장이 끝난 뒤 로그인 전 페이지로 복귀한다.
-          router.replace(getInternalRedirectPath(next))
+          router.replace(getSafeRedirectPath(next))
           return
         }
 
-        const redirectPath = getInternalRedirectPath(next)
+        const redirectPath = getSafeRedirectPath(next)
         router.replace(
           `/terms-agreement?next=${encodeURIComponent(redirectPath)}`,
         )
