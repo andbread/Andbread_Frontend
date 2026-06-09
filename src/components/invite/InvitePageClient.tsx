@@ -6,6 +6,7 @@ import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
 import NbreadsImage from '@/components/common/nbreadImage/NbreadsImage'
 import Spinner from '@/components/common/spinner/Spinner'
 import { useToast } from '@/components/common/toast/Toast'
+import InviteNoticeModal from '@/components/invite/InviteNoticeModal'
 import InviteResponseModal from '@/components/invite/InviteResponseModal'
 import { hasAuthenticatedSession } from '@/lib/auth'
 import {
@@ -20,6 +21,13 @@ interface InvitePageClientProps {
   token: string
 }
 
+interface InviteNotice {
+  title: string
+  description: string
+  buttonLabel: string
+  destination: string
+}
+
 const statusMessage: Record<
   Exclude<InviteStatus, 'pending'>,
   { title: string; description: string }
@@ -29,12 +37,12 @@ const statusMessage: Record<
     description: '참여 중인 엔빵을 확인해 주세요.',
   },
   rejected: {
-    title: '거절한 초대예요.',
+    title: '이미 거절한 초대예요.',
     description: '이 초대는 다시 수락할 수 없어요.',
   },
   expired: {
-    title: '만료된 초대예요.',
-    description: '새로운 초대 링크를 요청해 주세요.',
+    title: '이미 만료된 초대예요.',
+    description: '방장에게 다시 초대를 요청해주세요.',
   },
 }
 
@@ -49,6 +57,7 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isAuthLoading, setIsAuthLoading] = useState(true)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [notice, setNotice] = useState<InviteNotice | null>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -101,6 +110,18 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
       const result = await respondToInvite(token, selectedResponse)
 
       if (selectedResponse === 'accepted') {
+        if (result.outcome === 'already_participant') {
+          // 중복 participant를 생성하지 않고 기존 엔빵으로 이동하도록 안내한다.
+          setSelectedResponse(null)
+          setNotice({
+            title: '이미 참여 중인 엔빵이에요.',
+            description: '참여 중인 엔빵 정보를 바로 확인할 수 있어요.',
+            buttonLabel: '엔빵 확인하기',
+            destination: `/nbread/${result.nbread_id}`,
+          })
+          return
+        }
+
         trackEvent(GA_EVENTS.ACCEPT_INVITE, { group_id: result.nbread_id })
         useToast.success('엔빵 참여가 완료됐어요.')
         router.replace(`/nbread/${result.nbread_id}`)
@@ -123,8 +144,27 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
         useToast.error('로그인이 필요해요.')
       } else if (message.includes('INVITE_TARGET_MISMATCH')) {
         useToast.error('초대받은 계정으로 로그인해 주세요.')
-      } else if (message.includes('INVITE_NOT_PENDING')) {
-        useToast.error('이미 처리된 초대예요.')
+      } else if (message.includes('INVITE_ALREADY_ACCEPTED')) {
+        setNotice({
+          title: '이미 수락한 초대예요.',
+          description: '참여 중인 엔빵을 확인해 주세요.',
+          buttonLabel: '엔빵 확인하기',
+          destination: `/nbread/${invite.nbreadId}`,
+        })
+      } else if (message.includes('INVITE_ALREADY_REJECTED')) {
+        setNotice({
+          title: '이미 거절한 초대예요.',
+          description: '이 초대는 다시 수락할 수 없어요.',
+          buttonLabel: '홈으로 가기',
+          destination: '/',
+        })
+      } else if (message.includes('INVITE_EXPIRED')) {
+        setNotice({
+          title: '만료된 초대예요.',
+          description: '새로운 초대 링크를 요청해 주세요.',
+          buttonLabel: '홈으로 가기',
+          destination: '/',
+        })
       } else {
         useToast.error('초대 처리에 실패했어요.')
       }
@@ -214,6 +254,18 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
         onSubmit={() => {
           const redirectPath = `/invite/${token}`
           router.push(`/login?redirect=${encodeURIComponent(redirectPath)}`)
+        }}
+      />
+      <InviteNoticeModal
+        isOpen={notice !== null}
+        title={notice?.title ?? ''}
+        description={notice?.description ?? ''}
+        buttonLabel={notice?.buttonLabel ?? ''}
+        onClose={() => setNotice(null)}
+        onSubmit={() => {
+          if (!notice) return
+          router.replace(notice.destination)
+          setNotice(null)
         }}
       />
     </main>

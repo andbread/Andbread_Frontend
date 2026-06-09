@@ -7,6 +7,7 @@ interface InviteResponseResult {
   invite_id: string
   nbread_id: string
   status: InviteResponse
+  outcome: 'joined' | 'already_participant' | 'rejected'
 }
 
 export const respondToInvite = async (
