@@ -22,9 +22,11 @@ const InviteResponseModal = ({
     <Modal isOpen={response !== null} onClose={onClose}>
       <div className="flex flex-col gap-32 px-12 pb-8">
         <div className="flex flex-col gap-8">
-          <h5>엔빵 초대를 {isAccept ? '수락' : '거절'}하시겠어요?</h5>
+          <h5>초대를 {isAccept ? '수락' : '거절'}하시겠어요?</h5>
           <p className="text-body02 text-gray-600">
-            {nbreadTitle}의 초대를 {isAccept ? '수락' : '거절'}합니다.
+            {isAccept
+              ? '수락하면 즉시 참여가 완료돼요.'
+              : '참여하려면 다시 초대받아야 해요.'}
           </p>
         </div>
         <div className="flex h-48 flex-row gap-8">
