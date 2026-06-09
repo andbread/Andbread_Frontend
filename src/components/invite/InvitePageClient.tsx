@@ -28,22 +28,49 @@ interface InviteNotice {
   destination: string
 }
 
+type CompletedInviteStatus = Exclude<InviteStatus, 'pending'>
+
 const statusMessage: Record<
-  Exclude<InviteStatus, 'pending'>,
-  { title: string; description: string }
+  CompletedInviteStatus,
+  {
+    title: string
+    description: string
+    buttonLabel: string
+    getDestination: (nbreadId: string) => string
+  }
 > = {
   accepted: {
     title: '이미 수락한 초대예요.',
     description: '참여 중인 엔빵을 확인해 주세요.',
+    buttonLabel: '엔빵 확인하기',
+    getDestination: (nbreadId) => `/nbread/${nbreadId}`,
   },
   rejected: {
     title: '이미 거절한 초대예요.',
     description: '이 초대는 다시 수락할 수 없어요.',
+    buttonLabel: '홈으로 가기',
+    getDestination: () => '/',
   },
   expired: {
     title: '이미 만료된 초대예요.',
     description: '방장에게 다시 초대를 요청해주세요.',
+    buttonLabel: '홈으로 가기',
+    getDestination: () => '/',
   },
+}
+
+const getStatusNotice = (
+  status: CompletedInviteStatus,
+  nbreadId: string,
+): InviteNotice => {
+  const message = statusMessage[status]
+
+  return {
+    title: message.title,
+    description: message.description,
+    buttonLabel: message.buttonLabel,
+    destination: message.getDestination(nbreadId),
+  }
 }
 
 const InvitePageClient = ({ token }: InvitePageClientProps) => {
@@ -145,26 +172,11 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
       } else if (message.includes('INVITE_TARGET_MISMATCH')) {
         useToast.error('초대받은 계정으로 로그인해 주세요.')
       } else if (message.includes('INVITE_ALREADY_ACCEPTED')) {
-        setNotice({
-          title: '이미 수락한 초대예요.',
-          description: '참여 중인 엔빵을 확인해 주세요.',
-          buttonLabel: '엔빵 확인하기',
-          destination: `/nbread/${invite.nbreadId}`,
-        })
+        setNotice(getStatusNotice('accepted', invite.nbreadId))
       } else if (message.includes('INVITE_ALREADY_REJECTED')) {
-        setNotice({
-          title: '이미 거절한 초대예요.',
-          description: '이 초대는 다시 수락할 수 없어요.',
-          buttonLabel: '홈으로 가기',
-          destination: '/',
-        })
+        setNotice(getStatusNotice('rejected', invite.nbreadId))
       } else if (message.includes('INVITE_EXPIRED')) {
-        setNotice({
-          title: '만료된 초대예요.',
-          description: '새로운 초대 링크를 요청해 주세요.',
-          buttonLabel: '홈으로 가기',
-          destination: '/',
-        })
+        setNotice(getStatusNotice('expired', invite.nbreadId))
       } else {
         useToast.error('초대 처리에 실패했어요.')
       }
@@ -195,6 +207,7 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
 
   if (invite.status !== 'pending') {
     const message = statusMessage[invite.status]
+    const destination = message.getDestination(invite.nbreadId)
 
     return (
       <main className="flex min-h-svh flex-col items-center justify-center gap-24 px-24 text-center">
@@ -202,13 +215,9 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
         <p className="text-gray-600">{message.description}</p>
         <button
           className="btn btn-primary btn-medium"
-          onClick={() =>
-            router.replace(
-              invite.status === 'accepted' ? `/nbread/${invite.nbreadId}` : '/',
-            )
-          }
+          onClick={() => router.replace(destination)}
         >
-          {invite.status === 'accepted' ? '엔빵 확인하기' : '홈으로 가기'}
+          {message.buttonLabel}
         </button>
       </main>
     )
