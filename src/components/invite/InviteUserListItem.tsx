@@ -12,10 +12,17 @@ interface InviteUserData {
   invitedUserId: string
   onRefresh?: () => void
 }
-const InviteUserListItem = ({ avatar, name, status,nbreadId,invitedUserId,onRefresh }: InviteUserData) => {
-    const [sendStatus, setSendStatus] = useState(status)
-    const [color, setColor] = useState('')
-    const [cursor, setCursor] = useState('')
+const InviteUserListItem = ({
+  avatar,
+  name,
+  status,
+  nbreadId,
+  invitedUserId,
+  onRefresh,
+}: InviteUserData) => {
+  const [sendStatus, setSendStatus] = useState(status)
+  const [color, setColor] = useState('')
+  const [cursor, setCursor] = useState('')
   // const getInviteUserStatus = (status: string) => {
   //   switch (status) {
   //     case '초대 하기':
@@ -33,31 +40,28 @@ const InviteUserListItem = ({ avatar, name, status,nbreadId,invitedUserId,onRefr
       setSendStatus('초대 완료')
       setColor('text-gray-400')
       setCursor('cursor-default')
-    }
-    else if(status =='초대 하기'){
-        setSendStatus('초대 하기')
+    } else if (status == '초대 하기') {
+      setSendStatus('초대 하기')
       setColor('text-system-blue01')
       setCursor('cursor-pointer')
-    }
-    else if(status =='rejected') {
-        setSendStatus('초대 하기')
+    } else if (status == 'rejected') {
+      setSendStatus('초대 하기')
       setColor('text-system-blue01')
       setCursor('cursor-pointer')
-    }
-    else {
-        setSendStatus('')
+    } else {
+      setSendStatus('')
       setColor('')
       setCursor('')
     }
   }, [status])
   // const { color, cursor } = getInviteUserStatus(status)
 
-  const handleClick = async(status: string) => {
+  const handleClick = async (status: string) => {
     if (status == '초대 하기' || status == 'rejected') {
-      console.log('glgl',status)
-      console.log('현재 엔빵 아디: ',nbreadId)
+      console.log('glgl', status)
+      console.log('현재 엔빵 아디: ', nbreadId)
       console.log('초대보낼 유저 아이디 : ', invitedUserId)
-      const fetchInvite = await sendInviteRequest(nbreadId,invitedUserId,'pending')
+      const fetchInvite = await sendInviteRequest(nbreadId, invitedUserId)
       if (fetchInvite) {
         trackEvent(GA_EVENTS.INVITE_MEMBER, {
           group_id: nbreadId,
@@ -68,7 +72,7 @@ const InviteUserListItem = ({ avatar, name, status,nbreadId,invitedUserId,onRefr
       setSendStatus('요청 완료')
       setColor('text-gray-400')
       setCursor('cursor-default')
-          if (onRefresh) onRefresh()
+      if (onRefresh) onRefresh()
     }
   }
   return (
@@ -76,14 +80,14 @@ const InviteUserListItem = ({ avatar, name, status,nbreadId,invitedUserId,onRefr
       <div className="flex w-[40%] flex-row items-center gap-[20px]">
         {/* <Avatar size='large' profileImageUrl={avatar}/> */}
         {avatar && typeof avatar === 'string' && avatar !== '' ? (
-    <img
-      src={avatar}
-      alt={name}
-      className="h-32 w-32 rounded-full object-cover"
-    />
-  ) : (
-    <DefaultAvatar className="h-32 w-32" />
-  )}
+          <img
+            src={avatar}
+            alt={name}
+            className="h-32 w-32 rounded-full object-cover"
+          />
+        ) : (
+          <DefaultAvatar className="h-32 w-32" />
+        )}
         <p className="text-body01">{name}</p>
       </div>
       <div className="flex w-[60%] items-center justify-end">

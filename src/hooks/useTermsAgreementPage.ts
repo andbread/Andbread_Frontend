@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useToast } from '@/components/common/toast/Toast'
+import { getSafeRedirectPath } from '@/lib/authRedirect'
 import useUserStore from '@/stores/useAuthStore'
 import {
   agreeRequiredTerms,
@@ -12,8 +13,9 @@ import {
   toUserStoreValue,
 } from '@/lib/termsAgreement'
 
-export const useTermsAgreementPage = () => {
+export const useTermsAgreementPage = (next: string | null) => {
   const router = useRouter()
+  const redirectPath = getSafeRedirectPath(next)
   const setUser = useUserStore((state) => state.setUser)
   const clearUser = useUserStore((state) => state.clearUser)
   const storeUser = useUserStore((state) => state.user)
@@ -48,7 +50,7 @@ export const useTermsAgreementPage = () => {
         }
 
         if (hasRequiredTermsAgreement(userRow)) {
-          router.replace('/')
+          router.replace(redirectPath)
           return
         }
       } catch (error) {
@@ -61,7 +63,7 @@ export const useTermsAgreementPage = () => {
     }
 
     checkAgreementState()
-  }, [router, setUser, storeUser])
+  }, [redirectPath, router, setUser, storeUser])
 
   const toggleAll = useCallback(() => {
     const nextChecked = !isAllChecked
@@ -76,22 +78,22 @@ export const useTermsAgreementPage = () => {
       setIsSubmitting(true)
       await agreeRequiredTerms(storeUser.id)
       useToast.success('약관 동의가 완료됐어요.')
-      router.replace('/')
+      router.replace(redirectPath)
     } catch (error) {
       console.error('Error submitting terms agreement:', error)
       useToast.error('약관 동의 저장에 실패했어요.')
     } finally {
       setIsSubmitting(false)
     }
-  }, [isAllChecked, isSubmitting, router, storeUser])
+  }, [isAllChecked, isSubmitting, redirectPath, router, storeUser])
 
   const logoutAndGoLogin = useCallback(async () => {
     await supabase.auth.signOut()
     clearUser()
     sessionStorage.clear()
     localStorage.clear()
-    router.replace('/login')
-  }, [clearUser, router])
+    router.replace(`/login?redirect=${encodeURIComponent(redirectPath)}`)
+  }, [clearUser, redirectPath, router])
 
   return {
     isLoading,

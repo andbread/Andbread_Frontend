@@ -51,12 +51,17 @@ Deno.serve(async (req) => {
       )
     }
 
-    const invitedUserId = payload.record.invited_user_id
+    const targetUserId = payload.record.target_user_id
+
+    // 링크 초대는 대상 사용자가 없으므로 푸시 알림을 발송하지 않는다.
+    if (!targetUserId) {
+      return new Response(null, { status: 204, headers: corsHeaders })
+    }
 
     const title = '🍞 엔빵 초대 알림'
     const message = `${nbreadTitle.title}에서 초대가 도착했어요`
     const enabledTargetUserIds = await filterNotificationEnabledUsers(
-      [invitedUserId],
+      [targetUserId],
       'invite_enabled',
     )
 
@@ -119,6 +124,7 @@ Deno.serve(async (req) => {
         type: 'invite',
         data: {
           nbreadId: nbreadId,
+          inviteToken: payload.record.invite_token,
         },
       })
     })

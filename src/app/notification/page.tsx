@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import DetailHeader from '@/components/common/header/DetailHeader'
 import { getNotification } from '@/lib/notification'
 import useUserStore from '@/stores/useAuthStore'
@@ -7,10 +8,21 @@ import { Notification } from '@/types/notification'
 import Icon from '@/components/common/icon/Icon'
 import Spinner from '@/components/common/spinner/Spinner'
 import FriendAcceptModal from '@/components/friend/FriendAcceptModal'
-import InviteAcceptModal from '@/components/invite/InviteAcceptModal'
 import { getRelativeTime } from '@/utils/getRelativeTime'
 import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
+import { useToast } from '@/components/common/toast/Toast'
+
+interface InviteNotificationData {
+  inviteToken?: string
+}
+
+interface FriendNotificationData {
+  sender_name?: string
+  sender_id?: string
+}
+
 const Page = () => {
+  const router = useRouter()
   const [notificationData, setNotificationData] = useState<Notification[]>([])
   const [selectedNotifycationId, setSelectedNotifycationId] = useState<
     number | null
@@ -25,7 +37,6 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const userData = useUserStore((state) => state.user)
   const [isAcceptModalOpen, setIsAcceptModalOpen] = useState(false)
-  const [isInviteAcceptModalOpen, setIsInviteAcceptModalOpen] = useState(false)
   const fetchNotifications = async () => {
     setIsLoading(true)
     const data = await getNotification(userData!.id)
@@ -49,8 +60,6 @@ const Page = () => {
   useEffect(() => {
     if (selectedNotifycationType === 'friend_request') {
       setIsAcceptModalOpen(true)
-    } else if (selectedNotifycationType === 'invite') {
-      setIsInviteAcceptModalOpen(true)
     }
   }, [selectedNotifycationType])
   if (isLoading) {
@@ -75,7 +84,7 @@ const Page = () => {
       </div>
 
       <div className="flex flex-col justify-between gap-8 px-20">
-        {notificationData.map((data, index) => (
+        {notificationData.map((data) => (
           <div
             className="card card-clickable relative flex cursor-pointer flex-row justify-between"
             key={data.id}
@@ -84,24 +93,26 @@ const Page = () => {
                 notification_type: data.type,
                 notification_id: data.id,
               })
-              setSelectedNotifycationId(data.id)
-              setSelectedNotifycationType(data.type)
               if (data.type === 'invite') {
-                // 엔빵 초대 알림일 경우
-                setSelectedNotifycationSenderName(
-                  (data.data as any)?.nbreadTitle ?? null,
-                )
-                setSelectedNotifycationSenderId(
-                  (data.data as any)?.nbreadId ?? null,
-                )
+                // 모든 엔빵 초대 알림은 토큰 기반 단일 초대 페이지로 이동한다.
+                const inviteToken = (data.data as InviteNotificationData | null)
+                  ?.inviteToken
+
+                if (!inviteToken) {
+                  useToast.error('초대 정보를 찾을 수 없어요.')
+                  return
+                }
+
+                router.push(`/invite/${inviteToken}`)
               } else if (data.type === 'friend_request') {
                 // 친구 요청 알림일 경우
+                const friendData = data.data as FriendNotificationData | null
+                setSelectedNotifycationId(data.id)
+                setSelectedNotifycationType(data.type)
                 setSelectedNotifycationSenderName(
-                  (data.data as any)?.sender_name ?? null,
+                  friendData?.sender_name ?? null,
                 )
-                setSelectedNotifycationSenderId(
-                  (data.data as any)?.sender_id ?? null,
-                )
+                setSelectedNotifycationSenderId(friendData?.sender_id ?? null)
               }
             }}
           >
@@ -139,17 +150,6 @@ const Page = () => {
           setSelectedNotifycationType(null)
         }}
         senderUserName={selectedNotifycationSenderName}
-        receiverId={userData?.id as string}
-      />
-      <InviteAcceptModal
-        id={selectedNotifycationId}
-        isOpen={isInviteAcceptModalOpen}
-        onClose={() => {
-          setIsInviteAcceptModalOpen(false)
-          setSelectedNotifycationType(null)
-        }}
-        senderNbreadId={selectedNotifycationSenderId}
-        senderNbreadTitle={selectedNotifycationSenderName}
         receiverId={userData?.id as string}
       />
     </div>

@@ -1,7 +1,7 @@
 import Modal from '@/components/common/modal/Modal'
 import Icon from '../icon/Icon'
-import { useEffect, useState } from 'react'
-import { createLink } from '@/lib/nbread/insertLink'
+import { useEffect, useRef, useState } from 'react'
+import { createLinkInvite } from '@/lib/nbread/insertLink'
 import { useToast } from '../toast/Toast'
 import useUserStore from '@/stores/useAuthStore'
 interface NbreadInviteModalProps {
@@ -16,13 +16,45 @@ const NbreadInviteModal = ({
   nbreadId,
 }: NbreadInviteModalProps) => {
   const [inviteLink, setInviteLink] = useState<string>()
+  const [isCreatingInvite, setIsCreatingInvite] = useState(false)
+  const createdInviteForOpenRef = useRef(false)
   const user = useUserStore((state) => state.user)
 
   useEffect(() => {
-    if (isOpen) {
-      setInviteLink(createLink(nbreadId))
+    let isActive = true
+
+    const createInvite = async () => {
+      if (!isOpen) {
+        setInviteLink(undefined)
+        createdInviteForOpenRef.current = false
+        return
+      }
+
+      // Strict Mode의 effect 재실행으로 링크 초대가 중복 생성되지 않도록 한다.
+      if (createdInviteForOpenRef.current) return
+      createdInviteForOpenRef.current = true
+
+      setIsCreatingInvite(true)
+      try {
+        const link = await createLinkInvite(nbreadId)
+        if (isActive) setInviteLink(link)
+      } catch (error) {
+        createdInviteForOpenRef.current = false
+        console.error('링크 초대 생성 실패:', error)
+        if (isActive) {
+          useToast.error('초대 링크 생성에 실패했어요. 다시 시도해주세요.')
+          onClose()
+        }
+      } finally {
+        if (isActive) setIsCreatingInvite(false)
+      }
     }
-  }, [isOpen])
+
+    createInvite()
+    return () => {
+      isActive = false
+    }
+  }, [isOpen, nbreadId, onClose])
 
   useEffect(() => {
     if (isOpen && typeof window !== 'undefined' && window.Kakao) {
@@ -34,8 +66,8 @@ const NbreadInviteModal = ({
   }, [isOpen])
 
   const handleKakaoShare = () => {
-    onClose()
     if (!inviteLink || !window.Kakao) return
+    onClose()
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
@@ -61,8 +93,8 @@ const NbreadInviteModal = ({
   }
 
   const handleCopyLink = () => {
-    onClose()
     if (inviteLink) {
+      onClose()
       // 클립보드에 링크 복사
       navigator.clipboard
         .writeText(inviteLink)
@@ -89,6 +121,7 @@ const NbreadInviteModal = ({
         <div className="flex flex-col items-center gap-8 pb-12">
           <button
             onClick={handleCopyLink}
+            disabled={isCreatingInvite || !inviteLink}
             className="btn btn-medium text-heading06 bg-system-blue01 text-white hover:bg-system-blue02"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">
@@ -97,8 +130,8 @@ const NbreadInviteModal = ({
             </div>
           </button>
           <button
-            // TODO 카카오톡 공유하기 onClick 속성 수정 필요
             onClick={handleKakaoShare}
+            disabled={isCreatingInvite || !inviteLink}
             className="btn btn-medium text-heading06 bg-system-kakao hover:bg-yellow-400"
           >
             <div className="flex w-full flex-row items-center justify-start px-20">

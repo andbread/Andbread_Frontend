@@ -179,28 +179,31 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          invited_user_id: string
+          invite_token: string
           nbread_id: string
-          state: string
+          status: string
+          target_user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
-          invited_user_id: string
+          invite_token?: string
           nbread_id: string
-          state: string
+          status?: string
+          target_user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
-          invited_user_id?: string
+          invite_token?: string
           nbread_id?: string
-          state?: string
+          status?: string
+          target_user_id?: string | null
         }
         Relationships: [
           {
             foreignKeyName: 'nbread_invite_invited_user_id_fkey'
-            columns: ['invited_user_id']
+            columns: ['target_user_id']
             isOneToOne: false
             referencedRelation: 'user'
             referencedColumns: ['id']
@@ -490,6 +493,13 @@ export type Database = {
         Args: {
           p_nbread_id: string
           p_today?: string
+        }
+        Returns: Json
+      }
+      respond_to_nbread_invite: {
+        Args: {
+          p_invite_token: string
+          p_response: string
         }
         Returns: Json
       }
