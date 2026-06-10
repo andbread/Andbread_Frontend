@@ -8,3 +8,4 @@ export {
   deleteNotification,
 } from './deleteNotifications'
 export { markNotificationAsRead } from './markNotificationAsRead'
+export { sortNotifications } from './sortNotifications'

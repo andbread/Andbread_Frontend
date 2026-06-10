@@ -9,6 +9,7 @@ import {
   getNotificationDestination,
   getNotificationDestinationError,
   markNotificationAsRead,
+  sortNotifications,
 } from '@/lib/notification'
 import useUserStore from '@/stores/useAuthStore'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -129,8 +130,10 @@ const Page = () => {
     })
 
     if (!notification.is_read) {
-      const nextNotifications = notificationData.map((item) =>
-        item.id === notification.id ? { ...item, is_read: true } : item,
+      const nextNotifications = sortNotifications(
+        notificationData.map((item) =>
+          item.id === notification.id ? { ...item, is_read: true } : item,
+        ),
       )
       setNotificationData(nextNotifications)
       setNotificationCount(
@@ -163,7 +166,7 @@ const Page = () => {
   }
 
   return (
-    <div className="jusfity-between flex h-screen w-full flex-col overflow-y-hidden">
+    <div className="jusfity-between mb-40 flex h-full w-full flex-col">
       <div className="pl-24 pt-24">
         <DetailHeader />
       </div>
