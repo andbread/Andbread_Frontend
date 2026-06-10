@@ -7,3 +7,4 @@ export {
   deleteAllNotifications,
   deleteNotification,
 } from './deleteNotifications'
+export { markNotificationAsRead } from './markNotificationAsRead'

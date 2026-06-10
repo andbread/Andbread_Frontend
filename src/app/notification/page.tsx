@@ -8,6 +8,7 @@ import {
   getNotification,
   getNotificationDestination,
   getNotificationDestinationError,
+  markNotificationAsRead,
 } from '@/lib/notification'
 import useUserStore from '@/stores/useAuthStore'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -53,7 +54,9 @@ const Page = () => {
     try {
       const data = await getNotification(userData.id)
       setNotificationData(data)
-      setNotificationCount(data.length)
+      setNotificationCount(
+        data.filter((notification) => !notification.is_read).length,
+      )
       if (data.length > 0) {
         trackEvent(GA_EVENTS.RECEIVE_NOTIFICATION, {
           count: data.length,
@@ -77,7 +80,10 @@ const Page = () => {
         (notification) => notification.id !== notificationId,
       )
       setNotificationData(nextNotifications)
-      setNotificationCount(nextNotifications.length)
+      setNotificationCount(
+        nextNotifications.filter((notification) => !notification.is_read)
+          .length,
+      )
     } catch (error) {
       console.error(error)
       useToast.error('알림 삭제에 실패했어요. 다시 시도해주세요.')
@@ -115,10 +121,24 @@ const Page = () => {
   }, [selectedNotifycationType])
 
   const handleNotificationClick = (notification: Notification) => {
+    if (!userData) return
+
     trackEvent(GA_EVENTS.CLICK_NOTIFICATION, {
       notification_type: notification.type,
       notification_id: notification.id,
     })
+
+    if (!notification.is_read) {
+      const nextNotifications = notificationData.map((item) =>
+        item.id === notification.id ? { ...item, is_read: true } : item,
+      )
+      setNotificationData(nextNotifications)
+      setNotificationCount(
+        nextNotifications.filter((item) => !item.is_read).length,
+      )
+
+      void markNotificationAsRead(notification.id, userData.id).catch(() => {})
+    }
 
     if (notification.type === 'friend_request') {
       const friendData = notification.data as FriendNotificationData | null
@@ -171,7 +191,9 @@ const Page = () => {
         ) : (
           notificationData.map((data) => (
             <div
-              className="card card-clickable relative flex cursor-pointer flex-row justify-between"
+              className={`card card-clickable relative flex cursor-pointer flex-row justify-between ${
+                data.is_read ? 'bg-gray-200' : 'bg-white'
+              }`}
               key={data.id}
               onClick={() => handleNotificationClick(data)}
             >
