@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
-import { Notification } from '@/types/notification'
+import { Notification, NotificationType } from '@/types/notification'
 import { NotificationRow } from '@/types/supabase'
 import { PostgrestError } from '@supabase/supabase-js'
 
@@ -29,7 +29,7 @@ export const getNotification = async (userId: string) => {
         title: notification.title,
         message: notification.message,
         data: notification.data,
-        type: notification.type,
+        type: notification.type as NotificationType,
         is_read: notification.is_read,
       }),
     )

@@ -1,5 +1,13 @@
 import { Json } from './supabase'
 
+export type NotificationType =
+  | 'payment'
+  | 'chat'
+  | 'invite'
+  | 'invite_accept'
+  | 'friend_request'
+  | 'friend_response'
+
 export interface Notification {
   id: number
   user_id: string
@@ -8,6 +16,5 @@ export interface Notification {
   message: string
   data: Json | null
   is_read: boolean
-  type: string // TODO 알림 타입 수정 필요
-  // sender_name: string
+  type: NotificationType
 }

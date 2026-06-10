@@ -6,6 +6,8 @@ import {
   deleteAllNotifications,
   deleteNotification,
   getNotification,
+  getNotificationDestination,
+  getNotificationDestinationError,
 } from '@/lib/notification'
 import useUserStore from '@/stores/useAuthStore'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -16,10 +18,6 @@ import FriendAcceptModal from '@/components/friend/FriendAcceptModal'
 import { getRelativeTime } from '@/utils/getRelativeTime'
 import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 import { useToast } from '@/components/common/toast/Toast'
-
-interface InviteNotificationData {
-  inviteToken?: string
-}
 
 interface FriendNotificationData {
   sender_name?: string
@@ -115,6 +113,31 @@ const Page = () => {
       setIsAcceptModalOpen(true)
     }
   }, [selectedNotifycationType])
+
+  const handleNotificationClick = (notification: Notification) => {
+    trackEvent(GA_EVENTS.CLICK_NOTIFICATION, {
+      notification_type: notification.type,
+      notification_id: notification.id,
+    })
+
+    if (notification.type === 'friend_request') {
+      const friendData = notification.data as FriendNotificationData | null
+      setSelectedNotifycationId(notification.id)
+      setSelectedNotifycationType(notification.type)
+      setSelectedNotifycationSenderName(friendData?.sender_name ?? null)
+      setSelectedNotifycationSenderId(friendData?.sender_id ?? null)
+      return
+    }
+
+    const destination = getNotificationDestination(notification)
+    if (!destination) {
+      useToast.error(getNotificationDestinationError(notification.type))
+      return
+    }
+
+    router.push(destination)
+  }
+
   if (isLoading) {
     return <Spinner isLoading={isLoading} />
   }
@@ -150,34 +173,7 @@ const Page = () => {
             <div
               className="card card-clickable relative flex cursor-pointer flex-row justify-between"
               key={data.id}
-              onClick={() => {
-                trackEvent(GA_EVENTS.CLICK_NOTIFICATION, {
-                  notification_type: data.type,
-                  notification_id: data.id,
-                })
-                if (data.type === 'invite') {
-                  // 모든 엔빵 초대 알림은 토큰 기반 단일 초대 페이지로 이동한다.
-                  const inviteToken = (
-                    data.data as InviteNotificationData | null
-                  )?.inviteToken
-
-                  if (!inviteToken) {
-                    useToast.error('초대 정보를 찾을 수 없어요.')
-                    return
-                  }
-
-                  router.push(`/invite/${inviteToken}`)
-                } else if (data.type === 'friend_request') {
-                  // 친구 요청 알림일 경우
-                  const friendData = data.data as FriendNotificationData | null
-                  setSelectedNotifycationId(data.id)
-                  setSelectedNotifycationType(data.type)
-                  setSelectedNotifycationSenderName(
-                    friendData?.sender_name ?? null,
-                  )
-                  setSelectedNotifycationSenderId(friendData?.sender_id ?? null)
-                }
-              }}
+              onClick={() => handleNotificationClick(data)}
             >
               <div className="flex w-full flex-col gap-4">
                 <div className="text-body01 text-gray-800">{data.title}</div>

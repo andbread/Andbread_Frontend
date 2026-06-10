@@ -6,11 +6,10 @@ import { useToast } from '@/components/common/toast/Toast'
 import { getNbread } from '@/lib/nbread'
 import { getParticipants } from '@/lib/participant'
 import { Nbread, NbreadRecord } from '@/types/nbread'
-import { useRouter, useParams } from 'next/navigation'
+import { useRouter, useParams, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { getNbreadRecords } from '@/lib/nbreadRecord'
-import useUserStore from '@/stores/useAuthStore'
 import Spinner from '@/components/common/spinner/Spinner'
 import Tabbar from '@/components/common/tabbar/tabbar'
 import ChatRoom from '@/components/chat/ChatRoom'
@@ -23,18 +22,13 @@ const Page = () => {
   )
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const params = useParams()
+  const searchParams = useSearchParams()
   const router = useRouter()
-  const [selectedTab, setSelectedTab] = useState<number>(0)
+  const initialTab = searchParams.get('tab') === 'chat' ? 2 : 0
+  const [selectedTab, setSelectedTab] = useState<number>(initialTab)
 
   const [isEditing, setIsEditing] = useState<boolean>(false)
-  const {
-    register,
-    setValue,
-    getValues,
-    handleSubmit,
-    reset,
-    formState: { isValid },
-  } = useForm<Nbread>({ mode: 'onChange' })
+  const { reset } = useForm<Nbread>({ mode: 'onChange' })
 
   // 엔빵 및 참여자 정보를 DB로부터 불러오는 함수
   const fetchNbreadData = async () => {
@@ -123,7 +117,7 @@ const Page = () => {
 
         <Tabbar
           tabs={['엔빵 정보', '게시판', '채팅방']}
-          initialValue={0}
+          initialValue={initialTab}
           onTabChange={setSelectedTab}
         />
       </div>
