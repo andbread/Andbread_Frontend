@@ -22,7 +22,11 @@ const Header = () => {
     }
 
     getNotification(user.id)
-      .then((notifications) => setNotificationCount(notifications.length))
+      .then((notifications) =>
+        setNotificationCount(
+          notifications.filter((notification) => !notification.is_read).length,
+        ),
+      )
       .catch((error) => {
         console.error('Error fetching notification count:', error)
       })

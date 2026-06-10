@@ -6,6 +6,10 @@ import {
   deleteAllNotifications,
   deleteNotification,
   getNotification,
+  getNotificationDestination,
+  getNotificationDestinationError,
+  markNotificationAsRead,
+  sortNotifications,
 } from '@/lib/notification'
 import useUserStore from '@/stores/useAuthStore'
 import useNotificationStore from '@/stores/useNotificationStore'
@@ -16,10 +20,6 @@ import FriendAcceptModal from '@/components/friend/FriendAcceptModal'
 import { getRelativeTime } from '@/utils/getRelativeTime'
 import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 import { useToast } from '@/components/common/toast/Toast'
-
-interface InviteNotificationData {
-  inviteToken?: string
-}
 
 interface FriendNotificationData {
   sender_name?: string
@@ -55,7 +55,9 @@ const Page = () => {
     try {
       const data = await getNotification(userData.id)
       setNotificationData(data)
-      setNotificationCount(data.length)
+      setNotificationCount(
+        data.filter((notification) => !notification.is_read).length,
+      )
       if (data.length > 0) {
         trackEvent(GA_EVENTS.RECEIVE_NOTIFICATION, {
           count: data.length,
@@ -79,7 +81,10 @@ const Page = () => {
         (notification) => notification.id !== notificationId,
       )
       setNotificationData(nextNotifications)
-      setNotificationCount(nextNotifications.length)
+      setNotificationCount(
+        nextNotifications.filter((notification) => !notification.is_read)
+          .length,
+      )
     } catch (error) {
       console.error(error)
       useToast.error('알림 삭제에 실패했어요. 다시 시도해주세요.')
@@ -115,12 +120,53 @@ const Page = () => {
       setIsAcceptModalOpen(true)
     }
   }, [selectedNotifycationType])
+
+  const handleNotificationClick = (notification: Notification) => {
+    if (!userData) return
+
+    trackEvent(GA_EVENTS.CLICK_NOTIFICATION, {
+      notification_type: notification.type,
+      notification_id: notification.id,
+    })
+
+    if (!notification.is_read) {
+      const nextNotifications = sortNotifications(
+        notificationData.map((item) =>
+          item.id === notification.id ? { ...item, is_read: true } : item,
+        ),
+      )
+      setNotificationData(nextNotifications)
+      setNotificationCount(
+        nextNotifications.filter((item) => !item.is_read).length,
+      )
+
+      void markNotificationAsRead(notification.id, userData.id).catch(() => {})
+    }
+
+    if (notification.type === 'friend_request') {
+      const friendData = notification.data as FriendNotificationData | null
+      setSelectedNotifycationId(notification.id)
+      setSelectedNotifycationType(notification.type)
+      setSelectedNotifycationSenderName(friendData?.sender_name ?? null)
+      setSelectedNotifycationSenderId(friendData?.sender_id ?? null)
+      return
+    }
+
+    const destination = getNotificationDestination(notification)
+    if (!destination) {
+      useToast.error(getNotificationDestinationError(notification.type))
+      return
+    }
+
+    router.push(destination)
+  }
+
   if (isLoading) {
     return <Spinner isLoading={isLoading} />
   }
 
   return (
-    <div className="jusfity-between flex h-screen w-full flex-col overflow-y-hidden">
+    <div className="jusfity-between mb-40 flex h-full w-full flex-col">
       <div className="pl-24 pt-24">
         <DetailHeader />
       </div>
@@ -148,36 +194,11 @@ const Page = () => {
         ) : (
           notificationData.map((data) => (
             <div
-              className="card card-clickable relative flex cursor-pointer flex-row justify-between"
+              className={`card card-clickable relative flex cursor-pointer flex-row justify-between ${
+                data.is_read ? 'bg-gray-200' : 'bg-white'
+              }`}
               key={data.id}
-              onClick={() => {
-                trackEvent(GA_EVENTS.CLICK_NOTIFICATION, {
-                  notification_type: data.type,
-                  notification_id: data.id,
-                })
-                if (data.type === 'invite') {
-                  // 모든 엔빵 초대 알림은 토큰 기반 단일 초대 페이지로 이동한다.
-                  const inviteToken = (
-                    data.data as InviteNotificationData | null
-                  )?.inviteToken
-
-                  if (!inviteToken) {
-                    useToast.error('초대 정보를 찾을 수 없어요.')
-                    return
-                  }
-
-                  router.push(`/invite/${inviteToken}`)
-                } else if (data.type === 'friend_request') {
-                  // 친구 요청 알림일 경우
-                  const friendData = data.data as FriendNotificationData | null
-                  setSelectedNotifycationId(data.id)
-                  setSelectedNotifycationType(data.type)
-                  setSelectedNotifycationSenderName(
-                    friendData?.sender_name ?? null,
-                  )
-                  setSelectedNotifycationSenderId(friendData?.sender_id ?? null)
-                }
-              }}
+              onClick={() => handleNotificationClick(data)}
             >
               <div className="flex w-full flex-col gap-4">
                 <div className="text-body01 text-gray-800">{data.title}</div>

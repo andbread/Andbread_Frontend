@@ -1,7 +1,8 @@
 import { supabase } from '@/lib/supabaseClient'
-import { Notification } from '@/types/notification'
+import { Notification, NotificationType } from '@/types/notification'
 import { NotificationRow } from '@/types/supabase'
 import { PostgrestError } from '@supabase/supabase-js'
+import { sortNotifications } from './sortNotifications'
 
 type GetNotificationType = {
   data: NotificationRow[] | null
@@ -29,11 +30,11 @@ export const getNotification = async (userId: string) => {
         title: notification.title,
         message: notification.message,
         data: notification.data,
-        type: notification.type,
+        type: notification.type as NotificationType,
         is_read: notification.is_read,
       }),
     )
-    return notifications
+    return sortNotifications(notifications)
   } catch (error) {
     console.error('Error fetching notifications:', error)
     throw error
