@@ -15,7 +15,7 @@ export default function TermsOfServicePage() {
       <article className="mx-auto mt-20 max-w-[600px]">
         <h1 className="text-gray-800">엔빵 서비스 이용약관</h1>
         <p className="mt-12 text-body03 text-gray-500">
-          시행일: 2026년 5월 26일 | 최종 수정일: 2026년 5월 22일
+          시행일: 2026년 6월 11일 | 최종 수정일: 2026년 5월 22일
         </p>
 
         <section className="mt-32">
