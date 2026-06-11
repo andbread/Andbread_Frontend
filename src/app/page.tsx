@@ -19,7 +19,8 @@ import type { PendingInvite } from '@/lib/invite/getPendingInvites'
 
 const HomePage = () => {
   const user = useUserStore((state) => state.user)
-  const [nbreadList, setNbreadList] = useState<Nbread[]>([])
+  const [monthlyNbreadList, setMonthlyNbreadList] = useState<Nbread[]>([])
+  const [myNbreadList, setMyNbreadList] = useState<Nbread[]>([])
   const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([])
   const [totalAmount, setTotalAmount] = useState(0)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -30,22 +31,31 @@ const HomePage = () => {
   // Nbread 및 Participant 정보를 DB로부터 fetch
   const fetchNbreads = async (userId: string) => {
     try {
-      const [nbreads, invites] = await Promise.all([
+      const [{ monthlyNbreads, myNbreads }, invites] = await Promise.all([
         getUserNbreads(userId),
         // 초대 조회 실패가 기존 홈 엔빵 조회까지 막지 않도록 빈 목록으로 처리한다.
         getPendingInvites(userId).catch(() => []),
       ])
 
-      const nbreadsWithParticipants = await Promise.all(
-        nbreads.map(async (nbread) => {
+      const myNbreadsWithParticipants = await Promise.all(
+        myNbreads.map(async (nbread) => {
           const participants = await getParticipants(nbread.id)
           return { ...nbread, participants }
         }),
       )
-      setNbreadList(nbreadsWithParticipants)
+      const nbreadsById = new Map(
+        myNbreadsWithParticipants.map((nbread) => [nbread.id, nbread]),
+      )
+      const monthlyNbreadsWithParticipants = monthlyNbreads.map(
+        (nbread) => nbreadsById.get(nbread.id) ?? nbread,
+      )
+
+      setMonthlyNbreadList(monthlyNbreadsWithParticipants)
+      setMyNbreadList(myNbreadsWithParticipants)
       setPendingInvites(invites)
     } catch {
-      setNbreadList([])
+      setMonthlyNbreadList([])
+      setMyNbreadList([])
       setPendingInvites([])
     } finally {
       setIsLoading(false)
@@ -61,13 +71,13 @@ const HomePage = () => {
 
   // NbreadList가 업데이트된 후 totalAmount 계산
   useEffect(() => {
-    const total = nbreadList.reduce(
+    const total = monthlyNbreadList.reduce(
       (sum: number, nbread: Nbread) =>
         sum + Math.floor(nbread.amount / Math.max(nbread.participantCount, 1)),
       0,
     )
     setTotalAmount(total)
-  }, [nbreadList])
+  }, [monthlyNbreadList])
 
   return (
     <div className="flex flex-col justify-between p-24 pt-16">
@@ -79,11 +89,11 @@ const HomePage = () => {
           <>
             <ReceivedInviteBanner invites={pendingInvites} />
             <MonthlyNbread
-              nbreadList={nbreadList}
+              nbreadList={monthlyNbreadList}
               totalAmount={totalAmount}
               currentMonth={currentMonth}
             />
-            <MyNbread nbreadList={nbreadList} />
+            <MyNbread nbreadList={myNbreadList} />
           </>
         )}
       </main>
