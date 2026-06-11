@@ -45,10 +45,11 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
         })
       }
 
-      useToast.success('완료 여부 업데이트에 성공했어요.')
+      useToast.success('완료 여부가 업데이트되었어요.')
       setIsChecked((prev) => !prev)
     } catch (error) {
       useToast.error('완료 여부 업데이트에 실패했어요. 다시 시도해주세요.')
+      throw error
     }
 
     setTimeout(() => {
