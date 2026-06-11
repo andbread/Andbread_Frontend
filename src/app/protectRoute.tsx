@@ -3,8 +3,19 @@
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
+import { setSentryUser } from '@/lib/sentry/sentry'
+import useUserStore from '@/stores/useAuthStore'
+import {
+  getCurrentUserRow,
+  hasRequiredTermsAgreement,
+} from '@/lib/termsAgreement'
 
-const publicRoutes = ['/login', '/auth/callback', '/inviteAccept']
+const publicRoutes = ['/login', '/auth/callback', '/terms-agreement']
+const termsAgreementExemptRoutes = [
+  ...publicRoutes,
+  '/terms-of-service',
+  '/privacy-policy',
+]
 
 export default function ProtectRoute({
   children,
@@ -13,28 +24,55 @@ export default function ProtectRoute({
 }) {
   const router = useRouter()
   const pathname = usePathname()
-  const [isLoginConfirmModalOpen, setIsLoginConfirmModalOpen] =
-    useState<boolean>(false)
+  const user = useUserStore((state) => state.user)
+  const [isProtectedRoute, setIsProtectedRoute] = useState<boolean>(false)
+
+  useEffect(() => {
+    setSentryUser(user ? { id: user.id } : null)
+  }, [user])
 
   useEffect(() => {
     const user = sessionStorage.getItem('user-store')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isNotFoundPage = (window as any).__IS_NOT_FOUND_PAGE__
-    if (!user && !publicRoutes.includes(pathname) && !isNotFoundPage) {
-      setIsLoginConfirmModalOpen(true)
+    // 토큰 초대 페이지는 로그인 전에도 초대 내용을 확인할 수 있는 공개 경로다.
+    const isPublicRoute =
+      publicRoutes.includes(pathname) || pathname.startsWith('/invite/')
+
+    if (!user && !isPublicRoute && !isNotFoundPage) {
+      setIsProtectedRoute(true)
     }
   }, [pathname])
 
+  useEffect(() => {
+    if (!user?.id || termsAgreementExemptRoutes.includes(pathname)) return
+
+    const redirectIfRequiredTermsNotAgreed = async () => {
+      try {
+        const userRow = await getCurrentUserRow(user.id)
+
+        if (userRow && !hasRequiredTermsAgreement(userRow)) {
+          router.replace('/terms-agreement')
+        }
+      } catch (error) {
+        console.error('Error checking required terms agreement:', error)
+      }
+    }
+
+    redirectIfRequiredTermsNotAgreed()
+  }, [pathname, router, user?.id])
+
   return (
-    <>
+    <div className="min-h-[100svh]">
       {children}
       <LoginConfirmModal
-        isOpen={isLoginConfirmModalOpen}
-        onClose={() => setIsLoginConfirmModalOpen(false)}
+        isOpen={isProtectedRoute}
+        onClose={() => setIsProtectedRoute(false)}
         onSubmit={() => {
           router.replace('/login')
-          setIsLoginConfirmModalOpen(false)
+          setIsProtectedRoute(false)
         }}
       />
-    </>
+    </div>
   )
 }

@@ -8,7 +8,7 @@ html {
 }
 
 body {
-  @apply mx-auto max-h-svh min-h-dvh min-w-[320px] max-w-[600px] overflow-y-auto bg-background font-pretendard text-gray-800 antialiased shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
+  @apply mx-auto h-[100svh] max-h-svh min-h-dvh w-full min-w-[320px] max-w-[600px] overflow-y-auto bg-background font-pretendard text-gray-800 antialiased shadow-[0_7px_29px_0_rgba(100,100,111,0.1)];
   /* @apply mx-auto h-[100svh] min-h-screen min-w-[320px] max-w-[600px] overflow-x-hidden bg-white shadow-[0_7px_29px_0_rgba(100,100,111,0.1)]; */
 }
 body {
@@ -28,6 +28,18 @@ input {
 input:focus {
   outline: none;
   border-bottom: 1.6px solid theme('colors.primary.500');
+}
+
+.input-gray-no-line {
+  @apply rounded-8 border-0 bg-gray-100 px-16 py-0;
+  border-bottom: 0;
+  /* &:focus {
+    border: 1px solid theme('colors.primary.500');
+  } */
+}
+
+.input-gray-no-line:focus {
+  border-bottom: 0;
 }
 
 input[type='number']::-webkit-inner-spin-button,
@@ -113,6 +125,9 @@ a {
   h5 {
     @apply text-heading05;
   }
+  p {
+    @apply text-paragraph;
+  }
 }
 
 @layer components {
@@ -163,7 +178,7 @@ a {
   }
 
   .btn-warning {
-    @apply bg-system-red01 hover:bg-system-red02 active:bg-system-red02 text-white;
+    @apply bg-system-red01 text-white hover:bg-system-red02 active:bg-system-red02;
   }
 
   .btn-disabled {
@@ -178,16 +193,12 @@ a {
     @apply text-body03;
   }
 
-  .badge-large {
+  .badge-medium {
     @apply text-body02;
   }
 
-  .badge-selected {
-    @apply bg-primary-100 text-primary-500;
-  }
-
-  .badge-disabled {
-    @apply bg-gray-200 text-gray-400;
+  .badge-large {
+    @apply text-heading05;
   }
 }
 

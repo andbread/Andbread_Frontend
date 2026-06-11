@@ -1,16 +1,34 @@
 import { supabase } from './supabaseClient'
-import { adminSupabase } from './supabaseAdminClient'
 import { LoginProvider } from '@/types/user'
 import useUserStore from '@/stores/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/common/toast/Toast'
+import { captureAppError } from '@/lib/sentry/sentry'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
+import { getSafeRedirectPath } from '@/lib/authRedirect'
 
-export const login = async (provider: LoginProvider['provider']) => {
-  const redirectToUrl = process.env.NEXT_PUBLIC_REDIRECT_URL
+// 1. 로그인 함수
+export const login = async (
+  provider: LoginProvider['provider'],
+  next?: string,
+) => {
+  const appUrl =
+    (typeof window !== 'undefined' ? window.location.origin : undefined) ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.NEXT_PUBLIC_VERCEL_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : 'http://localhost:3000')
+  const callbackUrl = new URL('/auth/callback', appUrl)
+
+  if (next) {
+    // 허용된 초대 경로만 OAuth callback까지 전달한다.
+    callbackUrl.searchParams.set('next', getSafeRedirectPath(next))
+  }
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
-      redirectTo: redirectToUrl,
+      redirectTo: callbackUrl.toString(),
       queryParams: {
         access_type: 'offline',
         prompt: 'consent',
@@ -19,16 +37,27 @@ export const login = async (provider: LoginProvider['provider']) => {
   })
 
   if (error) {
+    captureAppError(error, {
+      action: 'auth.login',
+      tags: { provider },
+    })
     throw new Error(error.message)
   }
 
   return data
 }
 
+// 2. 로그아웃 함수
 export const logout = async (router: ReturnType<typeof useRouter>) => {
-  const data = await supabase.auth.signOut()
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    captureAppError(error, {
+      action: 'auth.logout',
+    })
+  }
   useUserStore.getState().clearUser()
   sessionStorage.clear()
+  trackEvent(GA_EVENTS.LOGOUT)
   setTimeout(() => {
     localStorage.clear()
     useToast.success('로그아웃이 완료되었어요.')
@@ -36,13 +65,39 @@ export const logout = async (router: ReturnType<typeof useRouter>) => {
   }, 1000)
 }
 
+// 3. 계정 탈퇴 함수
 export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
-  const data = await supabase.auth.getUser()
-  const user = data.data.user?.id
-  if (!user) {
-    throw new Error('유저정보를 찾을수 없음')
+  const { data, error: sessionError } = await supabase.auth.getSession()
+  const accessToken = data.session?.access_token
+
+  if (sessionError || !accessToken) {
+    const error = sessionError ?? new Error('유저정보를 찾을수 없음')
+    captureAppError(error, {
+      action: 'auth.delete_account',
+    })
+    throw error
   }
-  await adminSupabase.auth.admin.deleteUser(user), supabase.auth.signOut
+
+  const response = await fetch('/api/auth/delete-account', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+
+  if (!response.ok) {
+    const result = (await response.json().catch(() => null)) as {
+      message?: string
+    } | null
+    const error = new Error(result?.message ?? '회원 탈퇴에 실패했습니다.')
+    captureAppError(error, {
+      action: 'auth.delete_account',
+      tags: { status: response.status },
+    })
+    throw error
+  }
+
+  await supabase.auth.signOut({ scope: 'local' })
   useUserStore.getState().clearUser()
   sessionStorage.removeItem('user-store')
   localStorage.clear()
@@ -51,6 +106,8 @@ export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
     router.replace('/login')
   }, 1000)
 }
+
+// 4. 유저 이름을 받아오는 함수
 export const getUserName = async (leaderId: string) => {
   try {
     if (!leaderId) {
@@ -72,11 +129,28 @@ export const getUserName = async (leaderId: string) => {
 
     // 사용자 이름 반환
     return data.name
-  } catch (error) {
+  } catch {
     return null // 에러 발생 시 null 반환
   }
 }
+
+// 5. 유저 정보를 받아오는 함수
 export const getUser = async (accessToken: string) => {
   const data = await supabase.auth.getUser(accessToken)
+
   return data
+}
+
+// 6. 공개 경로에서 현재 로그인 여부 확인하는 함수
+export const hasAuthenticatedSession = async () => {
+  const { data, error } = await supabase.auth.getSession()
+
+  if (error) {
+    captureAppError(error, {
+      action: 'auth.get_session',
+    })
+    return false
+  }
+
+  return Boolean(data.session)
 }

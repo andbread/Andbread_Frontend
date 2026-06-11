@@ -63,13 +63,13 @@ export default {
       body05: ['0.625rem', { lineHeight: '0.75rem', fontWeight: '400' }],
       body06: ['0.5rem', { lineHeight: '0.625rem', fontWeight: '400' }],
       // paragraph, pre 태그 & 2줄 이상의 긴 텍스트에 사용
-      paragraph: ['0.875rem', { lineHeight: '1.225rem', fontWeight: '400' }],
+      paragraph: ['0.875rem', { lineHeight: '1.4rem', fontWeight: '400' }],
     },
     /* box shadow */
     boxShadow: {
       avatar: '0px 0px 1px rgba(0,0,0,0.12))',
       card: '0px 0px 4px rgba(0,0,0,0.12))',
-      modal: '0px 0px 8px rgba(0,0,0,0.12))',
+      modal: '0px 0px 8px rgba(0,0,0,0.12)',
     },
   },
   plugins: [

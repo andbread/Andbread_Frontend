@@ -1,80 +1,34 @@
 'use client'
 
+import NbreadDetail from '@/components/nbread/NbreadDetail'
 import DetailHeader from '@/components/common/header/DetailHeader'
-import Tab from '@/components/common/tab/tab'
 import { useToast } from '@/components/common/toast/Toast'
-import NbreadCard from '@/components/nbread/nbreadCard'
-import NbreadEditCard from '@/components/nbread/nbreadEditCard'
-import NbreadParticipantsList from '@/components/nbread/nbreadParticipantsList'
-import { deleteNbread, getNbread, updateNbread } from '@/lib/nbread'
-import { deleteParticipants, getParticipants } from '@/lib/participant'
+import { getNbread } from '@/lib/nbread'
+import { getParticipants } from '@/lib/participant'
 import { Nbread, NbreadRecord } from '@/types/nbread'
-import { useRouter, useParams } from 'next/navigation'
+import { useRouter, useParams, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import NbreadDeleteModal from '@/components/common/modal/NbreadDeleteModal'
-import NbreadInviteModal from '@/components/common/modal/NbreadInviteModal'
 import { getNbreadRecords } from '@/lib/nbreadRecord'
-import useUserStore from '@/stores/useAuthStore'
-import QuitNbreadModal from '@/components/common/modal/QuitNbreadModal'
 import Spinner from '@/components/common/spinner/Spinner'
+import Tabbar from '@/components/common/tabbar/tabbar'
+import ChatRoom from '@/components/chat/ChatRoom'
+import Community from '@/components/community/Community'
 
 const Page = () => {
-  const userData = useUserStore((state) => state.user)
   const [nbread, setNbread] = useState<Nbread | null>(null)
   const [nbreadRecords, setNbreadRecords] = useState<NbreadRecord[] | null>(
     null,
   )
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [isNbreadDeleteModalOpen, setIsNbreadDeleteModalOpen] =
-    useState<boolean>(false)
-  const [isNbreadInviteModalOpen, setIsNbreadInviteModalOpen] =
-    useState<boolean>(false)
-  const [isQuitNbreadModalOpen, setIsQuitNbreadModalOpen] =
-    useState<boolean>(false)
-
   const params = useParams()
+  const searchParams = useSearchParams()
   const router = useRouter()
+  const initialTab = searchParams.get('tab') === 'chat' ? 2 : 0
+  const [selectedTab, setSelectedTab] = useState<number>(initialTab)
 
   const [isEditing, setIsEditing] = useState<boolean>(false)
-  const {
-    register,
-    setValue,
-    getValues,
-    handleSubmit,
-    reset,
-    formState: { isValid },
-  } = useForm<Nbread>({ mode: 'onChange' })
-
-  // handleSubmit 콜백함수
-  const onSubmit = async (editedNbreadData: Nbread) => {
-    if (nbread === editedNbreadData) return
-
-    await updateNbread(editedNbreadData)
-    setNbread({ ...editedNbreadData })
-    useToast.success('엔빵 정보가 수정되었어요.')
-  }
-
-  // 수정하기/저장하기 버튼 클릭 시 이벤트 핸들러 함수
-  const handleEditingNbread = () => {
-    if (isEditing) {
-      handleSubmit(onSubmit)()
-    }
-    setIsEditing(!isEditing)
-  }
-
-  // 엔빵 삭제하기 버튼 클릭 시 이벤트 핸들러 함수
-  const handleDeleteNbread = async (nbreadId: string) => {
-    try {
-      await deleteNbread(nbreadId)
-      setIsNbreadDeleteModalOpen(false)
-      useToast.success('엔빵이 삭제되었어요.')
-      router.push('/')
-    } catch (error) {
-      console.error(error)
-      useToast.error('엔빵 삭제에 실패했어요. 다시 시도해주세요.')
-    }
-  }
+  const { reset } = useForm<Nbread>({ mode: 'onChange' })
 
   // 엔빵 및 참여자 정보를 DB로부터 불러오는 함수
   const fetchNbreadData = async () => {
@@ -89,18 +43,6 @@ const Page = () => {
       Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
 
     setNbread({ ...nbreadData, paymentAmount, participants })
-  }
-
-  // 엔빵 탈퇴 처리 함수
-  const onSubmitQuitNbread = async () => {
-    try {
-      await deleteParticipants(userData?.id!, nbread!.id)
-      setIsQuitNbreadModalOpen(false)
-      useToast.success('엔빵 나가기에 성공했어요.')
-      router.replace('/')
-    } catch (error) {
-      useToast.success('엔빵 나가기에 실패했어요.')
-    }
   }
 
   useEffect(() => {
@@ -119,7 +61,7 @@ const Page = () => {
     const fetchNbreadRecordData = async () => {
       const nbreadRecordsData = await getNbreadRecords(
         nbread!.id,
-        nbread!.currentPaymentDate!,
+        nbread!.startDate!,
       )
       setNbreadRecords(nbreadRecordsData)
     }
@@ -136,90 +78,52 @@ const Page = () => {
     }
   }, [nbreadRecords])
 
-  if (isLoading) {
+  if (isLoading || nbread == null) {
     return <Spinner isLoading={isLoading} />
   }
 
+  const nbreadTabContent = () => {
+    switch (selectedTab) {
+      case 0:
+        return (
+          <div className="mt-4 h-full w-full overflow-y-auto px-24 pt-4">
+            <NbreadDetail nbreadData={nbread} setNbreadData={setNbread} />
+          </div>
+        )
+      case 1:
+        return (
+          <div className="mt-4 h-full w-full overflow-y-auto px-24 pt-4">
+            <Community />
+          </div>
+        )
+      case 2:
+        return <ChatRoom />
+    }
+  }
+
   return (
-    <main className="h-full p-24">
-      <section>
+    <div className="jusfity-between relative flex h-screen w-full flex-col overflow-y-hidden">
+      <div className="pl-24 pt-24">
         <DetailHeader />
-        {nbread && (
-          <>
+      </div>
+      <div className="mb-16 flex flex-col px-24">
+        <header>
+          {nbread && (
             <div className="flex flex-row items-center justify-between pb-12 pt-24">
-              <h2 className="">
-                {isEditing ? '엔빵 수정하기' : nbread?.title}
-              </h2>
-              <div className="h-20">
-                {userData?.id === nbread.leaderId && (
-                  <Tab
-                    content={isEditing ? '저장하기' : '수정하기'}
-                    size="large"
-                    isClicked={isEditing}
-                    onClick={() => handleEditingNbread()}
-                  />
-                )}
-              </div>
+              <h2>{isEditing ? '엔빵 수정하기' : nbread?.title}</h2>
             </div>
-            {isEditing ? (
-              <NbreadEditCard
-                register={register}
-                setValue={setValue}
-                getValues={getValues}
-                defaultNbreadValue={nbread}
-              />
-            ) : (
-              <NbreadCard nbreadData={nbread as Nbread} />
-            )}
-            {nbreadRecords && (
-              <NbreadParticipantsList
-                nbreadId={nbread.id}
-                nbreadRecords={nbreadRecords!}
-                currentPaymentDate={nbread.currentPaymentDate!}
-                participants={nbread.participants!}
-                participantMaxCount={nbread.participantCount}
-                leaderId={nbread.leaderId!}
-                isEditing={isEditing}
-                paymentAmount={nbread.paymentAmount!}
-                onClickInvite={() => setIsNbreadInviteModalOpen(true)}
-                updateParticipantData={() => fetchNbreadData()}
-              />
-            )}
-          </>
-        )}
-        {isEditing && (
-          <button
-            className="btn btn-large btn-warning"
-            onClick={() => setIsNbreadDeleteModalOpen(true)}
-          >
-            엔빵 삭제하기
-          </button>
-        )}
-        {userData?.id !== nbread?.leaderId && (
-          <button
-            className="btn btn-large btn-warning"
-            onClick={() => setIsQuitNbreadModalOpen(true)}
-          >
-            엔빵 나가기
-          </button>
-        )}
-        <NbreadDeleteModal
-          isOpen={isNbreadDeleteModalOpen}
-          onClose={() => setIsNbreadDeleteModalOpen(false)}
-          onSubmit={() => handleDeleteNbread(nbread!.id)}
+          )}
+        </header>
+
+        <Tabbar
+          tabs={['엔빵 정보', '게시판', '채팅방']}
+          initialValue={initialTab}
+          onTabChange={setSelectedTab}
         />
-        <NbreadInviteModal
-          isOpen={isNbreadInviteModalOpen}
-          onClose={() => setIsNbreadInviteModalOpen(false)}
-          nbreadId={params.nbreadId as string}
-        />
-        <QuitNbreadModal
-          isOpen={isQuitNbreadModalOpen}
-          onClose={() => setIsQuitNbreadModalOpen(false)}
-          onSubmit={() => onSubmitQuitNbread()}
-        />
-      </section>
-    </main>
+      </div>
+
+      {nbreadTabContent()}
+    </div>
   )
 }
 

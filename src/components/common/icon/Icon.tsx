@@ -10,6 +10,10 @@ import GoogleLogo from '@/assets/icons/login-google.svg'
 import KakaoLogo from '@/assets/icons/login-kakao.svg'
 import Plus from '@/assets/icons/plus.svg'
 import Warning from '@/assets/icons/warning.svg'
+import Search from '@/assets/icons/search.svg'
+import MenuDots from '@/assets/icons/menu-dots.svg'
+import Profile from '@/assets/icons/profile.svg'
+import Alarm from '@/assets/icons/alarm.svg'
 
 const iconMap = {
   angleLeft: AngleLeft,
@@ -24,6 +28,10 @@ const iconMap = {
   kakaoLogo: KakaoLogo,
   plus: Plus,
   warning: Warning,
+  search: Search,
+  menuDots: MenuDots,
+  profile: Profile,
+  alarm: Alarm,
 } as const
 
 // iconMap의 key를 type으로 변경
@@ -37,7 +45,7 @@ interface IconProps {
   onClick?: () => void
 }
 
-const Icon = ({ type, width, height, fill = '' , onClick }: IconProps) => {
+const Icon = ({ type, width, height, fill = '', onClick }: IconProps) => {
   const SelectedIcon = iconMap[type]
 
   return (

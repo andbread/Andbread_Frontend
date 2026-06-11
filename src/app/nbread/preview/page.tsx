@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import useUserStore from '@/stores/useAuthStore'
 import { useEffect, useState } from 'react'
 import Spinner from '@/components/common/spinner/Spinner'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 
 const Page = () => {
   const nbreadData = useNbreadStore((state) => state.nbread)
@@ -47,6 +48,10 @@ const Page = () => {
         await insertParticipant(nbreadData.participants[0], newNbreadId)
 
         setSavedNbreadData(previewNbreadData)
+        trackEvent(GA_EVENTS.CREATE_GROUP, {
+          group_id: newNbreadId,
+          participant_count: nbreadData.participantCount,
+        })
         clearNbread()
         setPreviewNbreadData(null)
         useToast.success('엔빵 만들기에 성공했어요.')
@@ -71,7 +76,12 @@ const Page = () => {
           작성한 엔빵의 미리보기에요.
         </div>
         <h2 className="pb-12 pt-4">{previewNbreadData?.title}</h2>
-        {<NbreadCard nbreadData={previewNbreadData as Nbread} />}
+        {
+          <NbreadCard
+            nbreadData={previewNbreadData as Nbread}
+            userData={userData}
+          />
+        }
         <div className="mb-12 mt-40 text-body02 text-gray-500">참여한 사람</div>
         <div className="mb-40 flex flex-col gap-8">
           <NbreadParticipantCard

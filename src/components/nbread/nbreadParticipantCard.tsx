@@ -5,11 +5,12 @@ import Icon from '../common/icon/Icon'
 import { useToast } from '../common/toast/Toast'
 import useUserStore from '@/stores/useAuthStore'
 import { useRef, useState } from 'react'
+import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 
 interface NbreadParticipantCardProps {
   nbreadId?: string
   participantId?: string
-  currentPaymentDate?: string
+  startDate?: string
   profileImageUrl?: string | null
   isNbreadLeader: boolean
   name: string
@@ -35,13 +36,20 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
         props.nbreadId!,
         props.participantId!,
         !isChecked,
-        props.currentPaymentDate!,
+        props.startDate!,
       )
+      if (!isChecked) {
+        trackEvent(GA_EVENTS.COMPLETE_PAYMENT, {
+          group_id: props.nbreadId,
+          participant_id: props.participantId,
+        })
+      }
 
-      useToast.success('완료 여부 업데이트에 성공했어요.')
+      useToast.success('완료 여부가 업데이트되었어요.')
       setIsChecked((prev) => !prev)
     } catch (error) {
       useToast.error('완료 여부 업데이트에 실패했어요. 다시 시도해주세요.')
+      throw error
     }
 
     setTimeout(() => {

@@ -1,15 +1,14 @@
 import { supabase } from '@/lib/supabaseClient'
 import { Nbread } from '@/types/nbread'
+import { captureAppError } from '@/lib/sentry/sentry'
 
 export const updateNbreadRecord = async (
   nbreadId: string,
   userId: string,
   isPaid: boolean,
-  currentPaymentDate: string,
+  startDate: string,
 ) => {
-  const translatedCurrentPaymentDate = new Date(currentPaymentDate)
-    .toISOString()
-    .split('T')[0]
+  const translatedStartDate = new Date(startDate).toISOString().split('T')[0]
 
   try {
     const { data, error } = await supabase
@@ -19,7 +18,7 @@ export const updateNbreadRecord = async (
       })
       .eq('nbread_id', nbreadId)
       .eq('user_id', userId)
-      .eq('payment_date', translatedCurrentPaymentDate) // payment-date가 currentPaymentDate와 동일한 row만 업데이트(가장 최신 row만 업데이트)
+      .eq('payment_date', translatedStartDate)
 
     if (error) {
       console.error('Error updating nbread record:', error)
@@ -29,6 +28,17 @@ export const updateNbreadRecord = async (
     return data
   } catch (error) {
     console.error('Error updating nbread record:', error)
+    captureAppError(error, {
+      action: 'nbread_record.update',
+      tags: {
+        nbreadId,
+        userId,
+        isPaid,
+      },
+      extra: {
+        paymentDate: translatedStartDate,
+      },
+    })
     throw error
   }
 }

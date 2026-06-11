@@ -11,7 +11,7 @@ import { useState } from 'react'
 interface NbreadParticipantsListProps {
   nbreadId: string
   nbreadRecords: NbreadRecord[]
-  currentPaymentDate: string
+  startDate: string
   participants: Participant[]
   participantMaxCount: number
   paymentAmount: number
@@ -23,7 +23,7 @@ interface NbreadParticipantsListProps {
 
 const NbreadParticipantsList = ({
   nbreadId,
-  currentPaymentDate,
+  startDate,
   nbreadRecords,
   participants,
   participantMaxCount,
@@ -87,7 +87,7 @@ const NbreadParticipantsList = ({
                 key={index}
                 nbreadId={nbreadId}
                 participantId={participant.user.id}
-                currentPaymentDate={currentPaymentDate}
+                startDate={startDate}
                 isNbreadLeader={participant.isLeader}
                 name={participant.user.name}
                 profileImageUrl={participant.user.profileImage}
@@ -119,7 +119,7 @@ const NbreadParticipantsList = ({
                 key={index}
                 nbreadId={nbreadId}
                 participantId={participants[index].user.id}
-                currentPaymentDate={currentPaymentDate}
+                startDate={startDate}
                 isNbreadLeader={participants[index].isLeader}
                 name={participants[index].user.name}
                 profileImageUrl={participants[index].user.profileImage}

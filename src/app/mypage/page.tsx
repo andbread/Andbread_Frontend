@@ -6,6 +6,7 @@ import MenuList from '@/components/mypage/MenuList'
 import Manage from '@/components/mypage/Manage'
 import { useState } from 'react'
 import Spinner from '@/components/common/spinner/Spinner'
+import BasicList from '@/components/mypage/BasicList'
 
 const MyPage = () => {
   const [authProgress, setAuthProgress] = useState<boolean>(false)
@@ -21,6 +22,10 @@ const MyPage = () => {
         <section>
           <h2 className="mb-12 text-heading02 text-gray-800">내 정보</h2>
           <MyInfo />
+        </section>
+        <section>
+          <div className='mb-12 mt-40 text-body02 text-gray-500'>기본</div>
+          <BasicList/>
         </section>
         <section>
           <div className="mb-12 mt-40 text-body02 text-gray-500">기타</div>

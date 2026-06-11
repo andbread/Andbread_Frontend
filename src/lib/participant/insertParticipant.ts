@@ -2,6 +2,8 @@ import { supabase } from '@/lib/supabaseClient'
 import { Participant } from '@/types/nbread'
 import { isGetParticipantsUser, participantUsers } from './getParticipants'
 import { getNbread } from '../nbread'
+import { captureAppError } from '@/lib/sentry/sentry'
+
 export const insertParticipant = async (
   participant: Participant,
   nbreadId: string,
@@ -49,6 +51,16 @@ export const insertParticipant = async (
       }
     }
   } catch (error) {
+    captureAppError(error, {
+      action: 'participant.insert',
+      tags: {
+        nbreadId,
+        userId: participant.user.id,
+      },
+      extra: {
+        isLeader: participant.isLeader,
+      },
+    })
     throw error
   }
 }

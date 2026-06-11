@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "imports": {
+    "supabase": "npm:@supabase/supabase-js@2",
+    "JWT": "npm:google-auth-library@9"
+  }
+}

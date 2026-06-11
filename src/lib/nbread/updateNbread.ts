@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { Nbread } from '@/types/nbread'
+import { captureAppError } from '@/lib/sentry/sentry'
 
 export const updateNbread = async (nbread: Nbread) => {
   try {
@@ -24,6 +25,13 @@ export const updateNbread = async (nbread: Nbread) => {
     return data
   } catch (error) {
     console.error('Error updating nbread:', error)
+    captureAppError(error, {
+      action: 'nbread.update',
+      tags: {
+        nbreadId: nbread.id,
+        leaderId: nbread.leaderId ?? undefined,
+      },
+    })
     throw error
   }
 }
