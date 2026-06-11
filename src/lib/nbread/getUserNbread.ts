@@ -21,7 +21,7 @@ export const getUserNbreads = async (
       participantError.message,
     )
 
-    return []
+    return { monthlyNbreads: [], myNbreads: [] }
   }
 
   const nbreadIds = participantEntries?.map((entry) => entry.nbread_id) || []
@@ -41,21 +41,19 @@ export const getUserNbreads = async (
   }
 
   // 3. Supabase에서 가져온 엔빵 정보를 type에 맞게 변환
-  const renamedNbreadsData: Nbread[] = (nbreads as NbreadRow[])?.map(
-    (nbread, index) => ({
-      id: nbread.id,
-      title: nbread.title,
-      amount: nbread.amount,
-      participantCount: nbread.participant_count,
-      paymentDate: nbread.payment_date,
-      paymentMonth: nbread.payment_month,
-      paymentPeriod: nbread.payment_period as 'year' | 'month',
-      leaderId: nbread.leader_id,
-      participants: null,
-      startDate: nbread.start_date,
-      endDate: nbread.end_date,
-    }),
-  )
+  const allNbreads: Nbread[] = (nbreads as NbreadRow[]).map((nbread) => ({
+    id: nbread.id,
+    title: nbread.title,
+    amount: nbread.amount,
+    participantCount: nbread.participant_count,
+    paymentDate: nbread.payment_date,
+    paymentMonth: nbread.payment_month,
+    paymentPeriod: nbread.payment_period as 'year' | 'month',
+    leaderId: nbread.leader_id,
+    participants: null,
+    startDate: nbread.start_date,
+    endDate: nbread.end_date,
+  }))
 
   // 4. 각 nbread 객체에 paidCount 값을 추가
   const nbreadWithPaidCounts = await Promise.all(
