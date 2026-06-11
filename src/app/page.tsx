@@ -61,7 +61,7 @@ const HomePage = () => {
 
   // NbreadList가 업데이트된 후 totalAmount 계산
   useEffect(() => {
-    const total = nbreadList.reduce(
+    const total = monthlyNbreadList.reduce(
       (sum: number, nbread: Nbread) =>
         sum + Math.floor(nbread.amount / Math.max(nbread.participantCount, 1)),
       0,
@@ -79,11 +79,11 @@ const HomePage = () => {
           <>
             <ReceivedInviteBanner invites={pendingInvites} />
             <MonthlyNbread
-              nbreadList={nbreadList}
+              nbreadList={monthlyNbreadList}
               totalAmount={totalAmount}
               currentMonth={currentMonth}
             />
-            <MyNbread nbreadList={nbreadList} />
+            <MyNbread nbreadList={myNbreadList} />
           </>
         )}
       </main>
