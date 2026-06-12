@@ -6,6 +6,7 @@ import { useToast } from '@/components/common/toast/Toast'
 import { captureAppError } from '@/lib/sentry/sentry'
 import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 import { getSafeRedirectPath } from '@/lib/authRedirect'
+import { clearLegacyAuthStorage } from '@/lib/authStorage'
 
 // 1. 로그인 함수
 export const login = async (
@@ -56,10 +57,9 @@ export const logout = async (router: ReturnType<typeof useRouter>) => {
     })
   }
   useUserStore.getState().clearUser()
-  sessionStorage.clear()
+  clearLegacyAuthStorage()
   trackEvent(GA_EVENTS.LOGOUT)
   setTimeout(() => {
-    localStorage.clear()
     useToast.success('로그아웃이 완료되었어요.')
     router.replace('/login')
   }, 1000)
@@ -99,8 +99,7 @@ export const deleteAccount = async (router: ReturnType<typeof useRouter>) => {
 
   await supabase.auth.signOut({ scope: 'local' })
   useUserStore.getState().clearUser()
-  sessionStorage.removeItem('user-store')
-  localStorage.clear()
+  clearLegacyAuthStorage()
   setTimeout(() => {
     useToast.success('회원 탈퇴가 완료되었어요.')
     router.replace('/login')
