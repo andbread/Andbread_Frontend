@@ -16,7 +16,6 @@ const DeletePostModal = ({
   onSuccess,
 }: DeletePostModalProps) => {
     const handleDeletePost = async () =>{
-        console.log(postId)
         await deletePost(postId)
         onClose();
         onSuccess?.()

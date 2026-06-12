@@ -28,7 +28,6 @@ const FriendAcceptModal = ({
     if (acceptData) {
       trackEvent(GA_EVENTS.ACCEPT_FRIEND, { sender_id: senderUserId })
     }
-    console.log(acceptData)
     onClose()
   }
   const fetchUpdateReject = async() => {

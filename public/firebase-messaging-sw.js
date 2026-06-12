@@ -13,7 +13,6 @@ self.addEventListener('push', function (e) {
 
 /* 알림 클릭 이벤트 리스너 */
 // self.addEventListener('notificationclick', function (event) {
-//   console.log('notification click');
 //   const url = '/alarm';
 //   event.notification.close();
 //   event.waitUntil(clients.openWindow(url));

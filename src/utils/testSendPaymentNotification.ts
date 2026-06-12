@@ -6,7 +6,7 @@ export async function testSendPaymentNotification() {
   const accessToken = session.data.session?.access_token
 
   try {
-    const response = await axios.post(
+    await axios.post(
       '/api/payment-notification',
       {
         nbreadId: '1752dd4f-7a7e-4709-9b08-ab5a7255d3dd',
@@ -22,7 +22,6 @@ export async function testSendPaymentNotification() {
       },
     )
 
-    console.log('[알림 전송 결과]', response.data)
   } catch (error) {
     console.error('[알림 전송 실패]', error)
   }
