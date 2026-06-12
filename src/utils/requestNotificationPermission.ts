@@ -14,8 +14,6 @@ const registerFcmToken = async (userId: string) => {
     serviceWorkerRegistration: registration,
   })
 
-  console.log('[FCM] device token:', fcmDeviceToken)
-
   if (fcmDeviceToken) {
     await upsertFcmToken(userId, fcmDeviceToken)
   }

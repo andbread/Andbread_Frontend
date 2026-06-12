@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useToast } from '@/components/common/toast/Toast'
+import { clearLegacyAuthStorage } from '@/lib/authStorage'
 import { getSafeRedirectPath } from '@/lib/authRedirect'
 import useUserStore from '@/stores/useAuthStore'
 import {
@@ -90,8 +91,7 @@ export const useTermsAgreementPage = (next: string | null) => {
   const logoutAndGoLogin = useCallback(async () => {
     await supabase.auth.signOut()
     clearUser()
-    sessionStorage.clear()
-    localStorage.clear()
+    clearLegacyAuthStorage()
     router.replace(`/login?redirect=${encodeURIComponent(redirectPath)}`)
   }, [clearUser, redirectPath, router])
 

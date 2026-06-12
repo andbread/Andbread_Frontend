@@ -9,6 +9,7 @@ import {
   getCurrentUserRow,
   hasRequiredTermsAgreement,
 } from '@/lib/termsAgreement'
+import { hasPersistedUser } from '@/lib/authStorage'
 
 const publicRoutes = ['/login', '/auth/callback', '/terms-agreement']
 const termsAgreementExemptRoutes = [
@@ -32,14 +33,14 @@ export default function ProtectRoute({
   }, [user])
 
   useEffect(() => {
-    const user = sessionStorage.getItem('user-store')
+    const hasStoredUser = hasPersistedUser()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isNotFoundPage = (window as any).__IS_NOT_FOUND_PAGE__
     // 토큰 초대 페이지는 로그인 전에도 초대 내용을 확인할 수 있는 공개 경로다.
     const isPublicRoute =
       publicRoutes.includes(pathname) || pathname.startsWith('/invite/')
 
-    if (!user && !isPublicRoute && !isNotFoundPage) {
+    if (!hasStoredUser && !isPublicRoute && !isNotFoundPage) {
       setIsProtectedRoute(true)
     }
   }, [pathname])

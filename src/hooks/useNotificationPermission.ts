@@ -88,7 +88,6 @@ export const useNotificationPermission = (
 
         if (fcmDeviceToken) {
           await upsertFcmToken(userId, fcmDeviceToken)
-          console.log('[FCM] device token:', fcmDeviceToken)
         }
       } catch (error) {
         console.error('알림 권한 요청 중 오류 발생:', error)

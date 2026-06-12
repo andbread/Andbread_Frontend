@@ -58,9 +58,6 @@ const InviteUserListItem = ({
 
   const handleClick = async (status: string) => {
     if (status == '초대 하기' || status == 'rejected') {
-      console.log('glgl', status)
-      console.log('현재 엔빵 아디: ', nbreadId)
-      console.log('초대보낼 유저 아이디 : ', invitedUserId)
       const fetchInvite = await sendInviteRequest(nbreadId, invitedUserId)
       if (fetchInvite) {
         trackEvent(GA_EVENTS.INVITE_MEMBER, {
@@ -68,7 +65,6 @@ const InviteUserListItem = ({
           invited_user_id: invitedUserId,
         })
       }
-      console.log('초대 보냄')
       setSendStatus('요청 완료')
       setColor('text-gray-400')
       setCursor('cursor-default')
