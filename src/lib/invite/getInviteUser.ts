@@ -25,7 +25,6 @@ export const getInviteUser = async (tag: string, nbreadId: string) => {
           .eq('nbread_id', nbreadId)
           .maybeSingle()
 
-        console.log('nbreadData', nbreadData)
         const { data: inviteData } = await supabase
           .from('nbread_invite')
           .select('status')
@@ -35,7 +34,6 @@ export const getInviteUser = async (tag: string, nbreadId: string) => {
           .order('created_at', { ascending: false })
           .limit(1)
           .maybeSingle()
-        console.log('검색한 유저 데이터 :', inviteData)
         let status = '초대 하기'
         if (nbreadData === 'accept') {
           status = '참여 중'
@@ -49,11 +47,9 @@ export const getInviteUser = async (tag: string, nbreadId: string) => {
           status: status,
         }
 
-        console.log('유저 + 초대 상태:', result) // 여기서 확인
         return result
       }),
     )
-    console.log('usersWithInviteStatus', usersWithInviteStatus)
     return usersWithInviteStatus
   } catch (error) {}
 }

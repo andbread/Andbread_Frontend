@@ -15,7 +15,6 @@ export const sendFriendRequest = async ({
     console.error('error : ', error)
     return
   }
-  console.log('data', data)
   //   return data
   if (!data || data.length === 0) {
     // 데이터 없으면 insert

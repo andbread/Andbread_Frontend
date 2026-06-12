@@ -6,9 +6,10 @@ import { getUserNbreads } from '@/lib/nbread/getUserNbread'
 import Calendar from '@/components/calendar/calendar'
 import DetailHeader from '@/components/common/header/DetailHeader'
 import { Nbread } from '@/types/nbread'
+import useUserStore from '@/stores/useAuthStore'
 
 export default function CalendarPage() {
-  const [userId, setUserId] = useState<string | null>(null)
+  const userId = useUserStore((state) => state.user?.id ?? null)
   const [nbreadList, setNbreadList] = useState<Nbread[]>([])
 
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -16,27 +17,22 @@ export default function CalendarPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const userStore = sessionStorage.getItem('user-store')
-    if (userStore) {
-      const userData = JSON.parse(userStore).state?.user
-      if (userData?.id) {
-        setUserId(userData.id)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
     if (!userId) return
     const fetchNbreads = async () => {
       try {
         const { monthlyNbreads, myNbreads } = await getUserNbreads(userId)
 
-      const uniqueNbreadList = Array.from(
-        new Map([...monthlyNbreads, ...myNbreads].map((nbread) => [nbread.id, nbread])).values()
-      )
+        const uniqueNbreadList = Array.from(
+          new Map(
+            [...monthlyNbreads, ...myNbreads].map((nbread) => [
+              nbread.id,
+              nbread,
+            ]),
+          ).values(),
+        )
 
-      setNbreadList(uniqueNbreadList)
-      setLoading(false)
+        setNbreadList(uniqueNbreadList)
+        setLoading(false)
       } catch (error) {
         console.error('🚨 엔빵 데이터 가져오기 실패:', error)
         setLoading(false)

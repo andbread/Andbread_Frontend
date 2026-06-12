@@ -43,7 +43,6 @@ export const useAuthCallbackFlow = (next: string | null) => {
         const userInfo = toUserStoreValue(data.user, userRow)
         setUser(userInfo)
         trackEvent(GA_EVENTS.SIGN_IN, { provider: userInfo.socialType })
-        localStorage.clear()
 
         if (hasRequiredTermsAgreement(userRow)) {
           // 세션과 사용자 정보 저장이 끝난 뒤 로그인 전 페이지로 복귀한다.
