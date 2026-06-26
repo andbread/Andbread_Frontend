@@ -59,6 +59,53 @@ const sanitizeValue = (
   )
 }
 
+const getErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return error.message
+  }
+
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof error.message === 'string'
+  ) {
+    return error.message
+  }
+
+  if (typeof error === 'string') {
+    return error
+  }
+
+  return 'Unknown application error'
+}
+
+const toError = (error: unknown) => {
+  if (error instanceof Error) {
+    return error
+  }
+
+  return new Error(getErrorMessage(error))
+}
+
+const getErrorField = (error: unknown, field: string) => {
+  if (typeof error !== 'object' || error === null || !(field in error)) {
+    return undefined
+  }
+
+  const value = (error as Record<string, unknown>)[field]
+
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean'
+  ) {
+    return value
+  }
+
+  return undefined
+}
+
 export const beforeSend = (event: ErrorEvent, _hint: EventHint) => {
   if (event.user) {
     event.user = { id: event.user.id }
@@ -99,13 +146,22 @@ export const captureAppError = (
   },
 ) => {
   Sentry.withScope((scope) => {
+    const capturedError = toError(error)
+
     scope.setTag('action', context.action)
+
+    const errorCode = getErrorField(error, 'code')
+    if (errorCode !== undefined) {
+      scope.setTag('error.code', String(errorCode))
+    }
 
     Object.entries(context.tags ?? {}).forEach(([key, value]) => {
       if (value !== undefined) {
         scope.setTag(key, String(value))
       }
     })
+
+    scope.setExtra('originalError', sanitizeValue(error))
 
     if (context.extra) {
       scope.setExtras(sanitizeValue(context.extra) as Record<string, unknown>)
@@ -115,6 +171,6 @@ export const captureAppError = (
       scope.setLevel(context.level)
     }
 
-    Sentry.captureException(error)
+    Sentry.captureException(capturedError)
   })
 }
