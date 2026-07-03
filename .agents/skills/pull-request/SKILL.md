@@ -41,6 +41,17 @@ Pull Request는 변경 내역이 아니라 **의사결정 문서**입니다.
 
 ---
 
+## GitHub 설정
+
+PR을 생성할 때 아래 설정을 함께 적용합니다.
+
+- Assignee는 `hm1n`으로 고정합니다.
+- Label은 PR 제목의 라벨과 동일한 GitHub Label을 추가합니다.
+  - 예: PR 제목이 `[setting-66/ai-agent] Agent 주도 개발 환경 도입`이면 `Setting` 라벨을 추가합니다.
+  - PR 제목의 라벨이 GitHub Label과 정확히 일치하지 않으면, 기존 Label 목록에서 의미가 같은 라벨을 확인해 사용합니다.
+
+---
+
 ## 출력 형식
 
 프로젝트의 `.github/pull_request_template.md`를 사용합니다.

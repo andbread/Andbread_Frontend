@@ -35,6 +35,19 @@ description: 구현 설계서의 Task를 바탕으로 GitHub Feature Issue를 �
 
 ---
 
+## GitHub 설정
+
+Issue를 생성할 때 아래 설정을 함께 적용합니다.
+
+- Assignee는 `hm1n`으로 고정합니다.
+- Label은 Issue 제목의 라벨과 동일한 GitHub Label을 추가합니다.
+  - 예: Issue 제목이 `[setting-66/ai-agent] Agent 주도 개발 환경 도입`이면 `Setting` 라벨을 추가합니다.
+  - Issue 제목의 라벨이 GitHub Label과 정확히 일치하지 않으면, 기존 Label 목록에서 의미가 같은 라벨을 확인해 사용합니다.
+- Project는 `KANBAN`으로 지정합니다.
+- Project Status는 `TO-DO`로 지정합니다.
+
+---
+
 ## 출력 형식
 
 이슈를 생성할 때는 `.github/ISSUE_TEMPLATE`에 있는 `feature_request.md`를 우선 사용합니다.
