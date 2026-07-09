@@ -42,10 +42,20 @@ interface IconProps {
   width: number | string
   height: number | string
   fill?: string
+  ariaHidden?: boolean
+  ariaLabel?: string
   onClick?: () => void
 }
 
-const Icon = ({ type, width, height, fill = '', onClick }: IconProps) => {
+const Icon = ({
+  type,
+  width,
+  height,
+  fill = '',
+  ariaHidden,
+  ariaLabel,
+  onClick,
+}: IconProps) => {
   const SelectedIcon = iconMap[type]
 
   return (
@@ -53,7 +63,8 @@ const Icon = ({ type, width, height, fill = '', onClick }: IconProps) => {
       width={width}
       height={height}
       className={`fill-current ${fill}`}
-      aria-label={type}
+      aria-hidden={ariaHidden}
+      aria-label={ariaHidden ? undefined : ariaLabel || type}
       viewBox="0 0 24 24"
       onClick={onClick}
     />

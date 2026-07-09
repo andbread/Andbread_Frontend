@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
 import { setSentryUser } from '@/lib/sentry/sentry'
 import useUserStore from '@/stores/useAuthStore'
 import {
@@ -11,7 +10,15 @@ import {
 } from '@/lib/termsAgreement'
 import { hasPersistedUser } from '@/lib/authStorage'
 
-const publicRoutes = ['/login', '/auth/callback', '/terms-agreement']
+const publicRoutes = [
+  '/',
+  '/login',
+  '/auth/callback',
+  '/terms-agreement',
+  '/terms-of-service',
+  '/privacy-policy',
+  '/ios-guide',
+]
 const termsAgreementExemptRoutes = [
   ...publicRoutes,
   '/terms-of-service',
@@ -26,7 +33,8 @@ export default function ProtectRoute({
   const router = useRouter()
   const pathname = usePathname()
   const user = useUserStore((state) => state.user)
-  const [isProtectedRoute, setIsProtectedRoute] = useState<boolean>(false)
+  const [isRedirectingToLanding, setIsRedirectingToLanding] =
+    useState<boolean>(false)
 
   useEffect(() => {
     setSentryUser(user ? { id: user.id } : null)
@@ -41,9 +49,13 @@ export default function ProtectRoute({
       publicRoutes.includes(pathname) || pathname.startsWith('/invite/')
 
     if (!hasStoredUser && !isPublicRoute && !isNotFoundPage) {
-      setIsProtectedRoute(true)
+      setIsRedirectingToLanding(true)
+      router.replace('/')
+      return
     }
-  }, [pathname])
+
+    setIsRedirectingToLanding(false)
+  }, [pathname, router])
 
   useEffect(() => {
     if (!user?.id || termsAgreementExemptRoutes.includes(pathname)) return
@@ -65,15 +77,7 @@ export default function ProtectRoute({
 
   return (
     <div className="min-h-[100svh]">
-      {children}
-      <LoginConfirmModal
-        isOpen={isProtectedRoute}
-        onClose={() => setIsProtectedRoute(false)}
-        onSubmit={() => {
-          router.replace('/login')
-          setIsProtectedRoute(false)
-        }}
-      />
+      {isRedirectingToLanding ? null : children}
     </div>
   )
 }
