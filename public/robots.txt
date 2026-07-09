@@ -7,7 +7,9 @@ User-agent: *
 Disallow: /auth/
 Disallow: /calendar
 Disallow: /friendList
+Disallow: /home
 Disallow: /inviteAccept
+Disallow: /invites
 Disallow: /mypage
 Disallow: /nbread/
 Disallow: /notification
