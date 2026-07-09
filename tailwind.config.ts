@@ -67,8 +67,8 @@ export default {
     },
     /* box shadow */
     boxShadow: {
-      avatar: '0px 0px 1px rgba(0,0,0,0.12))',
-      card: '0px 0px 4px rgba(0,0,0,0.12))',
+      avatar: '0px 0px 1px rgba(0,0,0,0.12)',
+      card: '0px 0px 4px rgba(0,0,0,0.12)',
       modal: '0px 0px 8px rgba(0,0,0,0.12)',
     },
   },

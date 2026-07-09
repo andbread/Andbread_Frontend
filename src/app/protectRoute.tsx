@@ -11,7 +11,15 @@ import {
 } from '@/lib/termsAgreement'
 import { hasPersistedUser } from '@/lib/authStorage'
 
-const publicRoutes = ['/login', '/auth/callback', '/terms-agreement']
+const publicRoutes = [
+  '/',
+  '/login',
+  '/auth/callback',
+  '/terms-agreement',
+  '/terms-of-service',
+  '/privacy-policy',
+  '/ios-guide',
+]
 const termsAgreementExemptRoutes = [
   ...publicRoutes,
   '/terms-of-service',
