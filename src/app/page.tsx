@@ -124,7 +124,7 @@ export default function LandingPage() {
     <main className="min-h-dvh bg-background text-gray-800">
       <section className="overflow-hidden px-24 pb-0 pt-36">
         <header className="flex items-center justify-between">
-          <NbreadLogo width={81} height={29} />
+          <NbreadLogo width={81} height={29} aria-label="엔빵" role="img" />
           <Link
             href="/login"
             className="btn rounded-40 bg-secondary-100 px-16 py-9 text-heading05 text-white"
@@ -155,7 +155,7 @@ export default function LandingPage() {
             href="/login"
             className="btn btn-large btn-primary mt-28 flex items-center justify-center"
           >
-            지금 시작하기 →
+            지금 시작하기 <span aria-hidden="true">→</span>
           </Link>
         </RevealOnScroll>
 
@@ -203,6 +203,7 @@ export default function LandingPage() {
                 width={20}
                 height={20}
                 fill="text-secondary-300"
+                ariaHidden
               />
               <h3 className="mt-14 text-heading04 text-gray-800">
                 {card.title}
@@ -244,6 +245,7 @@ export default function LandingPage() {
                   width={16}
                   height={16}
                   fill="text-secondary-300"
+                  ariaHidden
                 />
                 <h3 className="text-heading04 text-gray-800">{point.title}</h3>
               </div>
@@ -283,7 +285,9 @@ export default function LandingPage() {
               delay={index * 70}
             >
               <h3 className="flex items-start gap-4 text-heading04 text-gray-800">
-                <span className="mt-[1px] leading-none">{feature.icon}</span>
+                <span className="mt-[1px] leading-none" aria-hidden="true">
+                  {feature.icon}
+                </span>
                 <span>{feature.title}</span>
               </h3>
               <p className="mt-14 whitespace-pre-line break-keep text-[15px] leading-[24px] text-gray-600">
@@ -345,7 +349,7 @@ export default function LandingPage() {
             href="/login"
             className="btn btn-large btn-primary mt-28 flex items-center justify-center"
           >
-            지금 시작하기 →
+            지금 시작하기 <span aria-hidden="true">→</span>
           </Link>
         </RevealOnScroll>
       </section>
