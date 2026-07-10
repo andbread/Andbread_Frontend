@@ -5,6 +5,15 @@ import Icon, { type IconType } from '@/components/common/icon/Icon'
 import NbreadsImage from '@/components/common/nbreadImage/NbreadsImage'
 import RevealOnScroll from '@/components/landing/RevealOnScroll'
 import NbreadLogo from '@/assets/logo/nbread-logo-text.svg'
+import { createPageMetadata } from '@/lib/seo'
+
+export const metadata = createPageMetadata({
+  title: '엔빵',
+  description:
+    '친구와 가족과 나누는 구독 서비스의 결제일과 정산 현황을 한 곳에서 관리하는 구독 공유 관리 서비스',
+  path: '/',
+  absoluteTitle: true,
+})
 
 const painCards: {
   icon: IconType
