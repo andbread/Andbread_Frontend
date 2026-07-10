@@ -1,5 +1,8 @@
 import TermsAgreementPageClient from '@/components/auth/TermsAgreementPageClient'
 import { getSafeRedirectPath } from '@/lib/authRedirect'
+import { NO_INDEX_METADATA } from '@/lib/seo'
+
+export const metadata = NO_INDEX_METADATA
 
 interface TermsAgreementPageProps {
   searchParams: Promise<{ next?: string | string[] }>

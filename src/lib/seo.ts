@@ -2,6 +2,17 @@ import type { Metadata } from 'next'
 
 export const SITE_URL = 'https://www.nbread.co.kr'
 
+export const NO_INDEX_METADATA: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+}
+
 const SITE_NAME = '엔빵'
 const OG_IMAGE = {
   url: '/assets/logo/open-graph-logo.png',
