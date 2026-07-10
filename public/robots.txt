@@ -8,9 +8,7 @@ Disallow: /auth/
 Disallow: /calendar
 Disallow: /friendList
 Disallow: /home
-Disallow: /invite/
 Disallow: /invites
-Disallow: /login
 Disallow: /mypage
 Disallow: /nbread/
 Disallow: /notification
