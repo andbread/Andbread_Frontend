@@ -6,9 +6,10 @@ import GoogleAnalytics from '@/lib/analytics/GoogleAnalytics'
 import PageViewTracker from '@/lib/analytics/PageViewTracker'
 import ClarityProvider from '@/lib/analytics/ClarityProvider'
 import Footer from '@/components/common/Footer'
+import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://nbread-nbread.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: '엔빵',
     template: '%s | 엔빵',
@@ -26,9 +27,6 @@ export const metadata: Metadata = {
   ],
   applicationName: '엔빵',
   manifest: '/manifest.json',
-  alternates: {
-    canonical: '/',
-  },
   robots: {
     index: true,
     follow: true,

@@ -1,9 +1,12 @@
 import DetailHeader from '@/components/common/header/DetailHeader'
-import type { Metadata } from 'next'
+import { createPageMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: '서비스이용약관',
-}
+export const metadata = createPageMetadata({
+  title: '서비스 이용약관',
+  description:
+    '엔빵 구독 공유 관리 서비스의 이용 조건, 이용자 의무, 서비스 제공 범위와 책임 기준을 안내합니다.',
+  path: '/terms-of-service',
+})
 
 const sectionTitleClass = 'text-heading04 text-gray-800 mt-16'
 const bodyClass = 'mt-8 whitespace-pre-line text-paragraph text-gray-700'

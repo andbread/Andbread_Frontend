@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://nbread-nbread.vercel.app',
+  siteUrl: 'https://www.nbread.co.kr',
   generateRobotsTxt: true,
   changefreq: 'weekly',
   priority: 0.7,
