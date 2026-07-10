@@ -3,6 +3,9 @@ import LoginButton from '@/components/user/LoginButton'
 import LoginRedirectGuard from '@/components/auth/LoginRedirectGuard'
 import NbreadText from '@/assets/logo/nbread-text.svg'
 import { getSafeRedirectPath } from '@/lib/authRedirect'
+import { NO_INDEX_METADATA } from '@/lib/seo'
+
+export const metadata = NO_INDEX_METADATA
 
 interface LoginPageProps {
   searchParams: Promise<{ redirect?: string | string[] }>
