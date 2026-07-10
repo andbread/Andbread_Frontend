@@ -28,9 +28,9 @@ export const landingPageJsonLd: JsonLdObject = {
       url: SITE_URL,
       logo: {
         '@type': 'ImageObject',
-        url: getAbsoluteUrl('/assets/logo/nbread-logo.svg'),
-        width: 40,
-        height: 40,
+        url: getAbsoluteUrl('/assets/logo/nbread-logo.png'),
+        width: 512,
+        height: 512,
       },
     },
     {
