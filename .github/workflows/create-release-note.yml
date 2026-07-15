@@ -15,7 +15,9 @@ jobs:
   create-release:
     if: >-
       github.event.context == 'Vercel' &&
-      github.event.state == 'success'
+      github.event.state == 'success' &&
+      github.event.sender.login == 'vercel[bot]' &&
+      startsWith(github.event.target_url, 'https://vercel.com/hm1n/nbread/')
     runs-on: ubuntu-latest
     env:
       EVENT_SHA: ${{ github.event.sha }}
@@ -129,9 +131,14 @@ jobs:
             exit 1
           fi
 
+          if [[ "$END_LINE" -le "$((START_LINE + 1))" ]]; then
+            echo "릴리즈 노트 마커 사이에 본문이 없습니다." >&2
+            exit 1
+          fi
+
           sed -n "$((START_LINE + 1)),$((END_LINE - 1))p" <<< "$PR_BODY" > release-notes.md
-          if [[ ! -s release-notes.md ]]; then
-            echo "릴리즈 PR에서 추출한 릴리즈 노트가 비어 있습니다." >&2
+          if ! grep -q '[^[:space:]]' release-notes.md; then
+            echo "릴리즈 PR에서 추출한 릴리즈 노트에 비공백 내용이 없습니다." >&2
             exit 1
           fi
 
