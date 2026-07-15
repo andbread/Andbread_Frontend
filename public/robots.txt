@@ -7,14 +7,15 @@ User-agent: *
 Disallow: /auth/
 Disallow: /calendar
 Disallow: /friendList
-Disallow: /inviteAccept
+Disallow: /home
+Disallow: /invites
 Disallow: /mypage
 Disallow: /nbread/
 Disallow: /notification
 Disallow: /terms-agreement
 
 # Host
-Host: https://nbread-nbread.vercel.app
+Host: https://www.nbread.co.kr
 
 # Sitemaps
-Sitemap: https://nbread-nbread.vercel.app/sitemap.xml
+Sitemap: https://www.nbread.co.kr/sitemap.xml

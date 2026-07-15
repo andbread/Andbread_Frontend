@@ -1,9 +1,12 @@
 import DetailHeader from '@/components/common/header/DetailHeader'
-import type { Metadata } from 'next'
+import { createPageMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: '개인정보처리방침',
-}
+  description:
+    '엔빵의 개인정보 수집 항목, 이용 목적, 보유 기간, 처리 위탁, 이용자 권리와 보호 조치를 안내합니다.',
+  path: '/privacy-policy',
+})
 
 const sectionTitleClass = 'text-heading04 text-gray-800 mt-16'
 const bodyClass = 'mt-8 whitespace-pre-line text-paragraph text-gray-700'
@@ -115,7 +118,7 @@ export default function PrivacyPolicyPage() {
           <h2 className={sectionTitleClass}>10. 개인정보 보호책임자 및 문의</h2>
           <p className={bodyClass}>
             서비스명: 엔빵(N빵)
-            {'\n'}서비스 URL: https://nbread-nbread.vercel.app
+            {'\n'}서비스 URL: https://www.nbread.co.kr
             {'\n'}팀명: 엔빵(andbread)
             {'\n'}문의: GitHub Issues
             (https://github.com/andbread/Andbread_Frontend/issues)

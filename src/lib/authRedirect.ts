@@ -1,4 +1,4 @@
-const DEFAULT_REDIRECT_PATH = '/'
+const DEFAULT_REDIRECT_PATH = '/home'
 
 export const getSafeRedirectPath = (next: string | null | undefined) => {
   if (!next) {
@@ -12,8 +12,8 @@ export const getSafeRedirectPath = (next: string | null | undefined) => {
     return DEFAULT_REDIRECT_PATH
   }
 
-  // 현재 로그인 후 리다이렉트는 토큰 초대 페이지 경로만 허용한다.
-  const isAllowedPath = next.startsWith('/invite/')
+  // 현재 로그인 후 리다이렉트는 홈과 토큰 초대 페이지 경로만 허용한다.
+  const isAllowedPath = next === '/home' || next.startsWith('/invite/')
 
   if (!isAllowedPath) {
     return DEFAULT_REDIRECT_PATH

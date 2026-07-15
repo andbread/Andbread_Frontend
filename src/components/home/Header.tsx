@@ -34,7 +34,7 @@ const Header = () => {
 
   return (
     <header className="my-16 flex items-start justify-between p-4">
-      <div className="cursor-pointer" onClick={() => router.replace('/')}>
+      <div className="cursor-pointer" onClick={() => router.replace('/home')}>
         <NbreadTextLogo />
       </div>
       <div className="flex h-full flex-row items-center gap-16">

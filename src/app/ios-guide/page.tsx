@@ -1,7 +1,13 @@
-'use client'
-
 import DetailHeader from '@/components/common/header/DetailHeader'
 import Image from 'next/image'
+import { createPageMetadata } from '@/lib/seo'
+
+export const metadata = createPageMetadata({
+  title: 'iOS 홈 화면 추가 가이드',
+  description:
+    'iPhone Safari에서 엔빵을 홈 화면에 추가하고 앱처럼 실행하는 방법을 단계별로 안내합니다.',
+  path: '/ios-guide',
+})
 
 const addToHomeSteps = [
   {
