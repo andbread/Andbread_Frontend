@@ -32,11 +32,6 @@
 
 <!-- release-note:end -->
 
-## 검증
-
-- [x] `npm run lint`
-- [x] `npm run build`
-- [ ] 프로덕션 배포 확인
 ```
 
 ## Rules
@@ -44,4 +39,3 @@
 - PR 제목은 반드시 `[release] vX.Y.Z` 형식을 사용합니다.
 - PR 본문의 버전과 제목의 버전은 반드시 일치해야 합니다.
 - `release-note:start`와 `release-note:end` 사이의 내용은 이후 GitHub Release 본문으로 사용합니다.
-- `검증` 섹션은 릴리즈 PR 검토를 위한 정보이며 GitHub Release에는 포함하지 않습니다.
