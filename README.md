@@ -275,3 +275,17 @@ $ npm install
 ```
 $ npm run dev
 ```
+
+### E2E 테스트 실행하기
+
+최초 실행 시 Chromium을 설치합니다.
+
+```
+$ npx playwright install chromium
+```
+
+Playwright가 개발 서버를 자동으로 실행한 뒤 E2E 테스트를 수행합니다.
+
+```
+$ npm run test:e2e
+```
