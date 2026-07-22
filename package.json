@@ -8,6 +8,7 @@
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
+    "test:e2e": "playwright test",
     "generate-sitemap": "next-sitemap",
     "update-types": "supabase gen types typescript --project-id yyisakaqnaoomehqlyjz --schema public > src/types/supabase.ts"
   },
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.61.1",
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
     "@types/nprogress": "^0.2.3",
