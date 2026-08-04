@@ -1,5 +1,5 @@
 import Modal from '../common/modal/Modal'
-import { deletePost } from '@/lib/\bpost/deletePost'
+import { deletePost } from '@/lib/post/deletePost'
 import { useToast } from '../common/toast/Toast'
 interface DeletePostModalProps {
   isOpen: boolean
