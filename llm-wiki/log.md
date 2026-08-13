@@ -7,3 +7,4 @@
 | 2026-08-13 | 세션 대화 내용을 `raw/2026-08-13-llm-wiki-setup-session-log.md`에 저장 | 구조 결정 근거 보존 | - |
 | 2026-08-13 | GitHub 이슈 #193을 `raw/2026-08-13-github-issue-193-llm-wiki-setup.md`에 저장 | 작업 기획서 원본 보존 | - |
 | 2026-08-13 | 첫 `wiki/` 문서 `llm-wiki-background-and-structure.md` 작성 | 배경, 해결 범위, 구조, 다음 질문 정리 | 이슈 #193 "후속 문서 작성 및 에이전트 연동 범위 정리" 작업 미완료 |
+| 2026-08-13 | GitHub 이슈 #195을 `raw/2026-08-13-github-issue-195-naver-search-advisor.md`에 저장 | 네이버 서치어드바이저 등록 작업 기획서 원본 보존 | 아직 `wiki/` 정리 문서 미작성 |
