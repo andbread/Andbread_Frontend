@@ -5,10 +5,10 @@ import BottomSheet, {
   BottomSheetProps,
 } from '../common/bottomsheet/BottomSheet'
 import { useToast } from '../common/toast/Toast'
-import { InsertPost } from '@/lib/\bpost/insertPost'
+import { InsertPost } from '@/lib/post/insertPost'
 import useUserStore from '@/stores/useAuthStore'
 import { useParams } from 'next/navigation'
-import { UpdatePost } from '@/lib/\bpost/updatePost'
+import { UpdatePost } from '@/lib/post/updatePost'
 interface UpdatePostBottomSheetProps
   extends Omit<BottomSheetProps, 'children'> {
   postData?: Post

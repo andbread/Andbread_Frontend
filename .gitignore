@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
 
 # next.js
 /.next/
@@ -45,3 +47,6 @@ public/sw.js*
 public/workbox-*.js*
 public/worker-*.js*
 certificates
+
+# claude
+.token-optimizer

@@ -31,6 +31,7 @@ Pull Request는 변경 내역이 아니라 **의사결정 문서**입니다.
 - 연결된 GitHub Issue의 Why, Goal, Constraints를 먼저 이해한 후 Pull Request를 작성합니다.
 - Git diff를 확인하여 실제 변경 사항만 작성합니다.
 - PR 본문은 한국어로 작성합니다.
+- PR은 다른 사람이 함께 보는 공유 문서이므로 본문은 존댓말(습니다체)로 작성합니다.
 - PR은 `Why → Decision → Changes → Impact → Review Points → Validation` 흐름으로 작성합니다.
 - 변경 사항을 나열하기보다 왜 그렇게 구현했는지 설명합니다.
 - 확인하지 않은 테스트는 실행했다고 작성하지 않습니다.
