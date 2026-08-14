@@ -16,5 +16,5 @@
 
 ## 최근 산출물
 
-- 
+- [클라이언트 Supabase 호출을 app/api로 이관하는 구현 설계서](output/2026-08-14-github-issue-170-supabase-client-to-app-api-migration-plan.md)
 
