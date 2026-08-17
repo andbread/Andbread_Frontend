@@ -1,0 +1,42 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { calculateIndividualShare } from '@/lib/nbread/calculateIndividualShare'
+
+export const getUserTotalNbreadAmount = async (
+  client: SupabaseClient,
+  userId: string,
+): Promise<number> => {
+  if (!userId) return 0
+
+  // 사용자가 속한 nbread_records에서 is_paid=true인 데이터 가져오기
+  const { data: paidRecords, error: paidError } = await client
+    .from('nbread_records')
+    .select('nbread_id')
+    .eq('user_id', userId)
+    .eq('is_paid', true)
+
+  if (paidError) {
+    console.error('❌ Failed to fetch paid records:', paidError.message)
+    return 0
+  }
+
+  if (!paidRecords || paidRecords.length === 0) return 0
+
+  const nbreadIds = paidRecords.map((record) => record.nbread_id)
+
+  // 해당 nbread_id에 대한 엔빵 정보 가져오기
+  const { data: nbreads, error: nbreadError } = await client
+    .from('nbread')
+    .select('id, amount, participant_count')
+    .in('id', nbreadIds)
+
+  if (nbreadError) {
+    console.error('❌ Failed to fetch nbreads:', nbreadError.message)
+    return 0
+  }
+
+  return nbreads.reduce(
+    (sum, nbread) =>
+      sum + calculateIndividualShare(nbread.amount, nbread.participant_count),
+    0,
+  )
+}
