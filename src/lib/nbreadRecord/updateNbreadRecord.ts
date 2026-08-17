@@ -1,5 +1,4 @@
-import { supabase } from '@/lib/supabaseClient'
-import { Nbread } from '@/types/nbread'
+import { apiRequest } from '@/lib/apiClient'
 import { captureAppError } from '@/lib/sentry/sentry'
 
 export const updateNbreadRecord = async (
@@ -8,24 +7,13 @@ export const updateNbreadRecord = async (
   isPaid: boolean,
   startDate: string,
 ) => {
-  const translatedStartDate = new Date(startDate).toISOString().split('T')[0]
-
   try {
-    const { data, error } = await supabase
-      .from('nbread_records')
-      .update({
-        is_paid: isPaid,
-      })
-      .eq('nbread_id', nbreadId)
-      .eq('user_id', userId)
-      .eq('payment_date', translatedStartDate)
+    await apiRequest(`/api/nbreads/${nbreadId}/records`, {
+      method: 'PATCH',
+      body: { userId, isPaid, startDate },
+    })
 
-    if (error) {
-      console.error('Error updating nbread record:', error)
-      throw error
-    }
-
-    return data
+    return null
   } catch (error) {
     console.error('Error updating nbread record:', error)
     captureAppError(error, {
@@ -36,7 +24,7 @@ export const updateNbreadRecord = async (
         isPaid,
       },
       extra: {
-        paymentDate: translatedStartDate,
+        startDate,
       },
     })
     throw error

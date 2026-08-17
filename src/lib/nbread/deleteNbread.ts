@@ -1,19 +1,11 @@
-import { supabase } from '@/lib/supabaseClient'
+import { apiRequest } from '@/lib/apiClient'
 import { captureAppError } from '@/lib/sentry/sentry'
 
 export const deleteNbread = async (nbreadId: string) => {
   try {
-    const { data, error } = await supabase
-      .from('nbread')
-      .delete()
-      .eq('id', nbreadId)
+    await apiRequest(`/api/nbreads/${nbreadId}`, { method: 'DELETE' })
 
-    if (error) {
-      console.error('Error inserting nbread:', error)
-      throw error
-    }
-
-    return data
+    return null
   } catch (error) {
     captureAppError(error, {
       action: 'nbread.delete',

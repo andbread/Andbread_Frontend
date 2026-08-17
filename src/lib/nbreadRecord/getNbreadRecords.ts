@@ -1,34 +1,12 @@
-import { supabase } from '@/lib/supabaseClient'
-import { Nbread, NbreadRecord } from '@/types/nbread'
+import { apiRequest } from '@/lib/apiClient'
+import { NbreadRecord } from '@/types/nbread'
 
-export const getNbreadRecords = async (
-  nbreadId: string,
-  startDate: string,
-) => {
-  const translatedStartDate = new Date(startDate)
-    .toISOString()
-    .split('T')[0]
-
+export const getNbreadRecords = async (nbreadId: string, startDate: string) => {
   try {
-    const { data, error } = await supabase
-      .from('nbread_records')
-      .select('*')
-      .eq('nbread_id', nbreadId)
-      .eq('payment_date', translatedStartDate)
-
-    if (error) {
-      console.error('Error fetching nbread record:', error)
-      throw error
-    }
-
-    const renamedNbreadData: NbreadRecord[] = data.map((item) => ({
-      userId: item.user_id,
-      nbreadId: item.nbread_id,
-      paymentDate: item.payment_date,
-      isPaid: item.is_paid,
-    }))
-
-    return renamedNbreadData
+    return await apiRequest<NbreadRecord[]>(
+      `/api/nbreads/${nbreadId}/records`,
+      { query: { startDate } },
+    )
   } catch (error) {
     console.error('Error fetching nbread record:', error)
     throw error

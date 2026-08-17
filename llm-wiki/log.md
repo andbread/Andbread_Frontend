@@ -19,3 +19,5 @@
 | 2026-08-16 | 개발 환경 검증 세션 내용을 `raw/2026-08-16-supabase-dev-environment-verification-session-log.md`에 저장 | 로컬 env 전환 및 Playwright 검증 과정, auth.users → public.user 트리거 누락 발견과 수정, db push 스크립트 버그 수정, 웹훅 구성 방식을 Dashboard 방식으로 재전환한 경위 보존 | 운영 마이그레이션 이력 repair와 두 수정 마이그레이션의 운영 반영 미실행, dev Dashboard 웹훅 미생성 |
 | 2026-08-16 | `wiki/supabase-schema-change-migration-strategy.md`에 "구조 변경과 환경별 설정을 구분하는 기준" 절 추가 | 테이블/함수/트리거/RLS/cron 같은 구조 변경은 마이그레이션 필수, OAuth Provider·Database Webhook 인증값·Vault 시크릿 같은 환경별 자격증명은 Dashboard가 맞다는 원칙을 실제 사례(트리거 누락, 웹훅 중복 위험) 근거로 정리 | 이 구분을 CI/리뷰 체크리스트에 반영할지 미논의 |
 | 2026-08-18 | 랜딩페이지와 검색 관련 코드 조사 후 `output/2026-08-18-faq-landing-page-implementation-plan.md` 작성 | FAQ 섹션, 공용 콘텐츠 원본, 구조화 데이터와 플레이wright 검증 범위 설계 | 최종 문항과 답변, 콘텐츠 목업, 펼침 방식 확인 |
+| 2026-08-18 | 설계서 0단계(notification, fcmToken) 구현 후 코드 리뷰 반영 | 401 강제 리다이렉트 제거, 미사용 응답 헬퍼 정리 | `getFCMDeviceToken`의 `catch` 누락은 후속 이슈 6번으로 미룸 |
+| 2026-08-18 | 설계서 1단계(nbread, nbreadRecord 10함수) 구현 및 로컬 검증 | Route Handler 6개 추가, curl과 브라우저로 동작 확인 | `getUserNbreads`에 `currentMonth` 쿼리 파라미터를 추가해 설계서 매핑표와 달라짐 |
