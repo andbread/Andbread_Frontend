@@ -2,12 +2,12 @@
 
 ## 한 문장 요약
 
-Supabase 스키마나 예약 작업, 대시보드 전용 설정을 바꿀 때는 반드시 `supabase/migrations` 파일로 먼저 만들고 그 파일을 통해 적용해야 하며, 대시보드에서 직접 바꾸거나 파일을 임의로 지우면 로컬 재현이 깨진다.
+Supabase 변경 사항은 성격에 따라 둘로 나눠서 다뤄야 한다 — 테이블·함수·트리거·RLS·예약 작업 같은 구조적 변경은 반드시 `supabase/migrations` 파일로 먼저 만들고 그 파일을 통해 적용해야 환경 간 재현이 보장되고, OAuth Provider나 Database Webhook의 인증 값처럼 환경마다 값이 달라야 하고 실제 비밀값을 담는 설정은 오히려 각 프로젝트의 Dashboard에서 직접 관리하는 편이 맞다.
 
 ## 근거
 
-- 원천 자료: `raw/2026-08-14-supabase-db-separation-session-log.md`, `raw/2026-08-14-supabase-migration-baseline-consolidation-session-log.md`, `raw/2026-08-14-github-issue-198-supabase-environment.md`
-- 확인 날짜: 2026-08-14
+- 원천 자료: `raw/2026-08-14-supabase-db-separation-session-log.md`, `raw/2026-08-14-supabase-migration-baseline-consolidation-session-log.md`, `raw/2026-08-14-github-issue-198-supabase-environment.md`, `raw/2026-08-16-supabase-dev-environment-verification-session-log.md`
+- 확인 날짜: 2026-08-14 (구조 변경/환경별 설정 구분 기준은 2026-08-16 확인)
 - 자료 성격: 실제 장애 조사 및 복구 세션 기록
 - 관련 문서: 없음 (이 도메인의 첫 위키 문서)
 
@@ -19,10 +19,17 @@ Supabase 스키마나 예약 작업, 대시보드 전용 설정을 바꿀 때는
 - 마이그레이션 파일이 실제로 "처음부터 재생 가능한지"는 파일이 존재한다는 사실만으로는 보장되지 않는다. `npx supabase db diff --linked`나 `npx supabase start`로 빈 상태에서 전체를 재생해봐야만 확인된다. 이번 사례처럼 몇 달간 아무도 이 재생을 시도하지 않으면 깨진 상태가 그대로 누적된다.
 - 스키마가 이미 크게 어긋난 상태를 되돌릴 때는, 개별 마이그레이션을 하나하나 복구하려 하기보다 `supabase db dump --linked`로 현재 운영 스키마 전체를 단일 baseline 마이그레이션으로 뜨고, 그 이전의 증분 파일들을 정리(삭제)하는 편이 현실적이다. `db dump`는 기본적으로 `auth`, `storage`, `cron`, `vault` 등 플랫폼 관리 스키마는 제외하고 `public` 계열만 뜨며, `CREATE TABLE IF NOT EXISTS` 등 멱등한 형태로 출력해준다.
 
+## 구조 변경과 환경별 설정을 구분하는 기준
+
+baseline 통합 이후 개발 프로젝트를 실제로 운영해보면서, "모든 대시보드 변경을 마이그레이션 파일로 남겨야 한다"는 원칙을 무리하게 넓게 적용하면 오히려 문제가 생긴다는 사례를 확인했다. 두 가지를 구분해야 한다.
+
+- **구조적 변경(테이블, 함수, 트리거, RLS 정책, cron 스케줄)**: 환경마다 달라지면 안 되는 것들이다. 이런 항목이 마이그레이션 파일에 빠지면 조용히 드리프트가 생기고, 겉으로는 잘 동작하다가 특정 시점에야 발견된다. 실제로 `auth.users`에 새 사용자가 생성될 때 `public.user`에도 행을 만드는 트리거가 정확히 이 경우였다. 함수 자체(`insert_into_public_users()`)는 baseline에 있었지만, 이를 `auth.users`에 연결하는 트리거는 `supabase db dump`가 `auth` 스키마를 기본적으로 제외해서 어떤 마이그레이션 파일에도 캡처되지 않았다. 운영은 이미 이 트리거가 있어서 계속 정상 동작했지만, 개발 프로젝트는 baseline만 적용해서 트리거가 없었고, 그 결과 카카오/구글 로그인 후 "사용자 정보를 찾을 수 없습니다" 오류가 발생했다. 이런 항목은 예외 없이 마이그레이션 파일로 캡처해야 한다.
+- **환경별 자격증명·연동 설정(OAuth Provider의 Client ID/Secret, Database Webhook의 호출 대상 URL과 인증 헤더, Vault 시크릿 값)**: 애초에 환경마다 값이 달라야 정상이고, 실제 비밀값을 담고 있어 git에 남기면 안 되는 항목이다. 이런 것까지 하나의 공유 마이그레이션 파일로 캡처하려고 하면, 개발 전용으로 만든 내용이 실수로 운영에 함께 적용되는 위험이 생긴다. 실제로 개발 환경의 Database Webhook을 `net.http_post` 기반 SQL 트리거로 마이그레이션 파일에 구현했다가, 그 파일이 운영에 실수로 push될 경우 운영에 이미 있는 Dashboard 웹훅과 같은 테이블·이벤트에 중복으로 트리거가 걸리는 위험을 뒤늦게 발견하고 되돌렸다. `supabase db dump`가 `auth` 스키마나 웹훅 내부 구현을 기본적으로 제외하는 것도 이런 항목은 애초에 Dashboard가 관리하는 자리라는 설계로 보인다. 이런 항목은 각 프로젝트의 Dashboard에서 직접 설정하고, 어떤 설정이 필요한지(테이블/이벤트/대상 함수 매핑 등 값이 아닌 구조)만 별도로 문서화하는 편이 낫다.
+
 ## 확인 필요
 
 - 이 전략을 CI나 PR 체크리스트에 강제하는 자동화(예: PR마다 `supabase db diff --linked` 실행)는 아직 없다. 도입 여부는 확인 필요.
-- 대시보드에서 어떤 종류의 변경이 마이그레이션에 안 잡히는지(예: RLS 정책을 대시보드 UI로 바꾼 경우 등) 전체 목록은 아직 정리하지 않았다.
+- 대시보드에서 어떤 종류의 변경이 마이그레이션에 안 잡히는지 전체 목록은 아직 정리하지 않았다. `auth.users`의 트리거, Database Webhook 내부 구현 두 가지는 2026-08-16에 구체적 사례로 확인했다.
 - baseline 재통합이 실제로 커밋되고 운영에 반영된 이후의 상태는 별도 확인이 필요하다 (이 문서 작성 시점엔 커밋 전이었다).
 
 ## 다시 물어볼 질문
