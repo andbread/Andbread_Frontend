@@ -1,21 +1,20 @@
-import { supabase } from '@/lib/supabaseClient'
+import { ApiError, apiRequest } from '@/lib/apiClient'
 
 export const markNotificationAsRead = async (
   notificationId: number,
   userId: string,
 ) => {
-  const { data, error } = await supabase
-    .from('notification')
-    .update({ is_read: true })
-    .eq('id', notificationId)
-    .eq('user_id', userId)
-    .select('id')
+  try {
+    await apiRequest(`/api/notifications/${notificationId}`, {
+      method: 'PATCH',
+      body: { isRead: true },
+    })
+  } catch (error) {
+    // 대상이 없거나 소유자가 아닌 경우의 기존 오류를 그대로 유지한다.
+    if (error instanceof ApiError && error.status === 404) {
+      throw new Error('Notification not found or not owned by the current user')
+    }
 
-  if (error) {
     throw error
-  }
-
-  if (data.length !== 1) {
-    throw new Error('Notification not found or not owned by the current user')
   }
 }

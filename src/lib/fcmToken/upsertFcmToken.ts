@@ -1,22 +1,14 @@
-import { supabase } from '@/lib/supabaseClient'
+import { apiRequest } from '@/lib/apiClient'
 import { captureAppError } from '@/lib/sentry/sentry'
 
 export const upsertFcmToken = async (userId: string, fcmToken: string) => {
   try {
-    const { data, error } = await supabase.from('fcm_token').upsert(
-      {
-        user_id: userId,
-        fcm_token: fcmToken,
-      },
-      { onConflict: 'fcm_token' },
-    )
+    await apiRequest('/api/fcm-tokens', {
+      method: 'PUT',
+      body: { fcmToken },
+    })
 
-    if (error) {
-      console.error('Error upserting fcm token:', error)
-      throw error
-    }
-
-    return data
+    return null
   } catch (error) {
     captureAppError(error, {
       action: 'fcm_token.upsert',

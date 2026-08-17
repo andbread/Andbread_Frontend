@@ -1,53 +1,21 @@
-import { supabase } from '@/lib/supabaseClient'
-import type { NotificationSettings } from './getNotificationState'
+import { apiRequest } from '@/lib/apiClient'
+import type { NotificationSettings } from '@/lib/server/notification/getNotificationState'
+import type { NotificationSettingsUpdate } from '@/lib/server/notification/updateNotificationState'
 
-export type NotificationSettingsUpdate = Partial<
-  Omit<NotificationSettings, 'userId'>
->
-
-const mapNotificationSettingsUpdate = (
-  settings: NotificationSettingsUpdate,
-) => ({
-  ...(settings.allEnabled !== undefined && {
-    all_enabled: settings.allEnabled,
-  }),
-  ...(settings.chatEnabled !== undefined && {
-    chat_enabled: settings.chatEnabled,
-  }),
-  ...(settings.inviteEnabled !== undefined && {
-    invite_enabled: settings.inviteEnabled,
-  }),
-  ...(settings.friendEnabled !== undefined && {
-    friend_enabled: settings.friendEnabled,
-  }),
-  ...(settings.paymentEnabled !== undefined && {
-    payment_enabled: settings.paymentEnabled,
-  }),
-})
+export type { NotificationSettingsUpdate }
 
 export async function updateNotificationState(
   userId: string,
   settings: NotificationSettingsUpdate,
 ) {
   try {
-    const { data, error } = await supabase
-      .from('user_notification_settings')
-      .upsert(
-        {
-          user_id: userId,
-          ...mapNotificationSettingsUpdate(settings),
-        },
-        { onConflict: 'user_id' },
-      )
-      .select()
-      .single()
-
-    if (error) {
-      console.error('Error updating notification state:', error)
-      throw error
-    }
-
-    return data
+    return await apiRequest<NotificationSettings>(
+      '/api/notifications/settings',
+      {
+        method: 'PATCH',
+        body: settings,
+      },
+    )
   } catch (error) {
     console.error('Error updating notification state:', error)
     throw error
