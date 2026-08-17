@@ -47,16 +47,16 @@ const getAccessToken = async () => {
 
 /**
  * 재시도까지 실패한 401은 세션이 살아날 수 없는 상태로 본다.
- * 로컬 세션과 스토어를 비우고 로그인 화면으로 돌려보낸다.
+ * 로컬 세션과 스토어만 비우고 화면 이동은 하지 않는다.
+ *
+ * 이동까지 여기서 처리하면 protectRoute의 판정과 경쟁한다.
+ * 배경 요청 하나가 실패했다고 사용자를 페이지 밖으로 밀어내지 않도록,
+ * 어디로 보낼지는 기존대로 protectRoute가 결정하게 둔다.
  */
-const forceLogout = async () => {
+const clearDeadSession = async () => {
   await supabase.auth.signOut({ scope: 'local' }).catch(() => {})
   useUserStore.getState().clearUser()
   clearLegacyAuthStorage()
-
-  if (typeof window !== 'undefined') {
-    window.location.replace('/login')
-  }
 }
 
 const parseErrorMessage = async (response: Response) => {
@@ -121,7 +121,7 @@ export const apiRequest = async <T = unknown>(
     }
 
     if (response.status === 401) {
-      await forceLogout()
+      await clearDeadSession()
       const { message, code } = await parseErrorMessage(response)
       throw new ApiError(401, message, code)
     }

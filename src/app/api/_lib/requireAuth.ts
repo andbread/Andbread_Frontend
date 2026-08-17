@@ -7,7 +7,7 @@ import {
 } from './supabaseRouteClient'
 
 export type AuthResult =
-  | { ok: true; user: User; client: SupabaseClient; accessToken: string }
+  | { ok: true; user: User; client: SupabaseClient }
   | { ok: false; response: NextResponse }
 
 const parseBearerToken = (request: Request) => {
@@ -49,5 +49,5 @@ export const requireAuth = async (request: Request): Promise<AuthResult> => {
     return { ok: false, response: fail(401, '유효하지 않은 인증 토큰입니다.') }
   }
 
-  return { ok: true, user, client, accessToken }
+  return { ok: true, user, client }
 }
