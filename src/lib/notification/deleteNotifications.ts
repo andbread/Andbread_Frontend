@@ -1,33 +1,28 @@
-import { supabase } from '@/lib/supabaseClient'
+import { ApiError, apiRequest } from '@/lib/apiClient'
 
 export const deleteNotification = async (
   notificationId: number,
   userId: string,
 ) => {
-  const { data, error } = await supabase
-    .from('notification')
-    .delete()
-    .eq('id', notificationId)
-    .eq('user_id', userId)
-    .select('id')
+  try {
+    await apiRequest(`/api/notifications/${notificationId}`, {
+      method: 'DELETE',
+    })
+  } catch (error) {
+    // 대상이 없거나 소유자가 아닌 경우의 기존 오류를 그대로 유지한다.
+    if (error instanceof ApiError && error.status === 404) {
+      throw new Error('Notification not found or not owned by the current user')
+    }
 
-  if (error) {
     console.error('Error deleting notification:', error)
     throw error
-  }
-
-  if (data.length !== 1) {
-    throw new Error('Notification not found or not owned by the current user')
   }
 }
 
 export const deleteAllNotifications = async (userId: string) => {
-  const { error } = await supabase
-    .from('notification')
-    .delete()
-    .eq('user_id', userId)
-
-  if (error) {
+  try {
+    await apiRequest('/api/notifications', { method: 'DELETE' })
+  } catch (error) {
     console.error('Error deleting notifications:', error)
     throw error
   }
