@@ -59,8 +59,7 @@ const FaqAccordionItem = ({
 
       <div
         id={contentId}
-        aria-hidden={!isOpen}
-        className="grid transition-[grid-template-rows] duration-300 ease-out"
+        className="faq-answer-panel grid transition-[grid-template-rows] duration-300 ease-out"
         style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
       >
         <div className="overflow-hidden">
