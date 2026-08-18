@@ -16,5 +16,6 @@
 
 ## 최근 산출물
 
+- [FAQ 랜딩페이지 추가 구현 설계서](output/2026-08-18-faq-landing-page-implementation-plan.md)
 - [클라이언트 Supabase 호출을 app/api로 이관하는 구현 설계서](output/2026-08-14-github-issue-170-supabase-client-to-app-api-migration-plan.md)
 
