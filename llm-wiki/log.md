@@ -23,3 +23,4 @@
 | 2026-08-18 | 설계서 1단계(nbread, nbreadRecord 10함수) 구현 및 로컬 검증 | Route Handler 6개 추가, curl과 브라우저로 동작 확인 | `getUserNbreads`에 `currentMonth` 쿼리 파라미터를 추가해 설계서 매핑표와 달라짐 |
 | 2026-08-18 | 설계서 2단계(participant, invite 10함수) 구현 및 로컬 검증 | Route Handler 6개 추가, 초대 수락까지 브라우저로 확인 | 비로그인 초대 조회는 `nbread_invite` RLS가 authenticated만 허용해 이관 전과 동일하게 막힘 |
 | 2026-08-18 | 설계서 3단계(friend, users/search 6함수) 구현 및 로컬 검증 | Route Handler 3개 추가, 친구 검색과 수락/거절을 브라우저로 확인 | `getInviteFriendList`은 호출부가 없어 노출하지 않음. 제거는 후속 이슈 5번 |
+| 2026-08-18 | 설계서 4단계(post, chatMessage 6함수) 구현 및 로컬 검증 | Route Handler 3개 추가로 이관 대상 39함수 완료, 게시판과 채팅을 브라우저로 확인 | 게시글 수정·삭제는 `/api/posts/[postId]`로 두어 설계서 경로와 달라짐 |

@@ -1,30 +1,19 @@
-import { supabase } from '@/lib/supabaseClient'
+import { apiRequest } from '@/lib/apiClient'
 import { ChatMessage } from '@/types/chatMessage'
+import type { ChatMessagePayload } from '@/lib/server/chatMessage/getChatMessages'
 import { formatChatMessageTime } from '@/utils/formatChatMessageTime'
 
-/* getChatMessages: DB로부터 그룹 메시지 내역을 불러옴 */
+/* getChatMessages: 그룹 메시지 내역을 불러옴 */
 export const getChatMessages = async (nbreadId: string) => {
   try {
-    const { data, error } = await supabase
-      .from('chat_messages')
-      .select('*')
-      .eq('nbread_id', nbreadId)
+    const messages = await apiRequest<ChatMessagePayload[]>(
+      `/api/nbreads/${nbreadId}/messages`,
+    )
 
-    if (error || !data) {
-      console.error('Error get chat messages:', error)
-      throw error
-    }
-
-    // 불러온 row data를 ChatMessage 타입으로 매핑
-    const chatMessages: ChatMessage[] = data.map((item) => ({
-      id: item.id,
-      content: item.content,
-      nbreadId: item.nbread_id,
-      userId: item.user_id ?? '',
-      userName: item.user_name,
-      userProfileImage: item.user_profile_image,
-      createdAt: item.created_at,
-      formattedTime: formatChatMessageTime(item.created_at),
+    // formattedTime은 표시용 값이라 여기서 만든다.
+    const chatMessages: ChatMessage[] = messages.map((message) => ({
+      ...message,
+      formattedTime: formatChatMessageTime(message.createdAt),
     }))
 
     return chatMessages

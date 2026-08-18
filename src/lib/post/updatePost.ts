@@ -1,20 +1,13 @@
-import { supabase } from "../supabaseClient"
+import { apiRequest } from '@/lib/apiClient'
 
-export const UpdatePost = async (post : any) => {
-    try {
-    const { data, error } = await supabase
-      .from('post')
-      .update({
-        content : post.content,
-      })
-      .eq('id', post.id)
-    if (error) {
-      console.error('Error updating post:', error)
-      throw error
-    }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const UpdatePost = async (post: any) => {
+  try {
+    await apiRequest(`/api/posts/${post.id}`, {
+      method: 'PATCH',
+      body: { content: post.content },
+    })
 
-    return data
-    } catch (error) {
-        
-    }
+    return null
+  } catch (error) {}
 }
