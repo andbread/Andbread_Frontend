@@ -12,7 +12,8 @@ interface InviteBottomSheetProps {
   user: string | null
 }
 interface User {
-  avatar: string
+  // profile_image는 nullable이라 InviteUserListItem의 avatar 타입과 맞춘다.
+  avatar: string | null
   name: string
   status: string
   userId: string

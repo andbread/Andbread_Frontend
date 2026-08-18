@@ -51,3 +51,14 @@ export const requireAuth = async (request: Request): Promise<AuthResult> => {
 
   return { ok: true, user, client }
 }
+
+/**
+ * 인증이 선택적인 엔드포인트용이다.
+ * 토큰이 있으면 그 토큰을 바인딩한 클라이언트를, 없으면 anon 클라이언트를 돌려준다.
+ * 비로그인 상태에서도 열리는 초대 링크 조회에만 쓴다.
+ */
+export const optionalAuth = (request: Request): SupabaseClient => {
+  const accessToken = parseBearerToken(request)
+
+  return accessToken ? createRouteClient(accessToken) : createAnonRouteClient()
+}

@@ -22,8 +22,6 @@ export interface ApiRequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
   body?: unknown
   query?: Record<string, QueryValue>
-  /** 인증이 선택적인 엔드포인트에서만 false로 둔다. */
-  auth?: boolean
 }
 
 const buildUrl = (path: string, query?: Record<string, QueryValue>) => {
@@ -99,19 +97,23 @@ const send = async (
  * app/api Route Handler를 호출한다.
  * 성공 응답의 { data }를 벗겨서 돌려주고, 204는 undefined를 돌려준다.
  * 실패하면 ApiError를 던진다.
+ *
+ * 세션이 있으면 항상 토큰을 붙인다.
+ * 인증이 선택인 엔드포인트도 마찬가지다. 로그인 상태에서 토큰을 빼면
+ * 서버가 anon으로 조회해 RLS에 막히므로 로그인 전과 같은 결과만 보게 된다.
  */
 export const apiRequest = async <T = unknown>(
   path: string,
   options: ApiRequestOptions = {},
 ): Promise<T> => {
-  const { method = 'GET', body, query, auth = true } = options
+  const { method = 'GET', body, query } = options
   const url = buildUrl(path, query)
 
-  let accessToken = auth ? await getAccessToken() : null
+  let accessToken = await getAccessToken()
   let response = await send(url, method, body, accessToken)
 
   // 토큰 만료로 401을 받으면 세션을 갱신해 1회만 재시도한다.
-  if (response.status === 401 && auth) {
+  if (response.status === 401) {
     const { data } = await supabase.auth.refreshSession()
     const refreshedToken = data.session?.access_token ?? null
 
