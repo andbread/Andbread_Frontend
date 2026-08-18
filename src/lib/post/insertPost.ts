@@ -1,27 +1,15 @@
-import { supabase } from '../supabaseClient'
+import { apiRequest } from '@/lib/apiClient'
 import { PostInsert } from '@/types/post'
 
 export const InsertPost = async (post: PostInsert) => {
   try {
-    const { data, error } = await supabase
-      .from('post')
-      .insert([
-        {
-          content: post.content,
-          user_id: post.userId,
-          user_name: post.userName,
-          profile_image: post.userProfileImage,
-          nbread_id: post.nbreadId,
-          created_at: post.createdAt,
-        },
-      ])
-      
-      if (error) {
-      console.error('Error inserting post:', error)
-      throw error
-    }
-    
-    return data
+    await apiRequest(`/api/nbreads/${post.nbreadId}/posts`, {
+      method: 'POST',
+      body: post,
+    })
+
+    // 기존에도 insert 결과가 null이라 항상 null을 돌려줬다.
+    return null
   } catch (error) {
     console.error(error)
   }
