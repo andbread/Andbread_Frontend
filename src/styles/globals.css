@@ -292,3 +292,12 @@ a {
 .floating {
   animation: floating 3s ease-in-out infinite;
 }
+
+/* 자바스크립트가 없는 환경에서는 스크롤 진입 효과를 적용하지 않고 항상 노출 */
+@media (scripting: none) {
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
