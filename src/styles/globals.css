@@ -300,4 +300,8 @@ a {
     transform: none !important;
     transition: none !important;
   }
+
+  .faq-answer-panel {
+    grid-template-rows: 1fr !important;
+  }
 }
