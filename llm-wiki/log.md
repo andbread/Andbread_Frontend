@@ -21,3 +21,4 @@
 | 2026-08-18 | 랜딩페이지와 검색 관련 코드 조사 후 `output/2026-08-18-faq-landing-page-implementation-plan.md` 작성 | FAQ 섹션, 공용 콘텐츠 원본, 구조화 데이터와 플레이wright 검증 범위 설계 | 최종 문항과 답변, 콘텐츠 목업, 펼침 방식 확인 |
 | 2026-08-18 | 설계서 0단계(notification, fcmToken) 구현 후 코드 리뷰 반영 | 401 강제 리다이렉트 제거, 미사용 응답 헬퍼 정리 | `getFCMDeviceToken`의 `catch` 누락은 후속 이슈 6번으로 미룸 |
 | 2026-08-18 | 설계서 1단계(nbread, nbreadRecord 10함수) 구현 및 로컬 검증 | Route Handler 6개 추가, curl과 브라우저로 동작 확인 | `getUserNbreads`에 `currentMonth` 쿼리 파라미터를 추가해 설계서 매핑표와 달라짐 |
+| 2026-08-18 | 설계서 2단계(participant, invite 10함수) 구현 및 로컬 검증 | Route Handler 6개 추가, 초대 수락까지 브라우저로 확인 | 비로그인 초대 조회는 `nbread_invite` RLS가 authenticated만 허용해 이관 전과 동일하게 막힘 |

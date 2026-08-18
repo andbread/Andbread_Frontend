@@ -1,14 +1,15 @@
-import { supabase } from '@/lib/supabaseClient'
+import { apiRequest } from '@/lib/apiClient'
 import { captureAppError } from '@/lib/sentry/sentry'
 
 export const deleteParticipants = async (userId: string, nbreadId: string) => {
-  const { data, error } = await supabase
-    .from('participant')
-    .delete()
-    .eq('user_id', userId)
-    .eq('nbread_id', nbreadId)
+  try {
+    await apiRequest(`/api/nbreads/${nbreadId}/participants`, {
+      method: 'DELETE',
+      query: { userId },
+    })
 
-  if (error) {
+    return null
+  } catch (error) {
     console.error('error deleting participants', error)
     captureAppError(error, {
       action: 'participant.delete',
@@ -16,6 +17,4 @@ export const deleteParticipants = async (userId: string, nbreadId: string) => {
     })
     throw error
   }
-
-  return data
 }
