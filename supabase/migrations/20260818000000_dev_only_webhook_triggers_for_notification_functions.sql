@@ -2,9 +2,8 @@
 -- "schema supabase_functions does not exist" 오류로 아예 동작하지 않는다
 -- (Supabase 호스팅 프로젝트에서도 발생하는 알려진 플랫폼 프로비저닝 문제).
 -- 그래서 원칙(환경별 웹훅 설정은 Dashboard 관리)의 예외로, pg_net을 직접 써서
--- 동일한 역할을 하는 트리거를 만든다. 이 파일은 이 dev 프로젝트에만 적용하고
--- 운영에는 절대 push하지 않는다 — 운영엔 이미 Dashboard 웹훅 6개가 있어서
--- 같은 테이블/이벤트에 중복 트리거가 걸리게 된다.
+-- 동일한 역할을 하는 트리거를 만든다. 마이그레이션 이력은 모든 환경에서 함께
+-- 관리하되, 아래 객체는 project_url이 andbread-dev를 가리킬 때만 생성한다.
 --
 -- 사전 조건 (Vault 시크릿, 이미 등록돼 있어야 함):
 --   select vault.create_secret('<프로젝트 URL>', 'project_url');
@@ -13,12 +12,27 @@
 -- vault secret이 없거나 net.http_post 호출이 실패해도 원본 INSERT/UPDATE
 -- 트랜잭션은 절대 실패하지 않도록 방어적으로 작성했다.
 
+do $migration$
+declare
+  v_project_url text;
+begin
+  select decrypted_secret into v_project_url
+  from vault.decrypted_secrets
+  where name = 'project_url';
+
+  if trim(trailing '/' from coalesce(v_project_url, ''))
+     <> 'https://ugujkypcxlpalihcrvjt.supabase.co' then
+    raise notice 'andbread-dev가 아닌 환경이므로 개발 전용 웹훅 트리거 생성을 건너뜀';
+    return;
+  end if;
+
+  execute $function$
 create or replace function public.notify_edge_function()
 returns trigger
 language plpgsql
 security definer
 set search_path = public
-as $$
+as $body$
 declare
   v_url text;
   v_token text;
@@ -57,28 +71,43 @@ begin
 
   return new;
 end;
-$$;
+$body$;
+$function$;
 
+  execute $trigger$
 create or replace trigger trg_chat_notification
 after insert on public.chat_messages
-for each row execute function public.notify_edge_function('chat-notification');
+for each row execute function public.notify_edge_function('chat-notification')
+$trigger$;
 
+  execute $trigger$
 create or replace trigger trg_friend_request_notification
 after insert on public.friend_request
-for each row execute function public.notify_edge_function('friend-request-notification');
+for each row execute function public.notify_edge_function('friend-request-notification')
+$trigger$;
 
+  execute $trigger$
 create or replace trigger trg_friend_response_notification
 after update on public.friend_request
-for each row execute function public.notify_edge_function('friend-response-notification');
+for each row execute function public.notify_edge_function('friend-response-notification')
+$trigger$;
 
+  execute $trigger$
 create or replace trigger trg_nbread_invite_notification
 after insert on public.nbread_invite
-for each row execute function public.notify_edge_function('nbread-invite-notification');
+for each row execute function public.notify_edge_function('nbread-invite-notification')
+$trigger$;
 
+  execute $trigger$
 create or replace trigger trg_nbread_invite_accept_notification
 after update on public.nbread_invite
-for each row execute function public.notify_edge_function('nbread-invite-accept-notification');
+for each row execute function public.notify_edge_function('nbread-invite-accept-notification')
+$trigger$;
 
+  execute $trigger$
 create or replace trigger trg_payment_notification
 after update on public.nbread_records
-for each row execute function public.notify_edge_function('payment-notification');
+for each row execute function public.notify_edge_function('payment-notification')
+$trigger$;
+end;
+$migration$;
