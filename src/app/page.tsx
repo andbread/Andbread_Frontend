@@ -3,9 +3,11 @@ import Image from 'next/image'
 import type { ReactNode } from 'react'
 import Icon, { type IconType } from '@/components/common/icon/Icon'
 import NbreadsImage from '@/components/common/nbreadImage/NbreadsImage'
+import FaqAccordionItem from '@/components/landing/FaqAccordionItem'
 import RevealOnScroll from '@/components/landing/RevealOnScroll'
 import JsonLdScript from '@/components/seo/JsonLdScript'
 import NbreadLogo from '@/assets/logo/nbread-logo-text.svg'
+import { faqItems } from '@/lib/faq'
 import { landingPageJsonLd } from '@/lib/jsonLd'
 import { createPageMetadata } from '@/lib/seo'
 
@@ -350,6 +352,27 @@ export default function LandingPage() {
               </div>
             ))}
           </RevealOnScroll>
+        </section>
+
+        <section className="bg-primary-100 px-24 py-54">
+          <RevealOnScroll>
+            <SectionHeading eyebrow="자주 묻는 질문" title="엔빵이 궁금하신가요?" />
+            <p className="mt-28 break-keep text-[16px] leading-[26px] text-gray-600">
+              가장 많이 물어보시는 질문을 모았어요.
+            </p>
+          </RevealOnScroll>
+
+          <div className="mt-28 flex flex-col gap-8">
+            {faqItems.map((item, index) => (
+              <RevealOnScroll key={item.question} delay={index * 60}>
+                <FaqAccordionItem
+                  question={item.question}
+                  answer={item.answer}
+                  defaultOpen={index === 0}
+                />
+              </RevealOnScroll>
+            ))}
+          </div>
         </section>
 
         <section className="bg-background px-24 py-48 text-center">

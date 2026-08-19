@@ -1,5 +1,7 @@
+import AngleDown from '@/assets/icons/angle-down.svg'
 import AngleLeft from '@/assets/icons/angle-left.svg'
 import AngleRight from '@/assets/icons/angle-right.svg'
+import AngleUp from '@/assets/icons/angle-up.svg'
 import Badge from '@/assets/icons/badge.svg'
 import Calendar from '@/assets/icons/calendar.svg'
 import Check from '@/assets/icons/check.svg'
@@ -16,8 +18,10 @@ import Profile from '@/assets/icons/profile.svg'
 import Alarm from '@/assets/icons/alarm.svg'
 
 const iconMap = {
+  angleDown: AngleDown,
   angleLeft: AngleLeft,
   angleRight: AngleRight,
+  angleUp: AngleUp,
   badge: Badge,
   calendar: Calendar,
   check: Check,
