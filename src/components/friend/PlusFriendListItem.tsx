@@ -5,7 +5,8 @@ import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
 interface PlusFriendListItemProps {
   name: string
   status: string
-  profile: string
+  // profile_image는 nullable이며 아래 렌더링에서 이미 falsy를 걸러 낸다.
+  profile: string | null
   senderId: string
   receiverId: string
 }

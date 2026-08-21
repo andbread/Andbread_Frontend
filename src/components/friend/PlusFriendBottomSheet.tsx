@@ -11,7 +11,8 @@ interface PlusFreindeBottomSheetProps {
 }
 interface searchFriendProps {
   name: string
-  profileImage: string
+  // profile_image는 nullable이라 PlusFriendListItem의 profile 타입과 맞춘다.
+  profileImage: string | null
   status: string
   senderId: string
   receiverId: string

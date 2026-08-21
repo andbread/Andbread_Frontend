@@ -1,5 +1,6 @@
-import { supabase } from '@/lib/supabaseClient'
+import { apiRequest } from '@/lib/apiClient'
 import { ChatMessage } from '@/types/chatMessage'
+import type { ChatMessagePayload } from '@/lib/server/chatMessage/getChatMessages'
 import { User } from '@/types/user'
 import { formatChatMessageTime } from '@/utils/formatChatMessageTime'
 
@@ -8,35 +9,20 @@ export const insertChatMessage = async (
   nbreadId: string,
   content: string,
 ): Promise<ChatMessage> => {
-  try {
-    const { data, error } = await supabase
-      .from('chat_messages')
-      .insert({
-        nbread_id: nbreadId,
-        user_id: user.id,
-        user_name: user.name,
-        user_profile_image: user.profileImage,
-        content: content,
-      })
-      .select('*')
-      .single()
+  const message = await apiRequest<ChatMessagePayload>(
+    `/api/nbreads/${nbreadId}/messages`,
+    {
+      method: 'POST',
+      body: {
+        content,
+        userName: user.name,
+        userProfileImage: user.profileImage,
+      },
+    },
+  )
 
-    if (error || !data) {
-      console.error('Error inserting chat messages:', error)
-      throw error
-    }
-
-    return {
-      id: data.id,
-      content: data.content,
-      nbreadId: data.nbread_id,
-      userId: data.user_id ?? '',
-      userName: data.user_name,
-      userProfileImage: data.user_profile_image,
-      createdAt: data.created_at,
-      formattedTime: formatChatMessageTime(data.created_at),
-    }
-  } catch (error) {
-    throw error
+  return {
+    ...message,
+    formattedTime: formatChatMessageTime(message.createdAt),
   }
 }

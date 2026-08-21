@@ -49,22 +49,18 @@ const Community = () => {
   const [hasFetched, setHasFetched] = useState<boolean>(false)
   const params = useParams()
   const nbreadId = params.nbreadId as string
-  const mapToPost = (raw: any): Post => ({
-    id: raw.id,
-    content: raw.content,
-    userName: raw.user_name,
-    userProfileImage: raw.profile_image,
-    createdAt: new Date(raw.created_at)
+  // 서버가 Post 형태로 내려주므로 표시용 날짜 포맷만 남긴다.
+  const formatPostDate = (post: Post): Post => ({
+    ...post,
+    createdAt: new Date(post.createdAt)
       .toISOString()
       .slice(0, 10)
       .replace(/-/g, '.'),
-    userId: raw.user_id,
-    nbreadId: raw.nbread_id,
   })
   const fetchPosts = async () => {
     setHasFetched(false)
     const data = await getPost(nbreadId)
-    const mapped = data?.map(mapToPost) ?? []
+    const mapped = data?.map(formatPostDate) ?? []
     setPosts(mapped)
     setTimeout(() => {
       setHasFetched(true)
