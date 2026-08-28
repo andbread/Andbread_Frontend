@@ -13,8 +13,10 @@
 ## 먼저 읽을 문서
 
 - [llm-wiki 배경과 구조](wiki/llm-wiki-background-and-structure.md)
+- [E2E 테스트 케이스 DB의 분류 축 결정](wiki/e2e-test-case-db-classification-axis.md)
 
 ## 최근 산출물
 
-- 
+- [E2E 테스트 케이스 우선순위 배정과 선정 근거](output/2026-08-28-e2e-tc-priority-assignment.md)
+
 
