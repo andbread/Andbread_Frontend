@@ -27,12 +27,14 @@ AI를 개발에 활용하면서 단순히 구현을 요청하는 것만으로는
 │   ├── README.md
 │   └── skills/
 │       ├── feature-issue/
+│       ├── gh-commit/
 │       ├── pull-request/
 │       └── production-release/
 │
 └── .claude/
     └── skills/
         ├── feature-issue → .agents/skills/feature-issue
+        ├── gh-commit → .agents/skills/gh-commit
         ├── pull-request → .agents/skills/pull-request
         └── production-release → .agents/skills/production-release
 ```
@@ -85,6 +87,7 @@ Claude Code가 `.agents`에 정의된 공통 Skill을 사용할 수 있도록 �
 반복적으로 수행하는 개발 업무의 작업 절차와 품질 기준을 Skill로 정의합니다.
 
 - Feature Issue 생성
+- Commit 생성
 - Pull Request 작성
 - Production Release 준비
 
@@ -93,6 +96,6 @@ Claude Code가 `.agents`에 정의된 공통 Skill을 사용할 수 있도록 �
 관련 파일
 
 - `skills/feature-issue/`
+- `skills/gh-commit/`
 - `skills/pull-request/`
 - `skills/production-release/`
-

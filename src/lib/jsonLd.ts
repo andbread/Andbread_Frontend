@@ -1,3 +1,4 @@
+import { faqItems } from '@/lib/faq'
 import { SITE_URL } from '@/lib/seo'
 
 type JsonLdValue =
@@ -56,6 +57,18 @@ export const landingPageJsonLd: JsonLdObject = {
       publisher: {
         '@id': `${SITE_URL}/#organization`,
       },
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${SITE_URL}/#faq`,
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer.join('\n\n'),
+        },
+      })),
     },
   ],
 }

@@ -64,7 +64,7 @@ const RevealOnScroll = ({
   return (
     <Component
       ref={ref}
-      className={`${transitionClass} transform-gpu transition-all duration-700 ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none ${className}`}
+      className={`reveal-on-scroll ${transitionClass} transform-gpu transition-all duration-700 ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none ${className}`}
       style={{ transitionDelay: `${delay}ms` } as CSSProperties}
     >
       {children}

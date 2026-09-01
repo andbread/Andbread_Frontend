@@ -19,13 +19,18 @@ export const getFcmAccessToken = async ({
     return cachedFcmAccessToken
   }
 
-  const jwtClient = new JWT({
-    email: clientEmail,
-    key: privateKey,
-    scopes: ['https://www.googleapis.com/auth/firebase.messaging'],
-  })
-
-  const tokens = await jwtClient.authorize()
+  let tokens
+  try {
+    const jwtClient = new JWT({
+      email: clientEmail,
+      key: privateKey,
+      scopes: ['https://www.googleapis.com/auth/firebase.messaging'],
+    })
+    tokens = await jwtClient.authorize()
+  } catch (e) {
+    console.error('FCM JWT authorize 실패:', e)
+    throw e
+  }
 
   cachedFcmAccessToken = tokens.access_token!
   fcmTokenExpirationTime = tokens.expiry_date!

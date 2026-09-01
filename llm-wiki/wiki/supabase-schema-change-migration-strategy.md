@@ -1,0 +1,49 @@
+# Supabase 스키마 변경 시 마이그레이션 저장 전략
+
+## 한 문장 요약
+
+Supabase 변경 사항은 성격에 따라 둘로 나눠서 다뤄야 한다 — 테이블·함수·트리거·RLS·예약 작업 같은 구조적 변경은 반드시 `supabase/migrations` 파일로 먼저 만들고 그 파일을 통해 적용해야 환경 간 재현이 보장되고, OAuth Provider나 Database Webhook의 인증 값처럼 환경마다 값이 달라야 하고 실제 비밀값을 담는 설정은 오히려 각 프로젝트의 Dashboard에서 직접 관리하는 편이 맞다.
+
+## 근거
+
+- 원천 자료: `raw/2026-08-14-supabase-db-separation-session-log.md`, `raw/2026-08-14-supabase-migration-baseline-consolidation-session-log.md`, `raw/2026-08-14-github-issue-198-supabase-environment.md`, `raw/2026-08-16-supabase-dev-environment-verification-session-log.md`
+- 확인 날짜: 2026-08-14 (구조 변경/환경별 설정 구분 기준은 2026-08-16 확인)
+- 자료 성격: 실제 장애 조사 및 복구 세션 기록
+- 관련 문서: 없음 (이 도메인의 첫 위키 문서)
+
+## 확인된 내용
+
+- 대시보드(SQL Editor 등)에서 스키마를 직접 바꾸면 그 변경은 운영 DB의 마이그레이션 이력 테이블(`supabase_migrations.schema_migrations`)이나 파일 어디에도 남지 않는다. `nbread`, `participant`, `user` 같은 기본 테이블이 정확히 이런 경로로 생성됐던 것으로 추정되고, 그 결과 리포에 있던 13개 증분 마이그레이션 파일이 전부 "이미 존재하는 테이블"을 전제로 작성돼 있었다.
+- 로컬에서 마이그레이션 파일을 지우는 것과, 그 파일이 애초에 커밋된 적이 있는지는 완전히 다른 문제다. 이미 git에 커밋된 파일은 지워도 `git log`로 언제든 복구되지만, 커밋된 적 없이 운영에만 직접 반영된 변경은 파일로도 커밋 이력으로도 복구할 방법이 없다. 이번에 사라진 24개 마이그레이션 버전이 이 경우였다.
+- 예약 작업(pg_cron), Vault 비밀값, Database Webhook 같은 대시보드 전용 기능은 스키마 마이그레이션(`supabase db diff`, `db dump`)으로 자동 캡처되지 않는다. `cron.job` 테이블의 등록 내용은 DDL이 아니라 데이터라서, 대시보드에서 예약 작업을 등록했다면 그 `cron.schedule(...)` 호출문을 직접 마이그레이션 파일로 옮겨 적어야 한다.
+- 마이그레이션 파일이 실제로 "처음부터 재생 가능한지"는 파일이 존재한다는 사실만으로는 보장되지 않는다. `npx supabase db diff --linked`나 `npx supabase start`로 빈 상태에서 전체를 재생해봐야만 확인된다. 이번 사례처럼 몇 달간 아무도 이 재생을 시도하지 않으면 깨진 상태가 그대로 누적된다.
+- 스키마가 이미 크게 어긋난 상태를 되돌릴 때는, 개별 마이그레이션을 하나하나 복구하려 하기보다 `supabase db dump --linked`로 현재 운영 스키마 전체를 단일 baseline 마이그레이션으로 뜨고, 그 이전의 증분 파일들을 정리(삭제)하는 편이 현실적이다. `db dump`는 기본적으로 `auth`, `storage`, `cron`, `vault` 등 플랫폼 관리 스키마는 제외하고 `public` 계열만 뜨며, `CREATE TABLE IF NOT EXISTS` 등 멱등한 형태로 출력해준다.
+
+## 구조 변경과 환경별 설정을 구분하는 기준
+
+baseline 통합 이후 개발 프로젝트를 실제로 운영해보면서, "모든 대시보드 변경을 마이그레이션 파일로 남겨야 한다"는 원칙을 무리하게 넓게 적용하면 오히려 문제가 생긴다는 사례를 확인했다. 두 가지를 구분해야 한다.
+
+- **구조적 변경(테이블, 함수, 트리거, RLS 정책, cron 스케줄)**: 환경마다 달라지면 안 되는 것들이다. 이런 항목이 마이그레이션 파일에 빠지면 조용히 드리프트가 생기고, 겉으로는 잘 동작하다가 특정 시점에야 발견된다. 실제로 `auth.users`에 새 사용자가 생성될 때 `public.user`에도 행을 만드는 트리거가 정확히 이 경우였다. 함수 자체(`insert_into_public_users()`)는 baseline에 있었지만, 이를 `auth.users`에 연결하는 트리거는 `supabase db dump`가 `auth` 스키마를 기본적으로 제외해서 어떤 마이그레이션 파일에도 캡처되지 않았다. 운영은 이미 이 트리거가 있어서 계속 정상 동작했지만, 개발 프로젝트는 baseline만 적용해서 트리거가 없었고, 그 결과 카카오/구글 로그인 후 "사용자 정보를 찾을 수 없습니다" 오류가 발생했다. 이런 항목은 예외 없이 마이그레이션 파일로 캡처해야 한다.
+- **환경별 자격증명·연동 설정(OAuth Provider의 Client ID/Secret, Database Webhook의 호출 대상 URL과 인증 헤더, Vault 시크릿 값)**: 애초에 환경마다 값이 달라야 정상이고, 실제 비밀값을 담고 있어 git에 남기면 안 되는 항목이다. 이런 것까지 하나의 공유 마이그레이션 파일로 캡처하려고 하면, 개발 전용으로 만든 내용이 실수로 운영에 함께 적용되는 위험이 생긴다. 실제로 개발 환경의 Database Webhook을 `net.http_post` 기반 SQL 트리거로 마이그레이션 파일에 구현했다가, 그 파일이 운영에 실수로 push될 경우 운영에 이미 있는 Dashboard 웹훅과 같은 테이블·이벤트에 중복으로 트리거가 걸리는 위험을 뒤늦게 발견하고 되돌렸다. `supabase db dump`가 `auth` 스키마나 웹훅 내부 구현을 기본적으로 제외하는 것도 이런 항목은 애초에 Dashboard가 관리하는 자리라는 설계로 보인다. 이런 항목은 각 프로젝트의 Dashboard에서 직접 설정하고, 어떤 설정이 필요한지(테이블/이벤트/대상 함수 매핑 등 값이 아닌 구조)만 별도로 문서화하는 편이 낫다.
+
+## 예외: andbread-dev의 Database Webhook
+
+2026-08-16에 정리한 구분 기준(환경별 자격증명/연동 설정은 Dashboard로)의 예외 사례가 바로 발생했다. `andbread-dev` 프로젝트에서 Dashboard로 Database Webhook을 만들려고 하면 `Failed to create webhook: ... ERROR: 3F000: schema "supabase_functions" does not exist` 오류가 난다. 이는 Supabase 호스팅 프로젝트에서도 보고되는 플랫폼 프로비저닝 문제로([supabase/supabase#20056](https://github.com/supabase/supabase/issues/20056), [#12447](https://github.com/supabase/supabase/issues/12447)), 저장소 코드나 설정으로 고칠 수 있는 문제가 아니다.
+
+그래서 이 프로젝트에 한해 원칙의 예외로, `supabase/migrations/20260818000000_dev_only_webhook_triggers_for_notification_functions.sql`에 `net.http_post`를 직접 쓰는 트리거를 마이그레이션 파일로 만들어 적용했다. 파일명에 `_dev_only_`를 넣어 눈에 띄게 하고, 파일 맨 위에 운영에 push하면 안 되는 이유를 주석으로 남겼다. 운영은 이미 Dashboard 웹훅 6개가 정상 동작하고 있으므로 이 파일이 운영에 적용되면 같은 테이블·이벤트에 중복 트리거가 걸린다.
+
+이 예외를 막아주는 자동화 장치(예: push 전 dev-only 파일 검사 스크립트)는 만들지 않기로 했다. 반복되는 패턴이 아니라 이 프로젝트 하나에 국한된 예외이고, 마침 운영 마이그레이션 이력이 별도 문제(27개 버전 불일치)로 이미 막혀 있어 정리되기 전까지는 실수로 push될 여지도 낮다.
+
+## 확인 필요
+
+- 이 전략을 CI나 PR 체크리스트에 강제하는 자동화(예: PR마다 `supabase db diff --linked` 실행)는 아직 없다. 도입 여부는 확인 필요.
+- 대시보드에서 어떤 종류의 변경이 마이그레이션에 안 잡히는지 전체 목록은 아직 정리하지 않았다. `auth.users`의 트리거, Database Webhook 내부 구현 두 가지는 2026-08-16에 구체적 사례로 확인했다.
+- baseline 재통합이 실제로 커밋되고 운영에 반영된 이후의 상태는 별도 확인이 필요하다 (이 문서 작성 시점엔 커밋 전이었다).
+- `andbread-dev`의 `supabase_functions` 스키마 프로비저닝 문제를 Supabase 지원팀에 문의해서 근본적으로 고칠지, 아니면 예외 상태를 계속 유지할지는 아직 정하지 않았다.
+- 예외 마이그레이션이 의존하는 Vault 시크릿(`project_url`, `nbread_webhook_service_role_key`)이 실제로 등록돼 있는지 이 문서 작성 시점엔 확인하지 못했다.
+
+## 다시 물어볼 질문
+
+- 앞으로 대시보드에서 예약 작업/Webhook/Vault 비밀값을 등록할 때, "등록 즉시 마이그레이션 파일로 옮겨 적기"를 팀 규칙으로 문서화(`AGENTS.md` 등)할 것인가?
+- `supabase db diff --linked`를 정기적으로(예: 매주, 또는 PR CI에) 돌려서 드리프트를 조기에 잡는 자동화를 추가할 것인가?
+- 로컬 개발 온보딩 문서에 "`supabase start`가 빈 상태에서 에러 없이 끝까지 올라가는지"를 새 기여자 체크리스트 항목으로 넣을 것인가?
