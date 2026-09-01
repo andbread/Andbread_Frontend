@@ -67,7 +67,6 @@ export class Seeder {
     const id = randomUUID()
     const email = `e2e-${this.runId}-${id.slice(0, 8)}@nbread-e2e.test`
     const userName = name ?? `E2E ${id.slice(0, 4)}`
-    const tag = String(1000 + Math.floor(Math.random() * 9000))
 
     const { data, error } = await this.admin.auth.admin.createUser({
       email,
@@ -82,23 +81,7 @@ export class Seeder {
 
     this.authUserIds.push(data.user.id)
 
-    // 가입 트리거가 이미 user 행을 만들었을 수 있으므로 upsert로 필요한 값만 확정한다.
-    const { error: rowError } = await this.admin.from('user').upsert(
-      {
-        id: data.user.id,
-        email,
-        name: userName,
-        social_type: 'kakao',
-        tag,
-        terms_agreed: true,
-        terms_agreed_at: new Date().toISOString(),
-        privacy_agreed: true,
-        privacy_agreed_at: new Date().toISOString(),
-      },
-      { onConflict: 'id' },
-    )
-
-    if (rowError) throw rowError
+    const tag = await this.insertUserRow(data.user.id, email, userName)
 
     return {
       id: data.user.id,
@@ -109,6 +92,43 @@ export class Seeder {
       socialType: 'kakao',
       profileImage: null,
     }
+  }
+
+  /**
+   * 가입 트리거가 없어 user 행은 이 helper가 직접 만든다.
+   * tag에는 user_tag_key 유니크 제약이 있고 값이 네 자리뿐이라
+   * 한 실행에서 여러 계정을 만들면 겹칠 수 있다. 겹치면 다른 값으로 다시 시도한다.
+   */
+  private async insertUserRow(id: string, email: string, name: string) {
+    const now = new Date().toISOString()
+
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      const tag = String(1000 + Math.floor(Math.random() * 9000))
+
+      const { error } = await this.admin.from('user').upsert(
+        {
+          id,
+          email,
+          name,
+          social_type: 'kakao',
+          tag,
+          terms_agreed: true,
+          terms_agreed_at: now,
+          privacy_agreed: true,
+          privacy_agreed_at: now,
+        },
+        { onConflict: 'id' },
+      )
+
+      if (!error) return tag
+
+      // tag 충돌이 아닌 오류는 다시 시도해도 같은 결과이므로 그대로 알린다.
+      if (error.code !== '23505' || !error.message.includes('user_tag_key')) {
+        throw error
+      }
+    }
+
+    throw new Error('겹치지 않는 테스트 사용자 tag를 찾지 못했습니다.')
   }
 
   async createNbread(options: CreateNbreadOptions): Promise<NbreadRow> {
