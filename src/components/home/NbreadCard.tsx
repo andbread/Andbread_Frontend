@@ -1,4 +1,5 @@
 import Avatar from '@/components/common/avatar/avatar'
+import { calculateIndividualShare } from '@/lib/nbread/calculateIndividualShare'
 import { Nbread } from '@/types/nbread'
 import { useRouter } from 'next/navigation'
 
@@ -23,7 +24,10 @@ const NbreadCard = ({ nbread, showParticipants = true }: NbreadCardProps) => {
       <div className="flex flex-col items-start gap-2">
         <p className="mb-4 text-body01">{nbread.title}</p>
         <p className="text-body02 text-gray-500">
-          {Math.floor(nbread.amount / nbread.participantCount).toLocaleString()}
+          {calculateIndividualShare(
+            nbread.amount,
+            nbread.participantCount,
+          ).toLocaleString()}
           원 /{nbread.paymentPeriod === 'year' ? ' 매년' : ' 매월'}
         </p>
       </div>

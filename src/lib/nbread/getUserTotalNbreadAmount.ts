@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
+import { calculateIndividualShare } from "@/lib/nbread/calculateIndividualShare";
 
 export const getUserTotalNbreadAmount = async (userId: string) => {
   if (!userId) return 0;
@@ -31,7 +32,7 @@ export const getUserTotalNbreadAmount = async (userId: string) => {
   }
 
   const totalAmount = nbreads.reduce((sum, nbread) => {
-    const individualShare = Math.floor(nbread.amount / Math.max(nbread.participant_count, 1));
+    const individualShare = calculateIndividualShare(nbread.amount, nbread.participant_count);
     return sum + individualShare;
   }, 0);
 
