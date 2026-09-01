@@ -26,12 +26,12 @@ import QuitNbreadModal from '@/components/common/modal/QuitNbreadModal'
 import Spinner from '@/components/common/spinner/Spinner'
 import InviteBottomSheet from '@/components/invite/InviteBottomSheet'
 import { getFriendList } from '@/lib/friend/getSearchFriend'
-interface nbreadDetailProps {
+interface NbreadDetailProps {
   nbreadData: Nbread
   setNbreadData: Dispatch<SetStateAction<Nbread | null>>
 }
 
-const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
+const NbreadDetail = ({ nbreadData, setNbreadData }: NbreadDetailProps) => {
   const userData = useUserStore((state) => state.user)
   const [nbreadRecords, setNbreadRecords] = useState<NbreadRecord[] | null>(
     null,
@@ -114,7 +114,8 @@ const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
   // 엔빵 탈퇴 처리 함수
   const onSubmitQuitNbread = async () => {
     try {
-      await deleteParticipants(userData?.id!, nbreadData!.id)
+      if (!userData?.id) throw new Error('사용자 정보를 찾을 수 없어요.')
+      await deleteParticipants(userData.id, nbreadData!.id)
       setIsQuitNbreadModalOpen(false)
       useToast.success('엔빵 나가기에 성공했어요.')
       router.replace('/home')
@@ -234,4 +235,4 @@ const nbreadDetail = ({ nbreadData, setNbreadData }: nbreadDetailProps) => {
   )
 }
 
-export default nbreadDetail
+export default NbreadDetail
