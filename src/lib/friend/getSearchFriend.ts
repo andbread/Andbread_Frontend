@@ -1,4 +1,10 @@
 import { supabase } from '../supabaseClient'
+import { NbreadInviteRow } from '@/types/supabase'
+
+type NbreadInviteSummary = Pick<
+  NbreadInviteRow,
+  'status' | 'target_user_id' | 'created_at'
+>
 
 export interface FriendListItem {
   name: string
@@ -95,7 +101,7 @@ export const getFriendList = async (
       }))
 
       const friendIds = processedFriends.map((f) => f.id)
-      let inviteData: any[] = []
+      let inviteData: NbreadInviteSummary[] = []
       if (nbreadId) {
         const { data, error } = await supabase
           .from('nbread_invite')

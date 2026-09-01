@@ -1,4 +1,5 @@
 import { Post } from '@/types/post'
+import { PostRow } from '@/types/supabase'
 import PostCard from './PostCard'
 import { useState } from 'react'
 import CreatePostButton from './CreatePostButton'
@@ -49,16 +50,16 @@ const Community = () => {
   const [hasFetched, setHasFetched] = useState<boolean>(false)
   const params = useParams()
   const nbreadId = params.nbreadId as string
-  const mapToPost = (raw: any): Post => ({
+  const mapToPost = (raw: PostRow): Post => ({
     id: raw.id,
-    content: raw.content,
-    userName: raw.user_name,
-    userProfileImage: raw.profile_image,
+    content: raw.content ?? '',
+    userName: raw.user_name ?? '',
+    userProfileImage: raw.profile_image ?? '',
     createdAt: new Date(raw.created_at)
       .toISOString()
       .slice(0, 10)
       .replace(/-/g, '.'),
-    userId: raw.user_id,
+    userId: raw.user_id ?? '',
     nbreadId: raw.nbread_id,
   })
   const fetchPosts = async () => {

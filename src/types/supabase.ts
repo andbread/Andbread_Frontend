@@ -530,3 +530,6 @@ export type NotificationRow =
   Database['public']['Tables']['notification']['Row']
 export type FriendRequestRow =
   Database['public']['Tables']['friend_request']['Row']
+export type PostRow = Database['public']['Tables']['post']['Row']
+export type NbreadInviteRow =
+  Database['public']['Tables']['nbread_invite']['Row']
