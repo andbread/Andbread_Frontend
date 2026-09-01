@@ -9,6 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:e2e": "playwright test",
     "generate-sitemap": "next-sitemap",
     "update-types": "supabase gen types typescript --project-id yyisakaqnaoomehqlyjz --schema public > src/types/supabase.ts"
@@ -49,6 +51,7 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "supabase": "^2.31.8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.11"
   }
 }
