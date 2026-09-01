@@ -58,7 +58,10 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
   }
 
   return (
-    <div className="card flex flex-row items-center justify-between">
+    <div
+      className="card flex flex-row items-center justify-between"
+      data-testid="participant-card"
+    >
       <div className="align-center flex flex-row items-center gap-16">
         <div className="w-40">
           <Avatar
@@ -77,6 +80,7 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
           disabled={props.isCheckboxDisabled}
           isChecked={isChecked}
           onChange={() => handleClickCheckbox()}
+          testId="participant-payment-toggle"
         />
       )}
       {props.hasDelete && (
