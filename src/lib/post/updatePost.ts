@@ -1,6 +1,7 @@
 import { supabase } from "../supabaseClient"
+import { Post } from '@/types/post'
 
-export const UpdatePost = async (post : any) => {
+export const UpdatePost = async (post : Pick<Post, 'id' | 'content'>) => {
     try {
     const { data, error } = await supabase
       .from('post')

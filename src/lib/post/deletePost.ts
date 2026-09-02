@@ -1,5 +1,5 @@
 import { supabase } from '../supabaseClient'
-export const deletePost = async (post: any) => {
+export const deletePost = async (post: number) => {
   try {
     const { data, error } = await supabase
       .from('post')

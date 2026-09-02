@@ -1,4 +1,4 @@
-name: CI E2E test
+name: E2E Test
 
 on:
   pull_request:

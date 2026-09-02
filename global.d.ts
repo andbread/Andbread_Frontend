@@ -19,6 +19,7 @@ export declare global {
       targetIdOrEventName: string | Date,
       params?: Record<string, unknown>,
     ) => void
+    __IS_NOT_FOUND_PAGE__?: boolean
   }
 
   interface Navigator {

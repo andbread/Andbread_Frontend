@@ -1,3 +1,4 @@
+import { calculateIndividualShare } from '@/lib/nbread/calculateIndividualShare'
 import { Nbread } from '@/types/nbread'
 import { User } from '@/types/user'
 import Tab from '../common/tab/tab'
@@ -13,8 +14,10 @@ const NbreadCard = ({
   userData,
   handleEditingNbread,
 }: NbreadCardProps) => {
-  const paymentAmount =
-    Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
+  const paymentAmount = calculateIndividualShare(
+    nbreadData!.amount,
+    nbreadData!.participantCount,
+  )
 
   return (
     <>

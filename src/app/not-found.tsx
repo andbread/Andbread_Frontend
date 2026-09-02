@@ -8,9 +8,9 @@ const Page = () => {
   const router = useRouter()
 
   useEffect(() => {
-    ;(window as any).__IS_NOT_FOUND_PAGE__ = true
+    window.__IS_NOT_FOUND_PAGE__ = true
     return () => {
-      ;(window as any).__IS_NOT_FOUND_PAGE__ = false
+      window.__IS_NOT_FOUND_PAGE__ = false
     }
   }, [])
 

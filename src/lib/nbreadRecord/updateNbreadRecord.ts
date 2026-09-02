@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabaseClient'
 import { Nbread } from '@/types/nbread'
 import { captureAppError } from '@/lib/sentry/sentry'
+import { toPaymentDateKey } from './toPaymentDateKey'
 
 export const updateNbreadRecord = async (
   nbreadId: string,
@@ -8,7 +9,7 @@ export const updateNbreadRecord = async (
   isPaid: boolean,
   startDate: string,
 ) => {
-  const translatedStartDate = new Date(startDate).toISOString().split('T')[0]
+  const translatedStartDate = toPaymentDateKey(startDate)
 
   try {
     const { data, error } = await supabase
