@@ -2,11 +2,12 @@ interface CheckboxProps {
   disabled?: boolean
   isChecked?: boolean
   onChange: () => void
+  testId?: string
 }
 
-const Checkbox = ({ disabled, isChecked, onChange }: CheckboxProps) => {
+const Checkbox = ({ disabled, isChecked, onChange, testId }: CheckboxProps) => {
   return (
-    <label className="checkbox_label h-16">
+    <label className="checkbox_label h-16" data-testid={testId}>
       <input
         type="checkbox"
         disabled={disabled || false}
