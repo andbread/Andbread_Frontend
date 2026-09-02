@@ -4,7 +4,7 @@ import { calculateIndividualShare } from './calculateIndividualShare'
 describe('calculateIndividualShare', () => {
   describe('정상 계산', () => {
     it('총 금액을 참여 인원으로 나눈다', () => {
-      expect(calculateIndividualShare(30000, 3)).toBe(9999)
+      expect(calculateIndividualShare(30000, 3)).toBe(10000)
     })
 
     it('나누어떨어지지 않으면 원 단위 미만을 버린다', () => {
