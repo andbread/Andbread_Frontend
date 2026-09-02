@@ -1,0 +1,99 @@
+name: CI E2E test
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'llm-wiki/**'
+
+permissions:
+  contents: read
+
+# 같은 PR에 새 커밋이 오면 이전 실행을 취소해 러너 시간을 아낀다.
+concurrency:
+  group: e2e-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: E2E (${{ matrix.project }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      # 한쪽 뷰포트가 깨져도 나머지 결과를 봐야 원인 범위를 좁힐 수 있다.
+      fail-fast: false
+      matrix:
+        # 서비스가 모바일 우선이라 평소에는 모바일만 돌리고,
+        # 배포 직전인 main 대상 PR에서만 PC 뷰포트를 함께 확인한다.
+        project: >-
+          ${{ github.base_ref == 'main'
+              && fromJSON('["mobile", "desktop"]')
+              || fromJSON('["mobile"]') }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # 설정의 projects가 모두 Chromium 기반이라 브라우저 하나만 받으면 된다.
+      - name: Install Playwright browser
+        run: npx playwright install chromium --with-deps
+
+      # secrets 이름이 틀리면 값이 빈 문자열로 들어온다. 그러면 테스트는
+      # 실패가 아니라 건너뛴 채 초록으로 끝나므로 그 전에 멈춘다.
+      - name: Check secrets
+        run: |
+          missing=''
+          for name in E2E_SUPABASE_URL E2E_SUPABASE_PUBLISHABLE_KEY E2E_SUPABASE_SECRET_KEY E2E_TEST_USER_PASSWORD; do
+            if [ -z "${!name}" ]; then missing="$missing $name"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "비어 있는 GitHub Secret:$missing"
+            exit 1
+          fi
+        env:
+          E2E_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+          E2E_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.E2E_SUPABASE_PUBLISHABLE_KEY }}
+          E2E_SUPABASE_SECRET_KEY: ${{ secrets.E2E_SUPABASE_SECRET_KEY }}
+          E2E_TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
+
+      # secrets 이름에 E2E_를 붙여 운영 DB 값과 섞이지 않게 한다.
+      # 키 이름은 Supabase의 현재 명칭(publishable, secret)을 따른다.
+      # 앱 환경변수는 예전 명칭을 쓰고 있으므로 여기서 연결한다.
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_KEY: ${{ secrets.E2E_SUPABASE_PUBLISHABLE_KEY }}
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=${{ matrix.project }}
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_KEY: ${{ secrets.E2E_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.E2E_SUPABASE_SECRET_KEY }}
+          E2E_TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
+
+      # 실패했을 때만 올린다. 리포트로 어떤 케이스가 깨졌는지 보고,
+      # trace는 `npx playwright show-trace trace.zip`으로 그 시점 화면과 네트워크를 확인한다.
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-${{ matrix.project }}-${{ github.run_attempt }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
