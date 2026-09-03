@@ -86,11 +86,10 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.E2E_SUPABASE_SECRET_KEY }}
           E2E_TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
 
-      # #215 측정 기간에는 성공한 실행도 올린다. 케이스별 실패율을 세려면
-      # 통과한 실행의 결과 파일도 있어야 한다.
+      # 실패했을 때만 올린다. 리포트로 어떤 케이스가 깨졌는지 보고,
       # trace는 `npx playwright show-trace trace.zip`으로 그 시점 화면과 네트워크를 확인한다.
       - name: Upload report
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: playwright-${{ matrix.project }}-${{ github.run_attempt }}
