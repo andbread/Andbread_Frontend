@@ -258,6 +258,17 @@ test.describe('납부 상태 저장 처리', () => {
     await expect(toastMessage(page, UPDATE_SUCCESS_MESSAGE)).toBeVisible()
     expect(patchCount).toBe(1)
 
+    // 여기까지는 요청이 진행 중인 동안의 잠금만 검증한다. 실제 가드는 두 겹이라
+    // nbreadParticipantCard.tsx의 isThrottling이 응답 완료 후에도 3초 동안 유지된다.
+    // 그 창 안에서 다시 누르면 두 번째 PATCH가 !isChecked를 보내 방금 완료로 바꾼
+    // 상태가 미납으로 되돌아갈 수 있으므로 여기서 이어서 검증한다.
+    // 3초 창에 기대는 구간이라 바로 위 토스트 확인 직후 곧바로 다시 클릭해 대기를
+    // 넣지 않는다. waitForTimeout으로 3초를 흘려보내면 검증 방향이 반대가 된다.
+    await label.click()
+
+    expect(patchCount).toBe(1)
+    await expect(participantCheckbox(page, member.name)).toBeChecked()
+
     // route.continue()로 실제 DB에 요청이 닿으므로, 쓰기가 정말 한 번만 반영됐는지 DB로도 확인한다.
     const records = await seed.getRecords(nbread.id, member.id)
     expect(records.filter((record) => record.is_paid)).toHaveLength(1)
