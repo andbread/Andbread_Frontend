@@ -258,6 +258,11 @@ test.describe('납부 상태 저장 처리', () => {
     await expect(toastMessage(page, UPDATE_SUCCESS_MESSAGE)).toBeVisible()
     expect(patchCount).toBe(1)
 
+    // 응답이 끝난 시각을 기준점으로 잡아 둔다. 이후 대기는 이 시각으로부터의
+    // 절대 경과 시간으로 계산한다. 그래야 앞 단계의 클릭·어설션에 걸린 시간이
+    // 누적돼 다음 클릭이 3초 경계에 붙어 버리는 일을 피할 수 있다.
+    const throttleStartedAt = Date.now()
+
     // 여기까지는 요청이 진행 중인 동안의 잠금만 검증한다. 실제 가드는 두 겹이라
     // nbreadParticipantCard.tsx의 isThrottling이 응답 완료 후에도 3초 동안 유지된다.
     // 그 창 안에서 다시 누르면 두 번째 PATCH가 !isChecked를 보내 방금 완료로 바꾼
@@ -276,6 +281,26 @@ test.describe('납부 상태 저장 처리', () => {
     // 달리 여기서는 대상이 상태 전이가 아니라 "요청 미발생"이라 고정 대기가 맞는
     // 도구다. 지우지 말 것 — llm-wiki/log.md 2026-09-01 항목 참고).
     await page.waitForTimeout(1000)
+
+    expect(patchCount).toBe(1)
+    await expect(participantCheckbox(page, member.name)).toBeChecked()
+
+    // 위 클릭+대기는 t≈0(응답 직후)에서 가드가 걸려 있는지만 본다. 스로틀이
+    // 3초보다 훨씬 짧게(예: 300ms) 줄어드는 회귀는 t≈0 클릭만으로는 잡히지
+    // 않으므로 창 안쪽 지점(throttleStartedAt로부터 2000ms 지점)도 함께 확인한다.
+    // 2000은 컴포넌트의 3000ms에서 나온 값이라 스로틀 값을 바꾸면 이 값도 함께
+    // 봐야 한다. 남은 시간만큼만 기다리는 이유: 위 블록(클릭 1회 + 1000ms 대기 +
+    // 어설션 2건)이 이미 시간을 썼는데 여기서 또 2000ms를 그대로 더하면 클릭
+    // 시점이 절대 경과 3000ms 부근(창 경계)까지 밀려 창 안쪽 검증이 아니라
+    // 경계에서 흔들리는 검증이 돼 버린다.
+    const elapsedSinceThrottleStart = Date.now() - throttleStartedAt
+    await page.waitForTimeout(Math.max(0, 2000 - elapsedSinceThrottleStart))
+    await label.click()
+
+    // 두 번째 PATCH가 나갔다면 이 대기 안에 route 핸들러까지 도달한다.
+    // 클릭 시점이 throttleStartedAt로부터 2000ms 부근이므로 500ms를 더해도
+    // 여전히 3000ms 창 안이다.
+    await page.waitForTimeout(500)
 
     expect(patchCount).toBe(1)
     await expect(participantCheckbox(page, member.name)).toBeChecked()
