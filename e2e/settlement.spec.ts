@@ -266,6 +266,17 @@ test.describe('납부 상태 저장 처리', () => {
     // 넣지 않는다. waitForTimeout으로 3초를 흘려보내면 검증 방향이 반대가 된다.
     await label.click()
 
+    // 지금 검증하려는 건 "두 번째 요청이 오지 않았다"는 부재이고, 폴링 어설션은
+    // 참이 되기를 기다릴 뿐 이미 참(체크 유지)이면 그대로 통과해 버려 정착점이
+    // 못 된다. click()도 change 이벤트를 보낸 뒤 곧장 반환하므로 아래 두 어설션이
+    // 두 번째 PATCH가 route 핸들러에 닿기 전에 평가될 수 있다.
+    // 부재는 폴링으로 확인할 수 없어 시간을 한정해 기다리는 수밖에 없다. 1초는
+    // 3초 창의 1/3이라 창을 넘겨 스로틀이 풀리는 일 없이, 브라우저가 요청을 만들어
+    // route 핸들러까지 보내기에는 충분하다(2026-09-01 정리 대상이던 고정 대기와
+    // 달리 여기서는 대상이 상태 전이가 아니라 "요청 미발생"이라 고정 대기가 맞는
+    // 도구다. 지우지 말 것 — llm-wiki/log.md 2026-09-01 항목 참고).
+    await page.waitForTimeout(1000)
+
     expect(patchCount).toBe(1)
     await expect(participantCheckbox(page, member.name)).toBeChecked()
 
