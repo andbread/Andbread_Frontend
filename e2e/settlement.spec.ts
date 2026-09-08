@@ -1,5 +1,3 @@
-import { randomUUID } from 'node:crypto'
-import type { Page } from '@playwright/test'
 import { expect, test } from './fixtures/test'
 import { hasTestDatabase, testDatabaseSkipReason } from './fixtures/env'
 import { applySession, createSession } from './fixtures/session'
@@ -48,140 +46,6 @@ const seedSettlementGroup = async (
   }
 
   return { leader, members, nbread, startDate: nbread.start_date! }
-}
-
-/**
- * 개발 DB나 로그인 없이 참여자 상세 화면 하나를 그린다.
- * SETTLE-UPDATE-002가 갱신 요청을 가로채는 방식(`page.route`로 경로를 매칭하고
- * 메서드로 나눠 처리)을 그대로 써서, 화면이 쓰는 REST 요청을 전부 고정된 값으로 대신한다.
- */
-const mockSettlementDetailPage = async (page: Page) => {
-  const nbreadId = `e2e-mock-nbread-${randomUUID()}`
-  const userId = `e2e-mock-user-${randomUUID()}`
-  const memberName = 'E2E Mock 참여자'
-  const startDate = '2026-01-08'
-  const mockEmail = 'e2e-mock@nbread-e2e.test'
-
-  let patchCount = 0
-  let releasePatch = () => {}
-  const heldPatch = new Promise<void>((resolve) => {
-    releasePatch = resolve
-  })
-
-  // 실제 로그인 없이 ProtectRoute만 통과시키려고 user-store만 직접 채운다.
-  // supabase 세션 항목은 비워 두어 실제 인증 절차를 거치지 않는다.
-  await applySession(page, {
-    storage: {},
-    user: {
-      id: userId,
-      name: memberName,
-      socialType: 'kakao',
-      profileImage: null,
-      email: mockEmail,
-      tag: 1234,
-    },
-  })
-
-  await page.route(
-    (url) => url.pathname.endsWith('/rest/v1/user'),
-    (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: userId,
-          email: mockEmail,
-          name: memberName,
-          social_type: 'kakao',
-          tag: '1234',
-          profile_image: null,
-          terms_agreed: true,
-          terms_agreed_at: new Date().toISOString(),
-          terms_version: null,
-          privacy_agreed: true,
-          privacy_agreed_at: new Date().toISOString(),
-          privacy_version: null,
-        }),
-      }),
-  )
-
-  await page.route(
-    (url) => url.pathname.endsWith('/rest/v1/nbread'),
-    (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: nbreadId,
-          title: 'E2E Mock 정산 그룹',
-          amount: 30000,
-          participant_count: 1,
-          payment_date: 8,
-          payment_month: null,
-          payment_period: 'month',
-          leader_id: userId,
-          start_date: startDate,
-          end_date: null,
-        }),
-      }),
-  )
-
-  await page.route(
-    (url) => url.pathname.endsWith('/rest/v1/participant'),
-    (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          {
-            is_leader: true,
-            user: {
-              id: userId,
-              name: memberName,
-              profile_image: null,
-              email: mockEmail,
-              social_type: 'kakao',
-              tag: '1234',
-            },
-          },
-        ]),
-      }),
-  )
-
-  await page.route(
-    (url) => url.pathname.endsWith('/rest/v1/nbread_records'),
-    async (route) => {
-      if (route.request().method() !== 'PATCH') {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify([
-            {
-              id: 1,
-              created_at: null,
-              is_paid: false,
-              nbread_id: nbreadId,
-              payment_date: startDate,
-              user_id: userId,
-            },
-          ]),
-        })
-        return
-      }
-
-      // 연속 클릭이 갱신 요청을 두 번 이상 보내는지 보려고 응답을 붙잡아 둔다.
-      patchCount += 1
-      await heldPatch
-      await route.fulfill({ status: 204, body: '' })
-    },
-  )
-
-  return {
-    nbreadId,
-    memberName,
-    getPatchCount: () => patchCount,
-    releasePatch: () => releasePatch(),
-  }
 }
 
 test.describe('납부 상태 변경', () => {
@@ -350,13 +214,39 @@ test.describe('납부 상태 저장 처리', () => {
   // SETTLE-UPDATE-001
   test('납부 체크박스를 연속으로 선택해도 갱신 요청은 한 번만 전송된다', async ({
     page,
+    seed,
   }) => {
-    const { nbreadId, memberName, getPatchCount, releasePatch } =
-      await mockSettlementDetailPage(page)
+    const { leader, members, nbread } = await seedSettlementGroup(seed, [
+      'E2E 참여자',
+    ])
+    const member = members[0]
+    await applySession(page, await createSession(leader))
 
-    await page.goto(`/nbread/${nbreadId}`)
-    const label = participantCheckboxLabel(page, memberName)
-    await expect(participantCheckbox(page, memberName)).not.toBeChecked()
+    let patchCount = 0
+    let releasePatch = () => {}
+    const heldPatch = new Promise<void>((resolve) => {
+      releasePatch = resolve
+    })
+
+    // 첫 갱신 요청 응답을 붙잡아 두고, 그 사이 연속 클릭이 요청을 더 보내는지 센다.
+    // 조회는 그대로 두고 갱신 요청만 가로채므로 seed 데이터와 실제 로그인을 그대로 쓴다.
+    await page.route(
+      (url) => url.pathname.endsWith('/rest/v1/nbread_records'),
+      async (route) => {
+        if (route.request().method() !== 'PATCH') {
+          await route.continue()
+          return
+        }
+
+        patchCount += 1
+        await heldPatch
+        await route.continue()
+      },
+    )
+
+    await page.goto(`/nbread/${nbread.id}`)
+    const label = participantCheckboxLabel(page, member.name)
+    await expect(participantCheckbox(page, member.name)).not.toBeChecked()
 
     // 첫 클릭이 갱신 요청을 붙잡고 있는 동안 연달아 눌러도 요청이 더 나가지 않아야 한다.
     await label.click()
@@ -366,7 +256,11 @@ test.describe('납부 상태 저장 처리', () => {
     releasePatch()
 
     await expect(toastMessage(page, UPDATE_SUCCESS_MESSAGE)).toBeVisible()
-    expect(getPatchCount()).toBe(1)
+    expect(patchCount).toBe(1)
+
+    // route.continue()로 실제 DB에 요청이 닿으므로, 쓰기가 정말 한 번만 반영됐는지 DB로도 확인한다.
+    const records = await seed.getRecords(nbread.id, member.id)
+    expect(records.filter((record) => record.is_paid)).toHaveLength(1)
   })
 
   // SETTLE-UPDATE-002
