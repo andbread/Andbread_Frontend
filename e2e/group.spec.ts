@@ -147,10 +147,19 @@ test.describe('그룹 생성', () => {
   // GROUP-CREATE-005
   test('그룹 저장 요청이 실패하면 생성 화면으로 돌아간다', async ({
     page,
+    seed,
   }) => {
-    // 미리보기는 화면 조작으로 만든 클라이언트 상태만 읽고, 실패시키려는 요청도
-    // 네트워크 계층에서 대체하므로 실제 Supabase 로그인 없이 가짜 세션으로 충분하다.
-    await applySession(page, createFakeSession())
+    const user = await seed.createUser()
+    const title = seed.unique('E2E 저장 실패 구독')
+
+    // nbread INSERT 정책은 authenticated이면서 leader_id = auth.uid()인 요청만
+    // 허용한다. 가짜 세션(storage: {})은 요청을 anon으로 보내 mock이 걸리지
+    // 않아도 RLS가 거절해 같은 토스트가 뜨므로, mock이 실제로 실행됐는지
+    // 구분하지 못한다. 실제 로그인을 써야 mock이 깨졌을 때 INSERT가 성공해
+    // 테스트가 실패한다. mock이 깨지면 그룹이 실제로 생성될 수 있으므로
+    // 제목을 미리 예약해 cleanup이 찾아 지우게 한다.
+    seed.trackNbreadTitle(title)
+    await applySession(page, await createSession(user))
 
     await page.route(
       (url) => url.pathname.endsWith('/rest/v1/nbread'),
@@ -173,7 +182,7 @@ test.describe('그룹 생성', () => {
     await page.goto('/nbread/create')
     await fillCreateForm(page, {
       amount: 18000,
-      title: '테스트 저장 실패 구독',
+      title,
       participantCount: 2,
       paymentDate: 9,
     })
