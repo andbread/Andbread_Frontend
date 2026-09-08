@@ -230,8 +230,7 @@ test.describe('약관 동의', () => {
       `/terms-agreement?next=${encodeURIComponent(ALLOWED_NEXT_PATH)}`,
     )
     // 체크박스 input은 CSS로 숨겨져 있어 클릭은 감싸는 label에 해야 한다.
-    // 전체 동의 체크박스는 목록의 첫 label이다.
-    await page.locator('label.checkbox_label').nth(0).click()
+    await page.getByTestId('terms-agree-all').click()
     await page.getByRole('button', { name: '확인' }).click()
 
     await expect(toastMessage(page, '약관 동의가 완료됐어요.')).toBeVisible()
@@ -251,7 +250,7 @@ test.describe('약관 동의', () => {
     )
     // 체크박스 input은 CSS로 숨겨져 있어 클릭은 감싸는 label에 해야 한다.
     // 서비스 이용 약관만 체크하고 개인정보 처리방침은 남겨 둔다.
-    await page.locator('label.checkbox_label').nth(1).click()
+    await page.getByTestId('terms-agree-service').click()
 
     await expect(page.getByRole('button', { name: '확인' })).toBeDisabled()
     await expect(page).toHaveURL(
@@ -290,7 +289,7 @@ test.describe('약관 동의', () => {
       `/terms-agreement?next=${encodeURIComponent(ALLOWED_NEXT_PATH)}`,
     )
     // 체크박스 input은 CSS로 숨겨져 있어 클릭은 감싸는 label에 해야 한다.
-    await page.locator('label.checkbox_label').nth(0).click()
+    await page.getByTestId('terms-agree-all').click()
     await page.getByRole('button', { name: '확인' }).click()
 
     await expect(
