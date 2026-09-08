@@ -9,6 +9,8 @@ import {
 import {
   monthlyNbreadEmptyState,
   monthlyNbreadItem,
+  monthlyNbreadTotalAmount,
+  myNbreadCount,
   myNbreadItem,
   nbreadField,
   participantCard,
@@ -380,13 +382,11 @@ test.describe('홈 그룹 조회와 상세 진입', () => {
     await expect(myNbreadItem(page, monthlyTitle)).toBeVisible()
     await expect(myNbreadItem(page, currentYearTitle)).toBeVisible()
     await expect(myNbreadItem(page, otherYearTitle)).toBeVisible()
-    await expect(page.getByText('3개', { exact: true })).toBeVisible()
+    await expect(myNbreadCount(page, 3)).toBeVisible()
 
     // 이번 달 엔빵 목록(매월 그룹 + 이번 달 매년 그룹)의 1인당 금액 합만 반영한다.
-    const expectedTotal = Math.floor(10000 / 3) + Math.floor(12000 / 2)
-    await expect(
-      page.getByText(`${expectedTotal.toLocaleString()}원`, { exact: true }),
-    ).toBeVisible()
+    // 9,333원 = 매월 그룹(10000원 / 3명 = 3333원) + 이번 달 매년 그룹(12000원 / 2명 = 6000원)
+    await expect(monthlyNbreadTotalAmount(page, 9333)).toBeVisible()
   })
 
   // GROUP-HOME-002
