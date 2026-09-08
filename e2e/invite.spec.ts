@@ -393,7 +393,9 @@ test.describe('초대 응답', () => {
       .filter({ visible: true })
       .click()
 
-    const rejectModal = page.locator('.z-50').filter({ visible: true })
+    const rejectModal = page
+      .getByTestId('invite-response-modal')
+      .filter({ visible: true })
     await rejectModal
       .getByRole('button', { name: '거절하기', exact: true })
       .click()
@@ -429,6 +431,17 @@ test.describe('초대 보내기', () => {
     )
     await applySession(page, await createSession(leader))
 
+    // 클릭이 실제로 초대 생성 요청을 보내는지는 DB 상태만으로 확정할 수 없다.
+    // 조회 시점이 요청보다 앞서면 통과해버리므로 요청 자체를 가로채 센다.
+    let insertCount = 0
+    await page.route(
+      (url) => url.pathname.endsWith('/rest/v1/nbread_invite'),
+      async (route) => {
+        if (route.request().method() === 'POST') insertCount += 1
+        await route.continue()
+      },
+    )
+
     await page.goto(`/nbread/${nbread.id}`)
     await page.getByText('친구 추가하기').first().click()
     await page.getByPlaceholder('태그로 검색하기').fill(target.tag)
@@ -437,6 +450,13 @@ test.describe('초대 보내기', () => {
     await expect(page.getByText('초대 완료', { exact: true })).toBeVisible()
 
     await page.getByText('초대 완료', { exact: true }).click()
+
+    // '초대 완료' 항목은 클릭해도 상태 전이가 없어 UI만으로는 정착점을 못 잡는다.
+    // 요청이 늦게 나가는 경우까지 잡을 수 있도록 네트워크가 잠잠해질 때까지 기다린 뒤 센다.
+    await expect(page.getByText('초대 완료', { exact: true })).toBeVisible()
+    await page.waitForLoadState('networkidle')
+
+    expect(insertCount).toBe(0)
 
     const invites = await seed.getInvitesForTarget(nbread.id, target.id)
     expect(invites).toHaveLength(1)
