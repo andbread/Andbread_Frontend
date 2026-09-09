@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import LoginConfirmModal from '@/components/common/modal/LoginConfirmModal'
 import NbreadsImage from '@/components/common/nbreadImage/NbreadsImage'
 import Spinner from '@/components/common/spinner/Spinner'
 import { useToast } from '@/components/common/toast/Toast'
@@ -16,6 +15,7 @@ import {
 } from '@/lib/invite/getInviteByToken'
 import { InviteResponse, respondToInvite } from '@/lib/invite/respondToInvite'
 import { GA_EVENTS, trackEvent } from '@/lib/analytics/events'
+import useUserStore from '@/stores/useAuthStore'
 
 interface InvitePageClientProps {
   token: string
@@ -81,9 +81,6 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
   const [selectedResponse, setSelectedResponse] =
     useState<InviteResponse | null>(null)
   const [loadFailed, setLoadFailed] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isAuthLoading, setIsAuthLoading] = useState(true)
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [notice, setNotice] = useState<InviteNotice | null>(null)
 
   useEffect(() => {
@@ -91,22 +88,33 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
 
     const initializeInvitePage = async () => {
       try {
-        const [inviteData, hasSession] = await Promise.all([
-          getInviteByToken(token),
-          hasAuthenticatedSession(),
-        ])
+        // 비로그인 사용자에게는 초대 내용을 노출하지 않으므로 조회보다 세션 확인이 먼저다.
+        const hasSession = await hasAuthenticatedSession()
+
+        if (!isMounted) return
+
+        if (!hasSession) {
+          // 세션은 없는데 localStorage의 user-store만 남아 있으면
+          // LoginRedirectGuard가 로그인 화면에서 /home으로 되돌려 초대 복귀가 끊긴다.
+          useUserStore.getState().clearUser()
+          // 로그인 후 초대 화면으로 돌아오게 한다. push를 쓰면 뒤로 가기가
+          // 초대 화면으로 돌아와 같은 판정을 반복하므로 replace를 쓴다.
+          const redirectPath = `/invite/${token}`
+          router.replace(`/login?redirect=${encodeURIComponent(redirectPath)}`)
+          // 이동하는 동안 초대 화면이 그려지지 않도록 로딩 상태를 유지한다.
+          return
+        }
+
+        const inviteData = await getInviteByToken(token)
 
         if (!isMounted) return
 
         setInvite(inviteData)
-        setIsAuthenticated(hasSession)
-        setIsLoginModalOpen(!hasSession)
+        setIsLoading(false)
       } catch {
-        if (isMounted) setLoadFailed(true)
-      } finally {
         if (isMounted) {
+          setLoadFailed(true)
           setIsLoading(false)
-          setIsAuthLoading(false)
         }
       }
     }
@@ -116,20 +124,10 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
     return () => {
       isMounted = false
     }
-  }, [token])
-
-  const selectResponse = (response: InviteResponse) => {
-    // 비로그인 사용자는 초대 응답 대신 로그인 안내 모달로 유도한다.
-    if (!isAuthenticated) {
-      setIsLoginModalOpen(true)
-      return
-    }
-
-    setSelectedResponse(response)
-  }
+  }, [token, router])
 
   const handleResponse = async () => {
-    if (!selectedResponse || !invite || !isAuthenticated) return
+    if (!selectedResponse || !invite) return
 
     setIsSubmitting(true)
 
@@ -186,7 +184,7 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
     }
   }
 
-  if (isLoading || isAuthLoading) {
+  if (isLoading) {
     return <Spinner isLoading />
   }
 
@@ -237,13 +235,13 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
       <div className="flex flex-col gap-12">
         <button
           className="btn btn-large btn-primary"
-          onClick={() => selectResponse('accepted')}
+          onClick={() => setSelectedResponse('accepted')}
         >
           초대 수락하기
         </button>
         <button
           className="btn btn-large btn-secondary"
-          onClick={() => selectResponse('rejected')}
+          onClick={() => setSelectedResponse('rejected')}
         >
           거절하기
         </button>
@@ -256,14 +254,6 @@ const InvitePageClient = ({ token }: InvitePageClientProps) => {
           if (!isSubmitting) setSelectedResponse(null)
         }}
         onSubmit={handleResponse}
-      />
-      <LoginConfirmModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onSubmit={() => {
-          const redirectPath = `/invite/${token}`
-          router.push(`/login?redirect=${encodeURIComponent(redirectPath)}`)
-        }}
       />
       <InviteNoticeModal
         isOpen={notice !== null}
