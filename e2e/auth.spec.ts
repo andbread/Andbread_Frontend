@@ -2,6 +2,7 @@ import { expect, test } from './fixtures/test'
 import { hasTestDatabase, testDatabaseSkipReason } from './fixtures/env'
 import { applySession, createSession, readUserStore } from './fixtures/session'
 import { toastMessage } from './fixtures/ui'
+import { failRequest } from './fixtures/net'
 
 /** 콜백/약관 동의 흐름의 복귀 경로 검증에 공통으로 쓰는 허용된 경로. */
 const ALLOWED_NEXT_PATH = '/invite/sample-code'
@@ -267,23 +268,7 @@ test.describe('약관 동의', () => {
     await applySession(page, await createSession(user))
 
     // 조회는 그대로 두고 약관 동의 저장 요청만 실패로 만든다.
-    await page.route(
-      (url) => url.pathname.endsWith('/rest/v1/user'),
-      async (route) => {
-        if (route.request().method() !== 'PATCH') {
-          await route.continue()
-          return
-        }
-
-        await route.fulfill({
-          status: 500,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            message: 'E2E forced user update failure',
-          }),
-        })
-      },
-    )
+    await failRequest(page, '/rest/v1/user', 'PATCH')
 
     await page.goto(
       `/terms-agreement?next=${encodeURIComponent(ALLOWED_NEXT_PATH)}`,

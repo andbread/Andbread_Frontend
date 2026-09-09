@@ -16,6 +16,7 @@ import {
   participantCard,
   toastMessage,
 } from './fixtures/ui'
+import { failRequest } from './fixtures/net'
 
 test.skip(!hasTestDatabase, testDatabaseSkipReason)
 
@@ -161,23 +162,7 @@ test.describe('그룹 생성', () => {
     seed.trackNbreadTitle(title)
     await applySession(page, await createSession(user))
 
-    await page.route(
-      (url) => url.pathname.endsWith('/rest/v1/nbread'),
-      async (route) => {
-        if (route.request().method() !== 'POST') {
-          await route.continue()
-          return
-        }
-
-        await route.fulfill({
-          status: 500,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            message: 'E2E forced nbread insert failure',
-          }),
-        })
-      },
-    )
+    await failRequest(page, '/rest/v1/nbread', 'POST')
 
     await page.goto('/nbread/create')
     await fillCreateForm(page, {
@@ -265,23 +250,7 @@ test.describe('그룹 삭제', () => {
     await applySession(page, await createSession(leader))
 
     // 조회는 그대로 두고 그룹 삭제 요청만 실패로 만든다.
-    await page.route(
-      (url) => url.pathname.endsWith('/rest/v1/nbread'),
-      async (route) => {
-        if (route.request().method() !== 'DELETE') {
-          await route.continue()
-          return
-        }
-
-        await route.fulfill({
-          status: 500,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            message: 'E2E forced nbread delete failure',
-          }),
-        })
-      },
-    )
+    await failRequest(page, '/rest/v1/nbread', 'DELETE')
 
     await page.goto(`/nbread/${nbread.id}`)
     await page.getByText('수정하기', { exact: true }).click()
