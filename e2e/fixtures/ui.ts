@@ -44,3 +44,28 @@ const myNbreadSection = (page: Page): Locator =>
  */
 export const myNbreadItem = (page: Page, title: string): Locator =>
   myNbreadSection(page).getByText(title, { exact: true })
+
+/** `나의 엔빵` 제목 옆에 표시되는 참여 그룹 개수(`N개`). */
+export const myNbreadCount = (page: Page, count: number): Locator =>
+  myNbreadSection(page).getByText(`${count}개`, { exact: true })
+
+/** 매월 그룹과 이번 달에 결제되는 매년 그룹만 포함하는 `이번 달 엔빵` 목록. */
+const monthlyNbreadSection = (page: Page): Locator =>
+  page
+    .locator('section')
+    .filter({ has: page.getByRole('heading', { name: '이번 달 엔빵' }) })
+
+export const monthlyNbreadItem = (page: Page, title: string): Locator =>
+  monthlyNbreadSection(page).getByText(title, { exact: true })
+
+/** `이번 달 엔빵` 목록 상단에 표시되는 이번 달 1인당 합계 금액(`N원`). */
+export const monthlyNbreadTotalAmount = (page: Page, amount: number): Locator =>
+  monthlyNbreadSection(page).getByText(`${amount.toLocaleString()}원`, {
+    exact: true,
+  })
+
+/** 이번 달 엔빵 목록이 비었을 때 표시되는 빈 상태 안내. */
+export const monthlyNbreadEmptyState = (page: Page): Locator =>
+  monthlyNbreadSection(page).getByText('등록된 엔빵이 없어요', {
+    exact: false,
+  })

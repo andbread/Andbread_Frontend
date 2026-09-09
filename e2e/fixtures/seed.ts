@@ -279,6 +279,19 @@ export class Seeder {
     return data
   }
 
+  /** 대상 사용자에게 보낸 초대를 모두 반환한다. 중복 생성 여부와 기존 기록 보존을 함께 확인할 때 쓴다. */
+  async getInvitesForTarget(nbreadId: string, targetUserId: string) {
+    const { data, error } = await this.admin
+      .from('nbread_invite')
+      .select('*')
+      .eq('nbread_id', nbreadId)
+      .eq('target_user_id', targetUserId)
+
+    if (error) throw error
+
+    return data ?? []
+  }
+
   async getParticipants(nbreadId: string, userId?: string) {
     const query = this.admin
       .from('participant')
