@@ -7,6 +7,7 @@ import {
   toastMessage,
 } from './fixtures/ui'
 import { shiftMonths, type Seeder, type TestUser } from './fixtures/seed'
+import { failRequest } from './fixtures/net'
 
 test.skip(!hasTestDatabase, testDatabaseSkipReason)
 
@@ -322,23 +323,7 @@ test.describe('납부 상태 저장 처리', () => {
     await applySession(page, await createSession(leader))
 
     // 조회는 그대로 두고 정산 기록 갱신 요청만 실패로 만든다.
-    await page.route(
-      (url) => url.pathname.endsWith('/rest/v1/nbread_records'),
-      async (route) => {
-        if (route.request().method() !== 'PATCH') {
-          await route.continue()
-          return
-        }
-
-        await route.fulfill({
-          status: 500,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            message: 'E2E forced nbread_records update failure',
-          }),
-        })
-      },
-    )
+    await failRequest(page, '/rest/v1/nbread_records', 'PATCH')
 
     // 카드가 갱신 실패를 다시 던져 브라우저에 처리되지 않은 거부가 남는다.
     // 던지는 값이 Error가 아니라 PostgrestError 객체라 pageerror에 메시지가 실리지 않으므로
