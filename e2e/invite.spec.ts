@@ -1,6 +1,10 @@
 import { expect, test } from './fixtures/test'
 import { hasTestDatabase, testDatabaseSkipReason } from './fixtures/env'
-import { applySession, createSession } from './fixtures/session'
+import {
+  applySession,
+  createFakeSession,
+  createSession,
+} from './fixtures/session'
 import { toastMessage } from './fixtures/ui'
 import type { Seeder } from './fixtures/seed'
 
@@ -77,30 +81,46 @@ const seedInviteSendTarget = async (
 
 test.describe('초대 응답 자격 검증', () => {
   // INVITE-ACCESS-001
-  // `nbread_invite`의 SELECT RLS 정책이 `authenticated` 역할에만 열려 있어
-  // (supabase/migrations/20260814100000_baseline_schema.sql:1339 "Authenticated users can select"),
-  // 세션이 없는 브라우저는 초대가 실제로 있어도 조회 결과가 항상 비어 로그인 안내 대신
-  // "초대 정보를 찾을 수 없어요." 화면으로 빠진다. 실제 동작으로 재현할 수 없어 자동화를 보류한다.
-  // RLS 정책 변경은 이 PR의 범위 밖이라 별도 확인이 필요하다.
-  test.fixme(
-    '비로그인 사용자는 초대에 응답하기 전에 로그인 안내를 받는다',
-    async ({ page, seed }) => {
-      const { inviteToken } = await seedPendingInvite(seed)
+  test('비로그인 사용자는 초대 내용 노출 없이 로그인 화면으로 이동한다', async ({
+    page,
+    seed,
+  }) => {
+    const { leader, title, inviteToken } = await seedPendingInvite(seed)
 
-      // 세션을 주입하지 않고 접속해 비로그인 상태를 유지한다.
-      await page.goto(`/invite/${inviteToken}`)
+    // 세션을 주입하지 않고 접속해 비로그인 상태를 유지한다.
+    await page.goto(`/invite/${inviteToken}`)
 
-      await expect(page.getByText('로그인이 필요해요.')).toBeVisible()
-      await page.getByRole('button', { name: '로그인하러 가기' }).click()
+    await expect(page).toHaveURL(`/login?redirect=%2Finvite%2F${inviteToken}`)
 
-      await expect(page).toHaveURL(
-        `/login?redirect=%2Finvite%2F${inviteToken}`,
-      )
+    // 로그인 전에는 엔빵 제목과 방장 이름이 노출되지 않아야 한다.
+    await expect(page.getByText(title)).toHaveCount(0)
+    await expect(page.getByText(leader.name)).toHaveCount(0)
 
-      const invite = await seed.getInvite(inviteToken)
-      expect(invite?.status).toBe('pending')
-    },
-  )
+    const invite = await seed.getInvite(inviteToken)
+    expect(invite?.status).toBe('pending')
+  })
+
+  // INVITE-ACCESS-003
+  test('세션이 끊긴 채 로컬 사용자 정보만 남아도 로그인 화면에 머문다', async ({
+    page,
+    seed,
+  }) => {
+    const { leader, title, inviteToken } = await seedPendingInvite(seed)
+    // Supabase 세션 없이 localStorage의 user-store만 남은 상태를 만든다.
+    await applySession(page, createFakeSession())
+
+    await page.goto(`/invite/${inviteToken}`)
+
+    await expect(page).toHaveURL(`/login?redirect=%2Finvite%2F${inviteToken}`)
+
+    // LoginRedirectGuard가 /home으로 되돌리지 않아야 로그인 버튼이 보인다.
+    await expect(
+      page.getByRole('button', { name: '카카오로 시작하기' }),
+    ).toBeVisible()
+
+    await expect(page.getByText(title)).toHaveCount(0)
+    await expect(page.getByText(leader.name)).toHaveCount(0)
+  })
 
   // INVITE-ACCESS-002
   test('초대받지 않은 계정은 지정 사용자 초대에 응답할 수 없다', async ({
@@ -159,7 +179,12 @@ test.describe('초대 링크 조회', () => {
   // INVITE-DETAIL-002
   test('존재하지 않는 초대 링크에서는 찾을 수 없다는 안내가 보인다', async ({
     page,
+    seed,
   }) => {
+    // 비로그인 상태에서는 조회 전에 로그인으로 보내므로 이 화면은 로그인 사용자만 본다.
+    const user = await seed.createUser('E2E 초대 링크 조회자')
+    await applySession(page, await createSession(user))
+
     await page.goto('/invite/e2e-nonexistent-invite-token')
 
     await expect(
