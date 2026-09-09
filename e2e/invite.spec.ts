@@ -452,9 +452,10 @@ test.describe('초대 보내기', () => {
     await page.getByText('초대 완료', { exact: true }).click()
 
     // '초대 완료' 항목은 클릭해도 상태 전이가 없어 UI만으로는 정착점을 못 잡는다.
-    // 요청이 늦게 나가는 경우까지 잡을 수 있도록 네트워크가 잠잠해질 때까지 기다린 뒤 센다.
-    await expect(page.getByText('초대 완료', { exact: true })).toBeVisible()
-    await page.waitForLoadState('networkidle')
+    // 부재(요청이 없었다는 것)는 폴링 어설션으로 확정할 수 없으므로 시간을 한정해
+    // 기다린다. networkidle은 이 화면의 select→insert처럼 순차 요청 사이 공백에서도
+    // 유휴로 판단해 뒤이은 요청을 놓칠 수 있어(직접 재현 확인) 쓰지 않는다.
+    await page.waitForTimeout(2000)
 
     expect(insertCount).toBe(0)
 
