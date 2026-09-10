@@ -71,6 +71,7 @@ trace는 내려받아 `npx playwright show-trace trace.zip`으로 확인한다.
 | `fixtures/seed.ts`    | 사용자·그룹·참여자·초대·정산 기록 생성과 cleanup  |
 | `fixtures/session.ts` | Supabase 세션 생성과 브라우저 주입                |
 | `fixtures/ui.ts`      | 라벨·참여자 카드·토스트 등 공용 선택자            |
+| `fixtures/net.ts`     | 특정 경로·메서드 요청만 실패로 대체하는 mock      |
 | `fixtures/test.ts`    | `seed` fixture를 붙인 `test`                      |
 
 ## 인증 방식

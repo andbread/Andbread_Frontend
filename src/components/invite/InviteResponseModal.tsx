@@ -20,7 +20,10 @@ const InviteResponseModal = ({
 
   return (
     <Modal isOpen={response !== null} onClose={onClose}>
-      <div className="flex flex-col gap-32 px-12 pb-8">
+      <div
+        className="flex flex-col gap-32 px-12 pb-8"
+        data-testid="invite-response-modal"
+      >
         <div className="flex flex-col gap-8">
           <h5>초대를 {isAccept ? '수락' : '거절'}하시겠어요?</h5>
           <p className="text-body02 text-gray-600">

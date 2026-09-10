@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { useToast } from '@/components/common/toast/Toast'
@@ -25,10 +25,16 @@ export const useTermsAgreementPage = (next: string | null) => {
   const [termsChecked, setTermsChecked] = useState(false)
   const [privacyChecked, setPrivacyChecked] = useState(false)
   const [isExitModalOpen, setIsExitModalOpen] = useState(false)
+  // '나중에 하기'로 로그아웃하는 중에는 clearUser()로 storeUser가 null이 되면서
+  // 아래 effect가 storeUser 변경으로 다시 실행돼 복귀 경로 없는 '/login'으로
+  // 덮어쓸 수 있다. 로그아웃이 시작되면 이 effect를 더 돌리지 않게 막는다.
+  const isLoggingOutRef = useRef(false)
 
   const isAllChecked = termsChecked && privacyChecked
 
   useEffect(() => {
+    if (isLoggingOutRef.current) return
+
     const checkAgreementState = async () => {
       try {
         const { data, error } = await supabase.auth.getUser()
@@ -89,6 +95,7 @@ export const useTermsAgreementPage = (next: string | null) => {
   }, [isAllChecked, isSubmitting, redirectPath, router, storeUser])
 
   const logoutAndGoLogin = useCallback(async () => {
+    isLoggingOutRef.current = true
     await supabase.auth.signOut()
     clearUser()
     clearLegacyAuthStorage()

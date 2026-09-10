@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import type { Page } from '@playwright/test'
 import { createClient } from '@supabase/supabase-js'
 import { USER_STORE_KEY } from '@/lib/authStorage'
@@ -57,6 +58,28 @@ export const createSession = async (
       socialType: user.socialType,
       profileImage: user.profileImage,
       tag: Number(user.tag),
+    },
+  }
+}
+
+/**
+ * ProtectRoute는 localStorage의 `user-store` 존재 여부만으로 보호 경로 접근을 허용한다.
+ * 실제 백엔드 응답이 필요 없는 화면(폼 검증, 네트워크를 대체한 케이스)에서는
+ * 이 값으로 실제 Supabase 로그인(계정 생성, signInWithPassword) 없이 보호 경로에 들어갈 수 있다.
+ * 실제 데이터 읽기/쓰기가 필요한 케이스는 그대로 `createSession`을 쓴다.
+ */
+export const createFakeSession = (name = 'E2E Fake User'): InjectedSession => {
+  const id = randomUUID()
+
+  return {
+    storage: {},
+    user: {
+      id,
+      name,
+      email: `e2e-fake-${id.slice(0, 8)}@nbread-e2e.test`,
+      socialType: 'kakao',
+      profileImage: null,
+      tag: 1234,
     },
   }
 }

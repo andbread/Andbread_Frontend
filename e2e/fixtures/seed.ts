@@ -63,7 +63,16 @@ export class Seeder {
     return `${prefix} ${this.runId}-${this.uniqueCounter}`
   }
 
-  async createUser(name?: string): Promise<TestUser> {
+  /**
+   * `createRow: false`는 인증 사용자는 있지만 대응하는 user 행이 없는 상황을
+   * 재현할 때 쓴다(콜백이 이 경우를 오류로 처리하는지 검증).
+   * `termsAgreed: false`는 약관 동의가 필요한 화면을 검증할 때 쓴다.
+   */
+  async createUser(
+    name?: string,
+    options: { termsAgreed?: boolean; createRow?: boolean } = {},
+  ): Promise<TestUser> {
+    const { termsAgreed = true, createRow = true } = options
     const id = randomUUID()
     const email = `e2e-${this.runId}-${id.slice(0, 8)}@nbread-e2e.test`
     const userName = name ?? `E2E ${id.slice(0, 4)}`
@@ -81,7 +90,9 @@ export class Seeder {
 
     this.authUserIds.push(data.user.id)
 
-    const tag = await this.insertUserRow(data.user.id, email, userName)
+    const tag = createRow
+      ? await this.insertUserRow(data.user.id, email, userName, termsAgreed)
+      : '0000'
 
     return {
       id: data.user.id,
@@ -99,8 +110,13 @@ export class Seeder {
    * tag에는 user_tag_key 유니크 제약이 있고 값이 네 자리뿐이라
    * 한 실행에서 여러 계정을 만들면 겹칠 수 있다. 겹치면 다른 값으로 다시 시도한다.
    */
-  private async insertUserRow(id: string, email: string, name: string) {
-    const now = new Date().toISOString()
+  private async insertUserRow(
+    id: string,
+    email: string,
+    name: string,
+    termsAgreed: boolean,
+  ) {
+    const now = termsAgreed ? new Date().toISOString() : null
 
     for (let attempt = 0; attempt < 10; attempt += 1) {
       const tag = String(1000 + Math.floor(Math.random() * 9000))
@@ -112,9 +128,9 @@ export class Seeder {
           name,
           social_type: 'kakao',
           tag,
-          terms_agreed: true,
+          terms_agreed: termsAgreed,
           terms_agreed_at: now,
-          privacy_agreed: true,
+          privacy_agreed: termsAgreed,
           privacy_agreed_at: now,
         },
         { onConflict: 'id' },
@@ -261,6 +277,19 @@ export class Seeder {
     if (error) throw error
 
     return data
+  }
+
+  /** 대상 사용자에게 보낸 초대를 모두 반환한다. 중복 생성 여부와 기존 기록 보존을 함께 확인할 때 쓴다. */
+  async getInvitesForTarget(nbreadId: string, targetUserId: string) {
+    const { data, error } = await this.admin
+      .from('nbread_invite')
+      .select('*')
+      .eq('nbread_id', nbreadId)
+      .eq('target_user_id', targetUserId)
+
+    if (error) throw error
+
+    return data ?? []
   }
 
   async getParticipants(nbreadId: string, userId?: string) {

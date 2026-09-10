@@ -7,6 +7,7 @@ import {
   toastMessage,
 } from './fixtures/ui'
 import { shiftMonths, type Seeder, type TestUser } from './fixtures/seed'
+import { failRequest } from './fixtures/net'
 
 test.skip(!hasTestDatabase, testDatabaseSkipReason)
 
@@ -109,6 +110,31 @@ test.describe('납부 상태 변경', () => {
     ).toBe(false)
   })
 
+  // SETTLE-TOGGLE-003
+  test('완료된 납부 상태를 다시 미납으로 변경한다', async ({ page, seed }) => {
+    const { leader, members, nbread, startDate } = await seedSettlementGroup(
+      seed,
+      ['E2E 참여자'],
+    )
+    const member = members[0]
+    await seed.upsertRecord(nbread.id, member.id, startDate, true)
+    await applySession(page, await createSession(leader))
+
+    await page.goto(`/nbread/${nbread.id}`)
+    await expect(participantCheckbox(page, member.name)).toBeChecked()
+
+    await participantCheckboxLabel(page, member.name).click()
+
+    await expect(toastMessage(page, UPDATE_SUCCESS_MESSAGE)).toBeVisible()
+    await expect(participantCheckbox(page, member.name)).not.toBeChecked()
+
+    const records = await seed.getRecords(nbread.id, member.id)
+    const currentRecord = records.find(
+      (record) => record.payment_date === startDate,
+    )
+    expect(currentRecord?.is_paid).toBe(false)
+  })
+
   // SETTLE-TOGGLE-004
   test('일반 참여자는 다른 참여자의 납부 상태를 변경할 수 없다', async ({
     page,
@@ -186,6 +212,105 @@ test.describe('정산 기간 기록 조회', () => {
 })
 
 test.describe('납부 상태 저장 처리', () => {
+  // SETTLE-UPDATE-001
+  test('납부 체크박스를 연속으로 선택해도 갱신 요청은 한 번만 전송된다', async ({
+    page,
+    seed,
+  }) => {
+    const { leader, members, nbread } = await seedSettlementGroup(seed, [
+      'E2E 참여자',
+    ])
+    const member = members[0]
+    await applySession(page, await createSession(leader))
+
+    let patchCount = 0
+    let releasePatch = () => {}
+    const heldPatch = new Promise<void>((resolve) => {
+      releasePatch = resolve
+    })
+
+    // 첫 갱신 요청 응답을 붙잡아 두고, 그 사이 연속 클릭이 요청을 더 보내는지 센다.
+    // 조회는 그대로 두고 갱신 요청만 가로채므로 seed 데이터와 실제 로그인을 그대로 쓴다.
+    await page.route(
+      (url) => url.pathname.endsWith('/rest/v1/nbread_records'),
+      async (route) => {
+        if (route.request().method() !== 'PATCH') {
+          await route.continue()
+          return
+        }
+
+        patchCount += 1
+        await heldPatch
+        await route.continue()
+      },
+    )
+
+    await page.goto(`/nbread/${nbread.id}`)
+    const label = participantCheckboxLabel(page, member.name)
+    await expect(participantCheckbox(page, member.name)).not.toBeChecked()
+
+    // 첫 클릭이 갱신 요청을 붙잡고 있는 동안 연달아 눌러도 요청이 더 나가지 않아야 한다.
+    await label.click()
+    await label.click()
+    await label.click()
+
+    releasePatch()
+
+    await expect(toastMessage(page, UPDATE_SUCCESS_MESSAGE)).toBeVisible()
+    expect(patchCount).toBe(1)
+
+    // 응답이 끝난 시각을 기준점으로 잡아 둔다. 이후 대기는 이 시각으로부터의
+    // 절대 경과 시간으로 계산한다. 그래야 앞 단계의 클릭·어설션에 걸린 시간이
+    // 누적돼 다음 클릭이 3초 경계에 붙어 버리는 일을 피할 수 있다.
+    const throttleStartedAt = Date.now()
+
+    // 여기까지는 요청이 진행 중인 동안의 잠금만 검증한다. 실제 가드는 두 겹이라
+    // nbreadParticipantCard.tsx의 isThrottling이 응답 완료 후에도 3초 동안 유지된다.
+    // 그 창 안에서 다시 누르면 두 번째 PATCH가 !isChecked를 보내 방금 완료로 바꾼
+    // 상태가 미납으로 되돌아갈 수 있으므로 여기서 이어서 검증한다.
+    // 3초 창에 기대는 구간이라 바로 위 토스트 확인 직후 곧바로 다시 클릭해 대기를
+    // 넣지 않는다. waitForTimeout으로 3초를 흘려보내면 검증 방향이 반대가 된다.
+    await label.click()
+
+    // 지금 검증하려는 건 "두 번째 요청이 오지 않았다"는 부재이고, 폴링 어설션은
+    // 참이 되기를 기다릴 뿐 이미 참(체크 유지)이면 그대로 통과해 버려 정착점이
+    // 못 된다. click()도 change 이벤트를 보낸 뒤 곧장 반환하므로 아래 두 어설션이
+    // 두 번째 PATCH가 route 핸들러에 닿기 전에 평가될 수 있다.
+    // 부재는 폴링으로 확인할 수 없어 시간을 한정해 기다리는 수밖에 없다. 1초는
+    // 3초 창의 1/3이라 창을 넘겨 스로틀이 풀리는 일 없이, 브라우저가 요청을 만들어
+    // route 핸들러까지 보내기에는 충분하다(2026-09-01 정리 대상이던 고정 대기와
+    // 달리 여기서는 대상이 상태 전이가 아니라 "요청 미발생"이라 고정 대기가 맞는
+    // 도구다. 지우지 말 것 — llm-wiki/log.md 2026-09-01 항목 참고).
+    await page.waitForTimeout(1000)
+
+    expect(patchCount).toBe(1)
+    await expect(participantCheckbox(page, member.name)).toBeChecked()
+
+    // 위 클릭+대기는 t≈0(응답 직후)에서 가드가 걸려 있는지만 본다. 스로틀이
+    // 3초보다 훨씬 짧게(예: 300ms) 줄어드는 회귀는 t≈0 클릭만으로는 잡히지
+    // 않으므로 창 안쪽 지점(throttleStartedAt로부터 2000ms 지점)도 함께 확인한다.
+    // 2000은 컴포넌트의 3000ms에서 나온 값이라 스로틀 값을 바꾸면 이 값도 함께
+    // 봐야 한다. 남은 시간만큼만 기다리는 이유: 위 블록(클릭 1회 + 1000ms 대기 +
+    // 어설션 2건)이 이미 시간을 썼는데 여기서 또 2000ms를 그대로 더하면 클릭
+    // 시점이 절대 경과 3000ms 부근(창 경계)까지 밀려 창 안쪽 검증이 아니라
+    // 경계에서 흔들리는 검증이 돼 버린다.
+    const elapsedSinceThrottleStart = Date.now() - throttleStartedAt
+    await page.waitForTimeout(Math.max(0, 2000 - elapsedSinceThrottleStart))
+    await label.click()
+
+    // 두 번째 PATCH가 나갔다면 이 대기 안에 route 핸들러까지 도달한다.
+    // 클릭 시점이 throttleStartedAt로부터 2000ms 부근이므로 500ms를 더해도
+    // 여전히 3000ms 창 안이다.
+    await page.waitForTimeout(500)
+
+    expect(patchCount).toBe(1)
+    await expect(participantCheckbox(page, member.name)).toBeChecked()
+
+    // route.continue()로 실제 DB에 요청이 닿으므로, 쓰기가 정말 한 번만 반영됐는지 DB로도 확인한다.
+    const records = await seed.getRecords(nbread.id, member.id)
+    expect(records.filter((record) => record.is_paid)).toHaveLength(1)
+  })
+
   // SETTLE-UPDATE-002
   test('납부 상태 저장에 실패하면 화면 상태를 유지하고 오류를 알린다', async ({
     page,
@@ -198,23 +323,7 @@ test.describe('납부 상태 저장 처리', () => {
     await applySession(page, await createSession(leader))
 
     // 조회는 그대로 두고 정산 기록 갱신 요청만 실패로 만든다.
-    await page.route(
-      (url) => url.pathname.endsWith('/rest/v1/nbread_records'),
-      async (route) => {
-        if (route.request().method() !== 'PATCH') {
-          await route.continue()
-          return
-        }
-
-        await route.fulfill({
-          status: 500,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            message: 'E2E forced nbread_records update failure',
-          }),
-        })
-      },
-    )
+    await failRequest(page, '/rest/v1/nbread_records', 'PATCH')
 
     // 카드가 갱신 실패를 다시 던져 브라우저에 처리되지 않은 거부가 남는다.
     // 던지는 값이 Error가 아니라 PostgrestError 객체라 pageerror에 메시지가 실리지 않으므로
