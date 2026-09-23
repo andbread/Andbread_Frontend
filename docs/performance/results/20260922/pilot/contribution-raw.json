@@ -1,0 +1,238 @@
+{
+  "measuredAt": "2026-09-22T06:41:33.401Z",
+  "scenario": "send",
+  "size": 100,
+  "cpuThrottleRate": 4,
+  "settleMs": 5000,
+  "warmupRuns": 1,
+  "measuredRuns": 2,
+  "conditions": [
+    {
+      "key": "P0_before",
+      "port": 3000,
+      "label": "개선 전 원본"
+    },
+    {
+      "key": "P1_C",
+      "port": 3003,
+      "label": "+ 시간 포맷 사전 계산"
+    },
+    {
+      "key": "P2_A",
+      "port": 3004,
+      "label": "+ 분리/memo/key"
+    },
+    {
+      "key": "P3_AC",
+      "port": 3005,
+      "label": "+ 분리/memo/key + 시간 포맷"
+    },
+    {
+      "key": "P4_E",
+      "port": 3002,
+      "label": "+ 구독 가드"
+    },
+    {
+      "key": "P5_B",
+      "port": 3006,
+      "label": "+ 낙관적 업데이트/병합"
+    },
+    {
+      "key": "P6_F",
+      "port": 3007,
+      "label": "+ 스크롤 처리 교체"
+    },
+    {
+      "key": "P7_after",
+      "port": 3001,
+      "label": "개선 후 (전부)"
+    }
+  ],
+  "nbreadId": "50796a10-4514-49b4-b4bf-f5496afaa606",
+  "failures": [
+    {
+      "condition": "P0_before",
+      "run": 0,
+      "attempt": 1,
+      "message": "전송한 메시지가 제한 시간 안에 그려지지 않았습니다"
+    }
+  ],
+  "results": [
+    {
+      "condition": "P1_C",
+      "label": "+ 시간 포맷 사전 계산",
+      "run": 0,
+      "attempts": 1,
+      "keydownToPaint": 3889.800000011921,
+      "longTaskSum": 1798,
+      "commitCount": 5,
+      "actualDurationSum": 56.200000047683716,
+      "actualDurationMax": 22.30000001192093
+    },
+    {
+      "condition": "P2_A",
+      "label": "+ 분리/memo/key",
+      "run": 0,
+      "attempts": 1,
+      "keydownToPaint": 3951.900000035763,
+      "longTaskSum": 1267,
+      "commitCount": 5,
+      "actualDurationSum": 14.199999988079071,
+      "actualDurationMax": 7.200000047683716
+    },
+    {
+      "condition": "P3_AC",
+      "label": "+ 분리/memo/key + 시간 포맷",
+      "run": 0,
+      "attempts": 1,
+      "keydownToPaint": 3919.099999964237,
+      "longTaskSum": 1715,
+      "commitCount": 5,
+      "actualDurationSum": 9.800000071525574,
+      "actualDurationMax": 3.3000000715255737
+    },
+    {
+      "condition": "P4_E",
+      "label": "+ 구독 가드",
+      "run": 0,
+      "attempts": 1,
+      "keydownToPaint": 1403.5999999642372,
+      "longTaskSum": 3804,
+      "commitCount": 5,
+      "actualDurationSum": 1775.0000003576279,
+      "actualDurationMax": 430.0999999642372
+    },
+    {
+      "condition": "P5_B",
+      "label": "+ 낙관적 업데이트/병합",
+      "run": 0,
+      "attempts": 1,
+      "keydownToPaint": 562.6999999880791,
+      "longTaskSum": 3088,
+      "commitCount": 2,
+      "actualDurationSum": 953.0999999642372,
+      "actualDurationMax": 499.9999998807907
+    },
+    {
+      "condition": "P6_F",
+      "label": "+ 스크롤 처리 교체",
+      "run": 0,
+      "attempts": 1,
+      "keydownToPaint": 3707.5,
+      "longTaskSum": 4184,
+      "commitCount": 3,
+      "actualDurationSum": 1515.699999988079,
+      "actualDurationMax": 571.9999997019768
+    },
+    {
+      "condition": "P7_after",
+      "label": "개선 후 (전부)",
+      "run": 0,
+      "attempts": 1,
+      "keydownToPaint": 99.5,
+      "longTaskSum": 1770,
+      "commitCount": 2,
+      "actualDurationSum": 9.599999964237213,
+      "actualDurationMax": 5.5
+    },
+    {
+      "condition": "P0_before",
+      "label": "개선 전 원본",
+      "run": 0,
+      "attempts": 1,
+      "keydownToPaint": 3444.199999988079,
+      "longTaskSum": 5723,
+      "commitCount": 5,
+      "actualDurationSum": 1505.6999999284744,
+      "actualDurationMax": 434.3999999165535
+    },
+    {
+      "condition": "P2_A",
+      "label": "+ 분리/memo/key",
+      "run": 1,
+      "attempts": 1,
+      "keydownToPaint": 3778.300000011921,
+      "longTaskSum": 3833,
+      "commitCount": 5,
+      "actualDurationSum": 15.099999964237213,
+      "actualDurationMax": 6.899999916553497
+    },
+    {
+      "condition": "P3_AC",
+      "label": "+ 분리/memo/key + 시간 포맷",
+      "run": 1,
+      "attempts": 1,
+      "keydownToPaint": 4043.800000011921,
+      "longTaskSum": 1884,
+      "commitCount": 5,
+      "actualDurationSum": 11.400000035762787,
+      "actualDurationMax": 5.799999952316284
+    },
+    {
+      "condition": "P4_E",
+      "label": "+ 구독 가드",
+      "run": 1,
+      "attempts": 1,
+      "keydownToPaint": 1640.2999999523163,
+      "longTaskSum": 4002,
+      "commitCount": 5,
+      "actualDurationSum": 2205.9000002145767,
+      "actualDurationMax": 543.9000000357628
+    },
+    {
+      "condition": "P5_B",
+      "label": "+ 낙관적 업데이트/병합",
+      "run": 1,
+      "attempts": 1,
+      "keydownToPaint": 506.9000000357628,
+      "longTaskSum": 2711,
+      "commitCount": 2,
+      "actualDurationSum": 790.1999995112419,
+      "actualDurationMax": 407.09999972581863
+    },
+    {
+      "condition": "P6_F",
+      "label": "+ 스크롤 처리 교체",
+      "run": 1,
+      "attempts": 1,
+      "keydownToPaint": 3501.699999988079,
+      "longTaskSum": 3092,
+      "commitCount": 3,
+      "actualDurationSum": 1084.4999999403954,
+      "actualDurationMax": 499.4999998807907
+    },
+    {
+      "condition": "P7_after",
+      "label": "개선 후 (전부)",
+      "run": 1,
+      "attempts": 1,
+      "keydownToPaint": 78,
+      "longTaskSum": 2262,
+      "commitCount": 2,
+      "actualDurationSum": 7.399999976158142,
+      "actualDurationMax": 4.399999976158142
+    },
+    {
+      "condition": "P0_before",
+      "label": "개선 전 원본",
+      "run": 1,
+      "attempts": 1,
+      "keydownToPaint": 4409.099999964237,
+      "longTaskSum": 3755,
+      "commitCount": 5,
+      "actualDurationSum": 1989.300000667572,
+      "actualDurationMax": 525.200000166893
+    },
+    {
+      "condition": "P1_C",
+      "label": "+ 시간 포맷 사전 계산",
+      "run": 1,
+      "attempts": 1,
+      "keydownToPaint": 3887.400000035763,
+      "longTaskSum": 2400,
+      "commitCount": 5,
+      "actualDurationSum": 65.6000000834465,
+      "actualDurationMax": 18.899999976158142
+    }
+  ]
+}
