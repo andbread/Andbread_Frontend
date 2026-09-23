@@ -1,0 +1,364 @@
+{
+  "tracedAt": "2026-09-23T07:24:24.232Z",
+  "condition": "P0_before",
+  "cpuThrottleRate": 4,
+  "seedCount": 10,
+  "observeMs": 20000,
+  "traces": [
+    {
+      "runIndex": 0,
+      "insertedAt": 26092,
+      "paintedAt": 28205,
+      "events": [
+        {
+          "at": 5711,
+          "kind": "socket:open",
+          "socket": 1,
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=sb_publishable_SRyky4fVvVXW7ZTcX9ilZQ_3jg0q8Nh&vsn=1.0.0"
+        },
+        {
+          "at": 6067,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 6067,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 6082,
+          "kind": "mark",
+          "detail": "초기 목록 렌더 완료"
+        },
+        {
+          "at": 10151,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=error reason=TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 11748,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "phx_reply",
+          "detail": "status=ok"
+        },
+        {
+          "at": 11750,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 15827,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=error reason=TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 15833,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "system",
+          "detail": "status=ok"
+        },
+        {
+          "at": 23775,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 26092,
+          "kind": "mark",
+          "detail": "관찰 20000ms 경과"
+        },
+        {
+          "at": 26092,
+          "kind": "mark",
+          "detail": "서버에 메시지 INSERT"
+        },
+        {
+          "at": 27905,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=error reason=TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 27908,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "postgres_changes",
+          "detail": "content=trace-0-1790148189313"
+        },
+        {
+          "at": 28205,
+          "kind": "mark",
+          "detail": "메시지가 화면에 보임"
+        }
+      ]
+    },
+    {
+      "runIndex": 1,
+      "insertedAt": 22320,
+      "paintedAt": 22849,
+      "events": [
+        {
+          "at": 1979,
+          "kind": "socket:open",
+          "socket": 1,
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=sb_publishable_SRyky4fVvVXW7ZTcX9ilZQ_3jg0q8Nh&vsn=1.0.0"
+        },
+        {
+          "at": 2218,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 2218,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 2306,
+          "kind": "mark",
+          "detail": "초기 목록 렌더 완료"
+        },
+        {
+          "at": 6297,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=error reason=TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 6301,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "phx_reply",
+          "detail": "status=ok"
+        },
+        {
+          "at": 6527,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "system",
+          "detail": "status=ok"
+        },
+        {
+          "at": 9084,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 13005,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_leave",
+          "detail": ""
+        },
+        {
+          "at": 13005,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 13165,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=error reason=TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 13165,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=ok"
+        },
+        {
+          "at": 17163,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=error reason=TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 22320,
+          "kind": "mark",
+          "detail": "관찰 20000ms 경과"
+        },
+        {
+          "at": 22320,
+          "kind": "mark",
+          "detail": "서버에 메시지 INSERT"
+        },
+        {
+          "at": 22795,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "postgres_changes",
+          "detail": "content=trace-1-1790148217696"
+        },
+        {
+          "at": 22849,
+          "kind": "mark",
+          "detail": "메시지가 화면에 보임"
+        }
+      ]
+    },
+    {
+      "runIndex": 2,
+      "insertedAt": 21768,
+      "paintedAt": 23344,
+      "events": [
+        {
+          "at": 1436,
+          "kind": "socket:open",
+          "socket": 1,
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=sb_publishable_SRyky4fVvVXW7ZTcX9ilZQ_3jg0q8Nh&vsn=1.0.0"
+        },
+        {
+          "at": 1680,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 1680,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 1755,
+          "kind": "mark",
+          "detail": "초기 목록 렌더 완료"
+        },
+        {
+          "at": 5814,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=error reason=TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 5817,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "phx_reply",
+          "detail": "status=ok"
+        },
+        {
+          "at": 6215,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "system",
+          "detail": "status=ok"
+        },
+        {
+          "at": 7566,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 11644,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=error reason=TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 19146,
+          "kind": "send",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_join",
+          "detail": ""
+        },
+        {
+          "at": 21768,
+          "kind": "mark",
+          "detail": "관찰 20000ms 경과"
+        },
+        {
+          "at": 21768,
+          "kind": "mark",
+          "detail": "서버에 메시지 INSERT"
+        },
+        {
+          "at": 23222,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "detail": "status=error reason=TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 23224,
+          "kind": "recv",
+          "socket": 1,
+          "topic": "realtime:fed990a5-a8f2-4c35-a56d-8cbb6eb41a29",
+          "event": "postgres_changes",
+          "detail": "content=trace-2-1790148240730"
+        },
+        {
+          "at": 23344,
+          "kind": "mark",
+          "detail": "메시지가 화면에 보임"
+        }
+      ]
+    }
+  ]
+}
