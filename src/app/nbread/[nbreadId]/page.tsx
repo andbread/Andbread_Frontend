@@ -14,6 +14,7 @@ import Spinner from '@/components/common/spinner/Spinner'
 import Tabbar from '@/components/common/tabbar/tabbar'
 import ChatRoom from '@/components/chat/ChatRoom'
 import Community from '@/components/community/Community'
+import PerfProfiler from '@/components/perf/PerfProfiler'
 
 const Page = () => {
   const [nbread, setNbread] = useState<Nbread | null>(null)
@@ -97,7 +98,11 @@ const Page = () => {
           </div>
         )
       case 2:
-        return <ChatRoom />
+        return (
+          <PerfProfiler id="ChatRoom">
+            <ChatRoom />
+          </PerfProfiler>
+        )
     }
   }
 
