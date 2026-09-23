@@ -1,0 +1,691 @@
+{
+  "measuredAt": "2026-09-02T02:03:19.073Z",
+  "cpuThrottleRate": 4,
+  "settleMs": 5000,
+  "runs": 20,
+  "warmup": 2,
+  "conditions": [
+    {
+      "key": "A_before",
+      "url": "http://127.0.0.1:3000"
+    },
+    {
+      "key": "B_guard",
+      "url": "http://127.0.0.1:3002"
+    },
+    {
+      "key": "C_after",
+      "url": "http://127.0.0.1:3001"
+    }
+  ],
+  "nbreadId": "3de8a705-77e3-4cfe-8134-b835152d709c",
+  "failures": [
+    {
+      "condition": "A_before",
+      "run": 0,
+      "message": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('exp-A_before-0-1788313953966').first() to be visible\u001b[22m\n"
+    }
+  ],
+  "results": [
+    {
+      "condition": "C_after",
+      "run": 0,
+      "insertToPaint": 1005,
+      "insertToFrame": 582,
+      "frameToPaint": 423,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 7.499999761581421
+    },
+    {
+      "condition": "A_before",
+      "run": 0,
+      "insertToPaint": 4455,
+      "insertToFrame": 4177,
+      "frameToPaint": 278,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 199.2000002861023
+    },
+    {
+      "condition": "B_guard",
+      "run": 0,
+      "insertToPaint": 936,
+      "insertToFrame": 517,
+      "frameToPaint": 419,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 355.2999999523163
+    },
+    {
+      "condition": "A_before",
+      "run": 1,
+      "insertToPaint": 623,
+      "insertToFrame": 261,
+      "frameToPaint": 362,
+      "frameSeen": true,
+      "topicNameRequired": 1,
+      "commitCount": 1,
+      "actualDurationSum": 285.80000019073486
+    },
+    {
+      "condition": "B_guard",
+      "run": 1,
+      "insertToPaint": 670,
+      "insertToFrame": 381,
+      "frameToPaint": 289,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 207.7000002861023
+    },
+    {
+      "condition": "C_after",
+      "run": 1,
+      "insertToPaint": 619,
+      "insertToFrame": 547,
+      "frameToPaint": 72,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 7.400000333786011
+    },
+    {
+      "condition": "B_guard",
+      "run": 2,
+      "insertToPaint": 1214,
+      "insertToFrame": 674,
+      "frameToPaint": 540,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 347.40000009536743
+    },
+    {
+      "condition": "C_after",
+      "run": 2,
+      "insertToPaint": 380,
+      "insertToFrame": 274,
+      "frameToPaint": 106,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 10.500000238418579
+    },
+    {
+      "condition": "A_before",
+      "run": 2,
+      "insertToPaint": 4338,
+      "insertToFrame": 4249,
+      "frameToPaint": 89,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 67.59999990463257
+    },
+    {
+      "condition": "C_after",
+      "run": 3,
+      "insertToPaint": 552,
+      "insertToFrame": 441,
+      "frameToPaint": 111,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 6.8999998569488525
+    },
+    {
+      "condition": "A_before",
+      "run": 3,
+      "insertToPaint": 4474,
+      "insertToFrame": 4185,
+      "frameToPaint": 289,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 222.50000047683716
+    },
+    {
+      "condition": "B_guard",
+      "run": 3,
+      "insertToPaint": 389,
+      "insertToFrame": 295,
+      "frameToPaint": 94,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 68.79999995231628
+    },
+    {
+      "condition": "A_before",
+      "run": 4,
+      "insertToPaint": 4330,
+      "insertToFrame": 4226,
+      "frameToPaint": 104,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 76.7999997138977
+    },
+    {
+      "condition": "B_guard",
+      "run": 4,
+      "insertToPaint": 488,
+      "insertToFrame": 383,
+      "frameToPaint": 105,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 80.39999961853027
+    },
+    {
+      "condition": "C_after",
+      "run": 4,
+      "insertToPaint": 1077,
+      "insertToFrame": 681,
+      "frameToPaint": 396,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 2.700000047683716
+    },
+    {
+      "condition": "B_guard",
+      "run": 5,
+      "insertToPaint": 1426,
+      "insertToFrame": 996,
+      "frameToPaint": 430,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 85.90000057220459
+    },
+    {
+      "condition": "C_after",
+      "run": 5,
+      "insertToPaint": 360,
+      "insertToFrame": 251,
+      "frameToPaint": 109,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 13.799999952316284
+    },
+    {
+      "condition": "A_before",
+      "run": 5,
+      "insertToPaint": 4629,
+      "insertToFrame": 4204,
+      "frameToPaint": 425,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 361.89999985694885
+    },
+    {
+      "condition": "C_after",
+      "run": 6,
+      "insertToPaint": 1057,
+      "insertToFrame": 710,
+      "frameToPaint": 347,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 9.09999966621399
+    },
+    {
+      "condition": "A_before",
+      "run": 6,
+      "insertToPaint": 4609,
+      "insertToFrame": 4251,
+      "frameToPaint": 358,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 230.3999993801117
+    },
+    {
+      "condition": "B_guard",
+      "run": 6,
+      "insertToPaint": 611,
+      "insertToFrame": 376,
+      "frameToPaint": 235,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 185.10000014305115
+    },
+    {
+      "condition": "A_before",
+      "run": 7,
+      "insertToPaint": 4628,
+      "insertToFrame": 4212,
+      "frameToPaint": 416,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 310.8999993801117
+    },
+    {
+      "condition": "B_guard",
+      "run": 7,
+      "insertToPaint": 711,
+      "insertToFrame": 350,
+      "frameToPaint": 361,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 293.59999990463257
+    },
+    {
+      "condition": "C_after",
+      "run": 7,
+      "insertToPaint": 574,
+      "insertToFrame": 460,
+      "frameToPaint": 114,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 6.5
+    },
+    {
+      "condition": "B_guard",
+      "run": 8,
+      "insertToPaint": 1095,
+      "insertToFrame": 591,
+      "frameToPaint": 504,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 400.2999999523163
+    },
+    {
+      "condition": "C_after",
+      "run": 8,
+      "insertToPaint": 335,
+      "insertToFrame": 266,
+      "frameToPaint": 69,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 12.000000238418579
+    },
+    {
+      "condition": "A_before",
+      "run": 8,
+      "insertToPaint": 4321,
+      "insertToFrame": 4230,
+      "frameToPaint": 91,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 67.29999995231628
+    },
+    {
+      "condition": "C_after",
+      "run": 9,
+      "insertToPaint": 552,
+      "insertToFrame": 525,
+      "frameToPaint": 27,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 2.700000286102295
+    },
+    {
+      "condition": "A_before",
+      "run": 9,
+      "insertToPaint": 4539,
+      "insertToFrame": 4258,
+      "frameToPaint": 281,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 236.7000002861023
+    },
+    {
+      "condition": "B_guard",
+      "run": 9,
+      "insertToPaint": 1123,
+      "insertToFrame": 677,
+      "frameToPaint": 446,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 293.60000014305115
+    },
+    {
+      "condition": "A_before",
+      "run": 10,
+      "insertToPaint": 4738,
+      "insertToFrame": 4250,
+      "frameToPaint": 488,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 391.4999997615814
+    },
+    {
+      "condition": "B_guard",
+      "run": 10,
+      "insertToPaint": 596,
+      "insertToFrame": 222,
+      "frameToPaint": 374,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 291.99999952316284
+    },
+    {
+      "condition": "C_after",
+      "run": 10,
+      "insertToPaint": 531,
+      "insertToFrame": 383,
+      "frameToPaint": 148,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 9.900000095367432
+    },
+    {
+      "condition": "B_guard",
+      "run": 11,
+      "insertToPaint": 1112,
+      "insertToFrame": 608,
+      "frameToPaint": 504,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 357.099999666214
+    },
+    {
+      "condition": "C_after",
+      "run": 11,
+      "insertToPaint": 1155,
+      "insertToFrame": 738,
+      "frameToPaint": 417,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 9.399999856948853
+    },
+    {
+      "condition": "A_before",
+      "run": 11,
+      "insertToPaint": 4576,
+      "insertToFrame": 4253,
+      "frameToPaint": 323,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 248.69999957084656
+    },
+    {
+      "condition": "C_after",
+      "run": 12,
+      "insertToPaint": 1126,
+      "insertToFrame": 592,
+      "frameToPaint": 534,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 9.199999809265137
+    },
+    {
+      "condition": "A_before",
+      "run": 12,
+      "insertToPaint": 4484,
+      "insertToFrame": 4180,
+      "frameToPaint": 304,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 228.400000333786
+    },
+    {
+      "condition": "B_guard",
+      "run": 12,
+      "insertToPaint": 1059,
+      "insertToFrame": 633,
+      "frameToPaint": 426,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 73.40000009536743
+    },
+    {
+      "condition": "A_before",
+      "run": 13,
+      "insertToPaint": 4624,
+      "insertToFrame": 4307,
+      "frameToPaint": 317,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 265.7999999523163
+    },
+    {
+      "condition": "B_guard",
+      "run": 13,
+      "insertToPaint": 829,
+      "insertToFrame": 514,
+      "frameToPaint": 315,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 241.40000009536743
+    },
+    {
+      "condition": "C_after",
+      "run": 13,
+      "insertToPaint": 357,
+      "insertToFrame": 293,
+      "frameToPaint": 64,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 3.1000001430511475
+    },
+    {
+      "condition": "B_guard",
+      "run": 14,
+      "insertToPaint": 1057,
+      "insertToFrame": 605,
+      "frameToPaint": 452,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 287.2000005245209
+    },
+    {
+      "condition": "C_after",
+      "run": 14,
+      "insertToPaint": 1095,
+      "insertToFrame": 755,
+      "frameToPaint": 340,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 5.800000429153442
+    },
+    {
+      "condition": "A_before",
+      "run": 14,
+      "insertToPaint": 4303,
+      "insertToFrame": 4177,
+      "frameToPaint": 126,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 98.89999985694885
+    },
+    {
+      "condition": "C_after",
+      "run": 15,
+      "insertToPaint": 440,
+      "insertToFrame": 374,
+      "frameToPaint": 66,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 3.499999761581421
+    },
+    {
+      "condition": "A_before",
+      "run": 15,
+      "insertToPaint": 4551,
+      "insertToFrame": 4237,
+      "frameToPaint": 314,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 245.5
+    },
+    {
+      "condition": "B_guard",
+      "run": 15,
+      "insertToPaint": 870,
+      "insertToFrame": 523,
+      "frameToPaint": 347,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 248.59999990463257
+    },
+    {
+      "condition": "A_before",
+      "run": 16,
+      "insertToPaint": 4634,
+      "insertToFrame": 4288,
+      "frameToPaint": 346,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 288.19999980926514
+    },
+    {
+      "condition": "B_guard",
+      "run": 16,
+      "insertToPaint": 323,
+      "insertToFrame": 210,
+      "frameToPaint": 113,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 80.09999990463257
+    },
+    {
+      "condition": "C_after",
+      "run": 16,
+      "insertToPaint": 1153,
+      "insertToFrame": 700,
+      "frameToPaint": 453,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 12.700000047683716
+    },
+    {
+      "condition": "B_guard",
+      "run": 17,
+      "insertToPaint": 1275,
+      "insertToFrame": 748,
+      "frameToPaint": 527,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 271.49999952316284
+    },
+    {
+      "condition": "C_after",
+      "run": 17,
+      "insertToPaint": 1011,
+      "insertToFrame": 692,
+      "frameToPaint": 319,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 8.299999952316284
+    },
+    {
+      "condition": "A_before",
+      "run": 17,
+      "insertToPaint": 4549,
+      "insertToFrame": 4139,
+      "frameToPaint": 410,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 336.59999990463257
+    },
+    {
+      "condition": "C_after",
+      "run": 18,
+      "insertToPaint": 1288,
+      "insertToFrame": 855,
+      "frameToPaint": 433,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 7.6000001430511475
+    },
+    {
+      "condition": "A_before",
+      "run": 18,
+      "insertToPaint": 4609,
+      "insertToFrame": 4186,
+      "frameToPaint": 423,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 324.2999997138977
+    },
+    {
+      "condition": "B_guard",
+      "run": 18,
+      "insertToPaint": 1103,
+      "insertToFrame": 648,
+      "frameToPaint": 455,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 336.900000333786
+    },
+    {
+      "condition": "A_before",
+      "run": 19,
+      "insertToPaint": 4567,
+      "insertToFrame": 4179,
+      "frameToPaint": 388,
+      "frameSeen": true,
+      "topicNameRequired": 2,
+      "commitCount": 1,
+      "actualDurationSum": 290.9999997615814
+    },
+    {
+      "condition": "B_guard",
+      "run": 19,
+      "insertToPaint": 652,
+      "insertToFrame": 338,
+      "frameToPaint": 314,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 247.19999957084656
+    },
+    {
+      "condition": "C_after",
+      "run": 19,
+      "insertToPaint": 325,
+      "insertToFrame": 255,
+      "frameToPaint": 70,
+      "frameSeen": true,
+      "topicNameRequired": 0,
+      "commitCount": 1,
+      "actualDurationSum": 7.900000095367432
+    }
+  ]
+}
