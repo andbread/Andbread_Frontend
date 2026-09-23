@@ -1,0 +1,2353 @@
+{
+  "experiment": "1b",
+  "tracedAt": "2026-09-23T08:55:49.345Z",
+  "runCount": 12,
+  "heartbeatDelaysMs": [
+    1000,
+    2500
+  ],
+  "note": "빈 토픽 접속과 heartbeat만 보낸다. 운영 DB 쓰기 없음.",
+  "summary": {
+    "baselineHeartbeatMs": {
+      "n": 36,
+      "min": 74,
+      "p25": 75.1,
+      "median": 75.9,
+      "p75": 77.8,
+      "max": 175.3
+    },
+    "emptyReplyMs": {
+      "n": 12,
+      "min": 4074.9,
+      "p25": 4076.6,
+      "median": 4077.7,
+      "p75": 4079.1,
+      "max": 4181.8
+    },
+    "emptyReplyMinusBaselineMedianMs": {
+      "n": 12,
+      "min": 3957.8,
+      "p25": 4000.3,
+      "median": 4001.1,
+      "p75": 4002.1,
+      "max": 4105.9
+    },
+    "probes": {
+      "hb@1000": {
+        "heartbeatReplyMs": {
+          "n": 12,
+          "min": 3065.2,
+          "p25": 3068.9,
+          "median": 3073.6,
+          "p75": 3078.6,
+          "max": 3178.3
+        },
+        "replyMinusEmptyReplyMs": {
+          "n": 12,
+          "min": 0,
+          "p25": 0,
+          "median": 0.1,
+          "p75": 0.1,
+          "max": 0.5
+        }
+      },
+      "hb@2500": {
+        "heartbeatReplyMs": {
+          "n": 12,
+          "min": 1561.7,
+          "p25": 1570.9,
+          "median": 1572.7,
+          "p75": 1574.7,
+          "max": 1670.5
+        },
+        "replyMinusEmptyReplyMs": {
+          "n": 12,
+          "min": 0,
+          "p25": 0.1,
+          "median": 0.1,
+          "p75": 0.2,
+          "max": 0.7
+        }
+      }
+    },
+    "afterHeartbeatMs": {
+      "n": 12,
+      "min": 73.9,
+      "p25": 74.2,
+      "median": 74.7,
+      "p75": 75.8,
+      "max": 77.8
+    },
+    "failures": []
+  },
+  "runs": [
+    {
+      "runIndex": 0,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        77.8,
+        75.4,
+        82.3
+      ],
+      "emptyReplyMs": 4082.1,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3082.7,
+          "replyMinusEmptyReplyMs": 0.5
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1575.8,
+          "replyMinusEmptyReplyMs": 0.7
+        }
+      ],
+      "afterHeartbeatMs": 75.8,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 580.6
+        },
+        {
+          "t": 0.3,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 78.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 285.2,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 360.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 562.8,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 645.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 846,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1845.9,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3353,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4928.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4928.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4928.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4929.4,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 5005.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5087.9,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 1,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        74.5,
+        175.3,
+        143.5
+      ],
+      "emptyReplyMs": 4101.3,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3098.9,
+          "replyMinusEmptyReplyMs": 0.2
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1600.9,
+          "replyMinusEmptyReplyMs": 0.2
+        }
+      ],
+      "afterHeartbeatMs": 77.8,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 302.9
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 74.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 279.1,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 454.4,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 661.5,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 805,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 1013.7,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 2016.3,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3514.3,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 5115.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 5115.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5115.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5115.4,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 5193.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5269.8,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 2,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        79.8,
+        76.1,
+        79.9
+      ],
+      "emptyReplyMs": 4076.7,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3070.9,
+          "replyMinusEmptyReplyMs": 0.1
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1573.7,
+          "replyMinusEmptyReplyMs": 0.1
+        }
+      ],
+      "afterHeartbeatMs": 74.6,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 294.2
+        },
+        {
+          "t": 0.1,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 79.9,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 280.7,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 356.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 564.7,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 644.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 857.7,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1863.6,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3360.8,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4934.4,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4934.4,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4934.5,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4934.6,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 5009.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5084.8,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 3,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        75.1,
+        75.9,
+        75.9
+      ],
+      "emptyReplyMs": 4077.7,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3072.2,
+          "replyMinusEmptyReplyMs": 0.1
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1571.8,
+          "replyMinusEmptyReplyMs": 0.2
+        }
+      ],
+      "afterHeartbeatMs": 73.9,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 286.5
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 75.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 280.3,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 356.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 556.9,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 632.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 836.9,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1842.5,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3343,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4914.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4914.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4914.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4915,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 4988.9,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5065.2,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 4,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        77.2,
+        74.1,
+        77.1
+      ],
+      "emptyReplyMs": 4078.1,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3069.4,
+          "replyMinusEmptyReplyMs": 0
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1572.4,
+          "replyMinusEmptyReplyMs": 0.2
+        }
+      ],
+      "afterHeartbeatMs": 74,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 311
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 77.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 284.4,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 358.5,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 558.7,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 635.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 845,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1853.7,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3350.8,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4923.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4923.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4923.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4923.3,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 4997.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5073.7,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 5,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        77.6,
+        74.6,
+        75.1
+      ],
+      "emptyReplyMs": 4076.2,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3075.7,
+          "replyMinusEmptyReplyMs": 0
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1566.4,
+          "replyMinusEmptyReplyMs": 0
+        }
+      ],
+      "afterHeartbeatMs": 74.8,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 288
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 77.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 292,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 366.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 573.3,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 648.4,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 849.5,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1850,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3359.4,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4925.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4925.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4925.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4925.8,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 5000.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5078.3,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 6,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        74.6,
+        75.7,
+        75.3
+      ],
+      "emptyReplyMs": 4077.6,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3065.8,
+          "replyMinusEmptyReplyMs": 0.1
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1573,
+          "replyMinusEmptyReplyMs": 0.1
+        }
+      ],
+      "afterHeartbeatMs": 75.6,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 305.2
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 74.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 280,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 355.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 563.5,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 638.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 844.9,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1856.7,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3349.5,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4922.4,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4922.5,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4922.5,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4922.6,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 4998.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5075.5,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 7,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        75.3,
+        75.1,
+        78.8
+      ],
+      "emptyReplyMs": 4074.9,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3067.3,
+          "replyMinusEmptyReplyMs": 0.1
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1561.7,
+          "replyMinusEmptyReplyMs": 0.1
+        }
+      ],
+      "afterHeartbeatMs": 77.3,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 302.1
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 75.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 277.3,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 352.4,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 556,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 634.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 837.2,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1845,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3350.6,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4912.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4912.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4912.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4912.3,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 4989.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5066.5,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 8,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        75.7,
+        76.1,
+        74
+      ],
+      "emptyReplyMs": 4076.2,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3075.1,
+          "replyMinusEmptyReplyMs": 0.1
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1570.9,
+          "replyMinusEmptyReplyMs": 0.1
+        }
+      ],
+      "afterHeartbeatMs": 74.5,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 294.6
+        },
+        {
+          "t": 0.1,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 75.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 286.5,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 362.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 565.8,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 639.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 845.5,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1846.6,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3350.9,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4921.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4921.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4921.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4921.9,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 4996.4,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5071.6,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 9,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        75.9,
+        78.9,
+        74.8
+      ],
+      "emptyReplyMs": 4076.9,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3065.2,
+          "replyMinusEmptyReplyMs": 0
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1570.9,
+          "replyMinusEmptyReplyMs": 0
+        }
+      ],
+      "afterHeartbeatMs": 75.8,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 305.6
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 75.9,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 287.6,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 366.5,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 567.4,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 642.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 847.1,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1858.9,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3353.2,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4924.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4924.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4924.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4924.1,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 4999.9,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5075.5,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 10,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        74.1,
+        82.6,
+        75.9
+      ],
+      "emptyReplyMs": 4181.8,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3178.3,
+          "replyMinusEmptyReplyMs": 0
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1670.5,
+          "replyMinusEmptyReplyMs": 0
+        }
+      ],
+      "afterHeartbeatMs": 73.9,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 316.3
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 74.1,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 279,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 361.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 563,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 638.9,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 847.2,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1850.7,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3358.5,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 5029,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 5029,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5029,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5029.1,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 5103,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5275.9,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    },
+    {
+      "runIndex": 11,
+      "status": "ok",
+      "baselineHeartbeatMs": [
+        77.9,
+        75.2,
+        75.9
+      ],
+      "emptyReplyMs": 4077.9,
+      "emptyReplyStatus": "error",
+      "probes": [
+        {
+          "delayMs": 1000,
+          "heartbeatReplyMs": 3077.2,
+          "replyMinusEmptyReplyMs": 0.1
+        },
+        {
+          "delayMs": 2500,
+          "heartbeatReplyMs": 1574.3,
+          "replyMinusEmptyReplyMs": 0.1
+        }
+      ],
+      "afterHeartbeatMs": 74.3,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 741.3
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "1",
+          "joinRef": null
+        },
+        {
+          "t": 77.9,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 282.8,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "2",
+          "joinRef": null
+        },
+        {
+          "t": 358,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "2",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 559.8,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "3",
+          "joinRef": null
+        },
+        {
+          "t": 635.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "3",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 837.9,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "4",
+          "joinRef": "4"
+        },
+        {
+          "t": 1838.8,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "5",
+          "joinRef": null
+        },
+        {
+          "t": 3341.7,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "6",
+          "joinRef": null
+        },
+        {
+          "t": 4915.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "4",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4915.9,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "5",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4915.9,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "6",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 4916,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "heartbeat",
+          "ref": "7",
+          "joinRef": null
+        },
+        {
+          "t": 4990.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "phoenix",
+          "event": "phx_reply",
+          "ref": "7",
+          "joinRef": null,
+          "status": "ok"
+        },
+        {
+          "t": 5065.8,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ]
+    }
+  ]
+}

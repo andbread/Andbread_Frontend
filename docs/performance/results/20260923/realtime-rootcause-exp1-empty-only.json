@@ -1,0 +1,1775 @@
+{
+  "experiment": 1,
+  "tracedAt": "2026-09-23T08:30:39.592Z",
+  "runsPerMethod": 12,
+  "cpuThrottleRate": 4,
+  "note": "빈 토픽 접속 요청만 보낸다. 운영 DB 쓰기 없음. 시각은 방법별 자기 시계 기준 간격만 비교한다.",
+  "summary": {
+    "node": {
+      "n": 12,
+      "min": 4074.8,
+      "p25": 4076.3,
+      "median": 4077,
+      "p75": 4077.9,
+      "max": 4145.6
+    },
+    "browserPlaywrightCallback": {
+      "n": 12,
+      "min": 4077,
+      "p25": 4083.8,
+      "median": 4086,
+      "p75": 4089.5,
+      "max": 4094
+    },
+    "browserCdpProtocol": {
+      "n": 12,
+      "min": 4074,
+      "p25": 4075.4,
+      "median": 4076.4,
+      "p75": 4078,
+      "max": 4085.2
+    },
+    "browserInPage": {
+      "n": 12,
+      "min": 4075.7,
+      "p25": 4076.9,
+      "median": 4078.7,
+      "p75": 4081.2,
+      "max": 4087.3
+    },
+    "failures": [],
+    "replyReasons": [
+      "error:TopicNameRequired: You must provide a topic name"
+    ]
+  },
+  "runs": [
+    {
+      "method": "node",
+      "runIndex": 0,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 301.3
+        },
+        {
+          "t": 0.2,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4077.9,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4154.2,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4077.7
+      },
+      "order": 0
+    },
+    {
+      "method": "browser",
+      "runIndex": 0,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd61-723b-7051-b90a-3c3c244e7764",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82d238ae752f0-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:28:30 GMT",
+        "Sec-WebSocket-Accept": "YqMhe9ex2YVI5uNUBrHa5aivddo=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4086,
+        "cdpProtocol": 4074,
+        "inPage": 4075.7
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 105,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 368,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4454,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4519,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "1580.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "1580.1",
+          "status": 101
+        },
+        {
+          "ts": 1.2,
+          "dir": "send",
+          "requestId": "1580.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4075.2,
+          "dir": "recv",
+          "requestId": "1580.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4150.2,
+          "kind": "socket:close",
+          "requestId": "1580.1"
+        }
+      ],
+      "order": 1
+    },
+    {
+      "method": "browser",
+      "runIndex": 1,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd61-88fe-75c0-a695-65244c281a7d",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82d47f8e716dd-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:28:36 GMT",
+        "Sec-WebSocket-Accept": "ZJrJbbta+k9tv0JwJt+BIQUievA=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4093,
+        "cdpProtocol": 4085.2,
+        "inPage": 4087.3
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 53,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 302,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4395,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4462,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "29652.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "29652.1",
+          "status": 101
+        },
+        {
+          "ts": 1.2,
+          "dir": "send",
+          "requestId": "29652.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4086.4,
+          "dir": "recv",
+          "requestId": "29652.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4162.5,
+          "kind": "socket:close",
+          "requestId": "29652.1"
+        }
+      ],
+      "order": 2
+    },
+    {
+      "method": "node",
+      "runIndex": 1,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 282.4
+        },
+        {
+          "t": 0.1,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4078.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4169.5,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4078.6
+      },
+      "order": 3
+    },
+    {
+      "method": "node",
+      "runIndex": 2,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 351
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4145.7,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4219.6,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4145.6
+      },
+      "order": 4
+    },
+    {
+      "method": "browser",
+      "runIndex": 2,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd61-caee-70fb-831e-5d95a711b00f",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82db17c046d95-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:28:53 GMT",
+        "Sec-WebSocket-Accept": "NxMxanRRH1sw7Vx0wkPjDSg/3qY=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4082,
+        "cdpProtocol": 4078.5,
+        "inPage": 4079.6
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 76,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 320,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4402,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4475,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "23068.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "23068.1",
+          "status": 101
+        },
+        {
+          "ts": 1,
+          "dir": "send",
+          "requestId": "23068.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4079.5,
+          "dir": "recv",
+          "requestId": "23068.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4156,
+          "kind": "socket:close",
+          "requestId": "23068.1"
+        }
+      ],
+      "order": 5
+    },
+    {
+      "method": "browser",
+      "runIndex": 3,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd61-e1a0-7c55-8ec6-1877dfd6d44e",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82dd5ce41ea0f-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:28:59 GMT",
+        "Sec-WebSocket-Accept": "UtiCSn1ONLJgxgBYlRCHcKfDoaA=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4086,
+        "cdpProtocol": 4075.5,
+        "inPage": 4077.7
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 72,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 321,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4407,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4474,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "4200.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "4200.1",
+          "status": 101
+        },
+        {
+          "ts": 2.1,
+          "dir": "send",
+          "requestId": "4200.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4077.6,
+          "dir": "recv",
+          "requestId": "4200.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4155.1,
+          "kind": "socket:close",
+          "requestId": "4200.1"
+        }
+      ],
+      "order": 6
+    },
+    {
+      "method": "node",
+      "runIndex": 3,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 288.5
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4076.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4151.7,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4076.3
+      },
+      "order": 7
+    },
+    {
+      "method": "node",
+      "runIndex": 4,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 284.7
+        },
+        {
+          "t": 0.1,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4076.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4151.5,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4076.3
+      },
+      "order": 8
+    },
+    {
+      "method": "browser",
+      "runIndex": 4,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd62-22e4-7150-8d27-33bfcc902c68",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82e3e3db120d9-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:29:16 GMT",
+        "Sec-WebSocket-Accept": "qMjNenLdGH+3JkOlqjmNyMKa7UQ=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4086,
+        "cdpProtocol": 4077.8,
+        "inPage": 4080.9
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 62,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 305,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4391,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4462,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "29148.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "29148.1",
+          "status": 101
+        },
+        {
+          "ts": 1,
+          "dir": "send",
+          "requestId": "29148.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4078.8,
+          "dir": "recv",
+          "requestId": "29148.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4157.3,
+          "kind": "socket:close",
+          "requestId": "29148.1"
+        }
+      ],
+      "order": 9
+    },
+    {
+      "method": "browser",
+      "runIndex": 5,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd62-399d-7428-a7d7-0349232f8b98",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82e628afdde6f-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:29:21 GMT",
+        "Sec-WebSocket-Accept": "5WhrX69RHaC9QrSZTsVDKRujZ1E=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4077,
+        "cdpProtocol": 4075.9,
+        "inPage": 4076.7
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 77,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 332,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4409,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4481,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "15200.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "15200.1",
+          "status": 101
+        },
+        {
+          "ts": 1,
+          "dir": "send",
+          "requestId": "15200.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4076.9,
+          "dir": "recv",
+          "requestId": "15200.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4151.5,
+          "kind": "socket:close",
+          "requestId": "15200.1"
+        }
+      ],
+      "order": 10
+    },
+    {
+      "method": "node",
+      "runIndex": 5,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 293.2
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4076.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4151.6,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4076.8
+      },
+      "order": 11
+    },
+    {
+      "method": "node",
+      "runIndex": 6,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 296.9
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4080.3,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4155.4,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4080.3
+      },
+      "order": 12
+    },
+    {
+      "method": "browser",
+      "runIndex": 6,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd62-7b05-7f78-96ba-0a0ba9c92ae3",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82ecb385bd1ea-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:29:38 GMT",
+        "Sec-WebSocket-Accept": "vFOsiI5jLE8RP1klsouOgrtXlY8=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4089,
+        "cdpProtocol": 4080.1,
+        "inPage": 4082.4
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 82,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 328,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4417,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4500,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "20484.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "20484.1",
+          "status": 101
+        },
+        {
+          "ts": 1,
+          "dir": "send",
+          "requestId": "20484.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4081.1,
+          "dir": "recv",
+          "requestId": "20484.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4172.9,
+          "kind": "socket:close",
+          "requestId": "20484.1"
+        }
+      ],
+      "order": 13
+    },
+    {
+      "method": "browser",
+      "runIndex": 7,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd62-91ae-748c-bd29-e0f09dfe4120",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82eef7ee038d5-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:29:44 GMT",
+        "Sec-WebSocket-Accept": "Puo2zwXJuMOFJpyo3441sfNx9jY=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4083,
+        "cdpProtocol": 4075.1,
+        "inPage": 4076.9
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 58,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 301,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4384,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4452,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "13064.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "13064.1",
+          "status": 101
+        },
+        {
+          "ts": 1.5,
+          "dir": "send",
+          "requestId": "13064.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4076.6,
+          "dir": "recv",
+          "requestId": "13064.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4152.2,
+          "kind": "socket:close",
+          "requestId": "13064.1"
+        }
+      ],
+      "order": 14
+    },
+    {
+      "method": "node",
+      "runIndex": 7,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 273.3
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4074.8,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4149.6,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4074.8
+      },
+      "order": 15
+    },
+    {
+      "method": "node",
+      "runIndex": 8,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 289.2
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4075.4,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4148.5,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4075.3
+      },
+      "order": 16
+    },
+    {
+      "method": "browser",
+      "runIndex": 8,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd62-d2f0-77ef-82d1-92d4c58be6dd",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82f57dd759d74-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:30:01 GMT",
+        "Sec-WebSocket-Accept": "fwBlGztneEKCnDoAs/wD/xLuYQ8=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4084,
+        "cdpProtocol": 4074.8,
+        "inPage": 4076.4
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 72,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 313,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4397,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4464,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "27344.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "27344.1",
+          "status": 101
+        },
+        {
+          "ts": 1.2,
+          "dir": "send",
+          "requestId": "27344.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4075.9,
+          "dir": "recv",
+          "requestId": "27344.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4151.7,
+          "kind": "socket:close",
+          "requestId": "27344.1"
+        }
+      ],
+      "order": 17
+    },
+    {
+      "method": "browser",
+      "runIndex": 9,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd62-e97e-71b1-8766-8034845b0bf0",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82f7bfb81580b-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:30:06 GMT",
+        "Sec-WebSocket-Accept": "7NpRxiyUXAe33HrlO7Y0LLlFomg=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4084,
+        "cdpProtocol": 4075.6,
+        "inPage": 4077.8
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 57,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 303,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4387,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4456,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "35748.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "35748.1",
+          "status": 101
+        },
+        {
+          "ts": 1.8,
+          "dir": "send",
+          "requestId": "35748.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4077.4,
+          "dir": "recv",
+          "requestId": "35748.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4155.4,
+          "kind": "socket:close",
+          "requestId": "35748.1"
+        }
+      ],
+      "order": 18
+    },
+    {
+      "method": "node",
+      "runIndex": 9,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 311.1
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4077.6,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4154.4,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4077.5
+      },
+      "order": 19
+    },
+    {
+      "method": "node",
+      "runIndex": 10,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 282.6
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4077.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4152.2,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4077.2
+      },
+      "order": 20
+    },
+    {
+      "method": "browser",
+      "runIndex": 10,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd63-2b09-781c-a290-0c52e1066d03",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f82fe4ccff3275-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:30:23 GMT",
+        "Sec-WebSocket-Accept": "RQhO+otR8Q569osUEhApMV1/cHY=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4091,
+        "cdpProtocol": 4076.9,
+        "inPage": 4081.3
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 99,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 360,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4451,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4519,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "8760.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "8760.1",
+          "status": 101
+        },
+        {
+          "ts": 1,
+          "dir": "send",
+          "requestId": "8760.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4077.9,
+          "dir": "recv",
+          "requestId": "8760.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4160.1,
+          "kind": "socket:close",
+          "requestId": "8760.1"
+        }
+      ],
+      "order": 21
+    },
+    {
+      "method": "browser",
+      "runIndex": 11,
+      "cpuThrottleRate": 4,
+      "handshakeHeaders": {
+        "Upgrade": "websocket",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "sb-project-ref": "yyisakaqnaoomehqlyjz",
+        "Cache-Control": "max-age=0, private, must-revalidate",
+        "sb-gateway-mode": "direct",
+        "CF-Cache-Status": "DYNAMIC",
+        "sb-request-id": "01a0cd63-41cd-7982-97a1-eeb42ea47a11",
+        "Connection": "upgrade",
+        "CF-Ray": "a3f830093b36ea0d-ICN",
+        "alt-svc": "h3=\":443\"; ma=86400",
+        "Date": "Wed, 23 Sep 2026 08:30:29 GMT",
+        "Sec-WebSocket-Accept": "4RKIRInwR6++e0K7xyPazq24t2o=",
+        "Server": "cloudflare",
+        "sb-gateway-version": "1"
+      },
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "playwrightCallback": 4094,
+        "cdpProtocol": 4077.7,
+        "inPage": 4081.1
+      },
+      "socketCount": 1,
+      "playwrightEvents": [
+        {
+          "at": 57,
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "at": 329,
+          "dir": "send",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "at": 4423,
+          "dir": "recv",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "at": 4485,
+          "kind": "socket:close"
+        }
+      ],
+      "cdpEvents": [
+        {
+          "kind": "socket:created",
+          "requestId": "12956.1",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0"
+        },
+        {
+          "ts": 0,
+          "kind": "handshake",
+          "requestId": "12956.1",
+          "status": 101
+        },
+        {
+          "ts": 2.2,
+          "dir": "send",
+          "requestId": "12956.1",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1"
+        },
+        {
+          "ts": 4079.9,
+          "dir": "recv",
+          "requestId": "12956.1",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "ts": 4158.2,
+          "kind": "socket:close",
+          "requestId": "12956.1"
+        }
+      ],
+      "order": 22
+    },
+    {
+      "method": "node",
+      "runIndex": 11,
+      "events": [
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:open",
+          "url": "wss://yyisakaqnaoomehqlyjz.supabase.co/realtime/v1/websocket?apikey=<redacted>&vsn=1.0.0",
+          "openMs": 283.8
+        },
+        {
+          "t": 0,
+          "socket": 1,
+          "dir": "send",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_join",
+          "ref": "1",
+          "joinRef": "1"
+        },
+        {
+          "t": 4076.2,
+          "socket": 1,
+          "dir": "recv",
+          "kind": "frame",
+          "topic": "realtime:",
+          "event": "phx_reply",
+          "ref": "1",
+          "joinRef": null,
+          "status": "error",
+          "reason": "TopicNameRequired: You must provide a topic name"
+        },
+        {
+          "t": 4153.1,
+          "socket": 1,
+          "dir": "local",
+          "kind": "socket:close",
+          "code": 1000
+        }
+      ],
+      "status": "ok",
+      "replyStatus": "error",
+      "replyReason": "TopicNameRequired: You must provide a topic name",
+      "emptyReplyMs": {
+        "node": 4076.2
+      },
+      "order": 23
+    }
+  ]
+}
