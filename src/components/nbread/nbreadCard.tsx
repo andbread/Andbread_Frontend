@@ -1,3 +1,4 @@
+import { calculateIndividualShare } from '@/lib/nbread/calculateIndividualShare'
 import { Nbread } from '@/types/nbread'
 import { User } from '@/types/user'
 import Tab from '../common/tab/tab'
@@ -13,8 +14,10 @@ const NbreadCard = ({
   userData,
   handleEditingNbread,
 }: NbreadCardProps) => {
-  const paymentAmount =
-    Math.floor(nbreadData!.amount / nbreadData!.participantCount) || 0
+  const paymentAmount = calculateIndividualShare(
+    nbreadData!.amount,
+    nbreadData!.participantCount,
+  )
 
   return (
     <>
@@ -24,7 +27,10 @@ const NbreadCard = ({
             <header className="flex flex-row justify-between">
               <div className="flex flex-col">
                 <div className="pb-4 text-body03 text-gray-600">총 금액</div>
-                <div className="text-heading01 text-secondary-200">
+                <div
+                  className="text-heading01 text-secondary-200"
+                  data-testid="nbread-amount"
+                >
                   {Number(nbreadData.amount).toLocaleString()}원
                 </div>
               </div>
@@ -44,13 +50,19 @@ const NbreadCard = ({
             <div className="flex flex-col gap-16 pt-20">
               <div className="flex flex-row items-center justify-between">
                 <div className="w-120 text-body02 text-gray-500">참여 인원</div>
-                <div className="text-body02 text-gray-800">
+                <div
+                  className="text-body02 text-gray-800"
+                  data-testid="nbread-participant-count"
+                >
                   {nbreadData.participantCount}명
                 </div>
               </div>
               <div className="flex flex-row items-center justify-between">
                 <div className="w-120 text-body02 text-gray-500">엔빵 금액</div>
-                <div className="text-body02 text-gray-800">
+                <div
+                  className="text-body02 text-gray-800"
+                  data-testid="nbread-payment-amount"
+                >
                   {paymentAmount.toLocaleString()}원
                 </div>
               </div>
@@ -58,7 +70,10 @@ const NbreadCard = ({
                 <div className="w-120 text-body02 text-gray-500">
                   정기 결제일
                 </div>
-                <div className="text-body02 text-gray-800">
+                <div
+                  className="text-body02 text-gray-800"
+                  data-testid="nbread-payment-date"
+                >
                   {nbreadData.paymentPeriod === 'year'
                     ? `매년 ${nbreadData.paymentMonth}월 ${nbreadData.paymentDate}일`
                     : `매월 ${nbreadData.paymentDate}일`}

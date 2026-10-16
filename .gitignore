@@ -50,3 +50,6 @@ certificates
 
 # claude
 .token-optimizer
+
+# playwright
+.playwright-mcp

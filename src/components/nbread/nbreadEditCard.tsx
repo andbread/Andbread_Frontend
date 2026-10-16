@@ -113,6 +113,7 @@ const NbreadEditCard = ({
             <div className="w-120 text-body02 text-gray-500">참여 인원</div>
             <select
               className="w-200 text-body02"
+              data-testid="nbread-participant-count"
               {...register('participantCount', {
                 onChange: (event) =>
                   setParticipantCount(Number(event.target.value)),
@@ -137,6 +138,7 @@ const NbreadEditCard = ({
             <input
               {...register('paymentAmount')}
               className="w-200 text-body02 text-gray-400"
+              data-testid="nbread-payment-amount"
               placeholder="0"
               disabled={true}
             />
@@ -169,7 +171,11 @@ const NbreadEditCard = ({
           {/* ------------ 결제일 ------------ */}
           <div className="flex flex-row items-center justify-between">
             <div className="w-120 text-body02 text-gray-500">정기 결제일</div>
-            <select className="w-200 text-body02" {...register('paymentDate')}>
+            <select
+              className="w-200 text-body02"
+              data-testid="nbread-payment-date"
+              {...register('paymentDate')}
+            >
               {Array.from({ length: 30 }, (_, i) => (
                 <option key={i + 1} value={i + 1}>
                   {i + 1}일

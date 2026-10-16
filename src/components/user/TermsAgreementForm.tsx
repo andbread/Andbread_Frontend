@@ -37,21 +37,33 @@ const TermsAgreementForm = ({
 
       <div className="mt-64 flex flex-col gap-20">
         <div className="flex items-center gap-16 text-body01 text-gray-800">
-          <Checkbox isChecked={isAllChecked} onChange={onToggleAll} />
+          <Checkbox
+            isChecked={isAllChecked}
+            onChange={onToggleAll}
+            testId="terms-agree-all"
+          />
           <button type="button" onClick={onToggleAll}>
             약관 전체 동의
           </button>
         </div>
 
         <div className="flex items-center gap-16 text-body01 text-gray-500">
-          <Checkbox isChecked={termsChecked} onChange={onToggleTerms} />
+          <Checkbox
+            isChecked={termsChecked}
+            onChange={onToggleTerms}
+            testId="terms-agree-service"
+          />
           <Link href="/terms-of-service" className="underline">
             (필수) 서비스 이용 약관 동의
           </Link>
         </div>
 
         <div className="flex items-center gap-16 text-body01 text-gray-500">
-          <Checkbox isChecked={privacyChecked} onChange={onTogglePrivacy} />
+          <Checkbox
+            isChecked={privacyChecked}
+            onChange={onTogglePrivacy}
+            testId="terms-agree-privacy"
+          />
           <Link href="/privacy-policy" className="underline">
             (필수) 개인정보 처리방침 동의
           </Link>
