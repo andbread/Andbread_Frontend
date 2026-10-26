@@ -76,6 +76,11 @@ Code Review
 
 Playwright 테스트가 존재하는 경우 영향을 받은 기능을 함께 검증합니다.
 
+로컬 E2E나 성능 측정을 실행할 때는 Sentry로 데이터가 전송되지 않게 막습니다. 테스트 브라우저의 데이터가 운영 Web Vitals 집계에 섞이기 때문입니다.
+
+- 로컬 서버는 `NEXT_PUBLIC_SENTRY_DSN`을 비운 상태로 빌드합니다. 이 값은 빌드할 때 번들에 포함되므로 실행할 때 비우면 적용되지 않습니다.
+- 운영 주소를 측정할 때는 브라우저에서 `/monitoring`(Sentry 터널)과 GA, Clarity 수집 요청을 차단합니다.
+
 ---
 
 ## Review Guidelines
