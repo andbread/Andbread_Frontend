@@ -148,7 +148,8 @@ export default function LandingPage() {
             </Link>
           </header>
 
-          <RevealOnScroll className="mt-54">
+          {/* 첫 화면은 투명하게 시작하면 LCP가 늦어지므로 RevealOnScroll을 쓰지 않는다(#234) */}
+          <div className="mt-54">
             <p className="text-heading04 text-secondary-200">
               구독 나눔, 이제 쉽게
             </p>
@@ -163,18 +164,18 @@ export default function LandingPage() {
               넷플릭스, 유튜브 프리미엄, 왓챠 등 친구, 가족과 나누는 구독
               서비스의 결제일과 정산 현황을 한 곳에서 관리할 수 있어요.
             </p>
-          </RevealOnScroll>
+          </div>
 
-          <RevealOnScroll delay={80}>
+          <div>
             <Link
               href="/login"
               className="btn btn-large btn-primary mt-28 flex items-center justify-center"
             >
               지금 시작하기 <span aria-hidden="true">→</span>
             </Link>
-          </RevealOnScroll>
+          </div>
 
-          <RevealOnScroll delay={160}>
+          <div>
             <Image
               src="/image/landing/home.png"
               alt="엔빵 홈 화면 미리보기"
@@ -183,7 +184,7 @@ export default function LandingPage() {
               priority
               className="mx-auto mt-40 h-auto w-[205px]"
             />
-          </RevealOnScroll>
+          </div>
         </section>
 
         <section className="bg-gradient-to-b from-primary-400 to-primary-100 px-24 py-48">
