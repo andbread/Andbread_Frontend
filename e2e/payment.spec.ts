@@ -236,7 +236,7 @@ test.describe('납부 상태 저장 처리', () => {
     // 첫 갱신 요청 응답을 붙잡아 두고, 그 사이 연속 클릭이 요청을 더 보내는지 센다.
     // 조회는 그대로 두고 갱신 요청만 가로채므로 seed 데이터와 실제 로그인을 그대로 쓴다.
     await page.route(
-      (url) => url.pathname.endsWith('/rest/v1/nbread_records'),
+      (url) => url.pathname === `/api/nbreads/${nbread.id}/records`,
       async (route) => {
         if (route.request().method() !== 'PATCH') {
           await route.continue()
@@ -306,14 +306,16 @@ test.describe('납부 상태 저장 처리', () => {
     page.on('request', (request) => {
       if (
         request.method() === 'PATCH' &&
-        new URL(request.url()).pathname.endsWith('/rest/v1/nbread_records')
+        new URL(request.url()).pathname === `/api/nbreads/${nbread.id}/records`
       ) {
         patchCount += 1
       }
     })
 
     // 조회는 그대로 두고 첫 갱신 요청만 실패로 만든다. 두 번째 요청은 실제 DB로 간다.
-    await failRequest(page, '/rest/v1/nbread_records', 'PATCH', { times: 1 })
+    await failRequest(page, `/api/nbreads/${nbread.id}/records`, 'PATCH', {
+      times: 1,
+    })
 
     await page.goto(`/nbread/${nbread.id}`)
     const label = participantCheckboxLabel(page, member.name)
