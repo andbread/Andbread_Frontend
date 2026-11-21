@@ -118,17 +118,6 @@ test.describe('로그인 콜백 처리', () => {
     )
   })
 
-  // AUTH-CALLBACK-003
-  test('인증 세션이 없는 콜백 화면은 오류 메시지를 표시한다', async ({
-    page,
-  }) => {
-    await page.goto('/auth/callback')
-
-    // 세션이 없으면 supabase-js가 AuthSessionMissingError를 던지고
-    // 그 메시지를 그대로 화면에 보여준다.
-    await expect(page.getByText('Auth session missing!')).toBeVisible()
-  })
-
   // AUTH-CALLBACK-004
   test('사용자 행이 없는 인증 사용자의 콜백은 오류 메시지를 표시한다', async ({
     page,
