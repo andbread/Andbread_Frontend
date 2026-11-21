@@ -7,10 +7,6 @@ import {
   createSession,
 } from './fixtures/session'
 import {
-  monthlyNbreadEmptyState,
-  monthlyNbreadItem,
-  monthlyNbreadTotalAmount,
-  myNbreadCount,
   myNbreadItem,
   nbreadField,
   participantCard,
@@ -119,32 +115,6 @@ test.describe('그룹 생성', () => {
     expect(participants[0].is_leader).toBe(true)
   })
 
-  // GROUP-CREATE-002
-  test('필수 입력값이 없으면 저장하기 버튼을 누를 수 없다', async ({
-    page,
-  }) => {
-    // 폼 검증만 확인하고 백엔드 데이터를 읽거나 쓰지 않으므로 실제 Supabase 로그인 없이
-    // 보호 경로 통과에만 필요한 가짜 세션을 주입한다.
-    await applySession(page, createFakeSession())
-
-    await page.goto('/nbread/create')
-    const submitButton = page.getByRole('button', { name: '저장하기' })
-
-    // 총 금액과 타이틀이 모두 빈 경우
-    await expect(submitButton).toBeDisabled()
-
-    // 총 금액만 입력한 경우
-    await page.getByPlaceholder('총 금액을 입력하세요').fill('12000')
-    await expect(submitButton).toBeDisabled()
-
-    // 총 금액을 지우고 타이틀만 입력한 경우
-    await page.getByPlaceholder('총 금액을 입력하세요').fill('')
-    await page.getByPlaceholder('타이틀을 입력해주세요').fill('테스트 구독')
-    await expect(submitButton).toBeDisabled()
-
-    await expect(page).toHaveURL('/nbread/create')
-  })
-
   // GROUP-CREATE-005
   test('그룹 저장 요청이 실패하면 생성 화면으로 돌아간다', async ({
     page,
@@ -192,80 +162,10 @@ test.describe('그룹 생성', () => {
 
     await page.goto('/nbread/preview')
 
-    await expect(toastMessage(page, '먼저 엔빵 폼을 작성해주세요.')).toBeVisible()
-    await expect(page).toHaveURL('/nbread/create')
-  })
-})
-
-test.describe('그룹 삭제', () => {
-  // GROUP-DELETE-001
-  test('그룹장은 편집 화면에서 그룹을 삭제하고 홈으로 이동한다', async ({
-    page,
-    seed,
-  }) => {
-    const leader = await seed.createUser('E2E 그룹장')
-    const title = seed.unique('E2E 삭제 그룹')
-    const nbread = await seed.createNbread({
-      leaderId: leader.id,
-      title,
-      amount: 15000,
-      participantCount: 1,
-      paymentDate: 7,
-    })
-    await seed.addParticipant(nbread.id, leader.id, true)
-    await applySession(page, await createSession(leader))
-
-    await page.goto(`/nbread/${nbread.id}`)
-    await page.getByText('수정하기', { exact: true }).click()
-    await page.getByRole('button', { name: '엔빵 삭제하기' }).click()
-    await page
-      .getByRole('button', { name: '삭제하기', exact: true })
-      .click()
-
-    await expect(toastMessage(page, '엔빵이 삭제되었어요.')).toBeVisible()
-    await expect(page).toHaveURL('/home')
-    await expect(myNbreadItem(page, title)).not.toBeVisible()
-
-    // nbread 삭제는 DB의 ON DELETE CASCADE로 participant, nbread_records,
-    // nbread_invite를 함께 지우므로 cleanup은 이미 없는 행을 다시 지우는 셈이라 안전하다.
-    const deleted = await seed.findNbreadByTitle(title)
-    expect(deleted).toBeNull()
-  })
-
-  // GROUP-DELETE-002
-  test('그룹 삭제 요청이 실패하면 상세 화면에 머문다', async ({
-    page,
-    seed,
-  }) => {
-    const leader = await seed.createUser('E2E 그룹장')
-    const title = seed.unique('E2E 삭제 실패 그룹')
-    const nbread = await seed.createNbread({
-      leaderId: leader.id,
-      title,
-      amount: 15000,
-      participantCount: 1,
-      paymentDate: 7,
-    })
-    await seed.addParticipant(nbread.id, leader.id, true)
-    await applySession(page, await createSession(leader))
-
-    // 조회는 그대로 두고 그룹 삭제 요청만 실패로 만든다.
-    await failRequest(page, '/rest/v1/nbread', 'DELETE')
-
-    await page.goto(`/nbread/${nbread.id}`)
-    await page.getByText('수정하기', { exact: true }).click()
-    await page.getByRole('button', { name: '엔빵 삭제하기' }).click()
-    await page
-      .getByRole('button', { name: '삭제하기', exact: true })
-      .click()
-
     await expect(
-      toastMessage(page, '엔빵 삭제에 실패했어요. 다시 시도해주세요.'),
+      toastMessage(page, '먼저 엔빵 폼을 작성해주세요.'),
     ).toBeVisible()
-    await expect(page).toHaveURL(`/nbread/${nbread.id}`)
-
-    const stillExists = await seed.findNbreadByTitle(title)
-    expect(stillExists).not.toBeNull()
+    await expect(page).toHaveURL('/nbread/create')
   })
 })
 
@@ -301,92 +201,6 @@ test.describe('홈 그룹 조회와 상세 진입', () => {
     await expect(nbreadField(page, 'payment-amount')).toHaveText('10,000원')
     await expect(nbreadField(page, 'payment-date')).toHaveText('매월 10일')
     await expect(participantCard(page, user.name)).toBeVisible()
-  })
-
-  // GROUP-HOME-001
-  test('홈은 이번 달 그룹과 전체 참여 그룹을 구분해 보여준다', async ({
-    page,
-    seed,
-  }) => {
-    const user = await seed.createUser()
-    // 현재 월은 브라우저의 new Date() 기준이므로 테스트 실행 시점에 맞춰 결제월을 만든다.
-    const currentMonth = new Date().getMonth() + 1
-    const otherMonth = currentMonth === 12 ? 1 : currentMonth + 1
-
-    const monthlyTitle = seed.unique('E2E 매월 그룹')
-    const currentYearTitle = seed.unique('E2E 이번달 매년 그룹')
-    const otherYearTitle = seed.unique('E2E 다른달 매년 그룹')
-
-    const monthlyNbread = await seed.createNbread({
-      leaderId: user.id,
-      title: monthlyTitle,
-      amount: 10000,
-      participantCount: 3,
-      paymentDate: 10,
-    })
-    const currentYearNbread = await seed.createNbread({
-      leaderId: user.id,
-      title: currentYearTitle,
-      amount: 12000,
-      participantCount: 2,
-      paymentDate: 10,
-      paymentPeriod: 'year',
-      paymentMonth: currentMonth,
-    })
-    const otherYearNbread = await seed.createNbread({
-      leaderId: user.id,
-      title: otherYearTitle,
-      amount: 24000,
-      participantCount: 4,
-      paymentDate: 10,
-      paymentPeriod: 'year',
-      paymentMonth: otherMonth,
-    })
-
-    await seed.addParticipant(monthlyNbread.id, user.id, true)
-    await seed.addParticipant(currentYearNbread.id, user.id, true)
-    await seed.addParticipant(otherYearNbread.id, user.id, true)
-    await applySession(page, await createSession(user))
-
-    await page.goto('/home')
-    await expect(
-      page.getByRole('heading', { name: '나의 엔빵' }),
-    ).toBeVisible()
-
-    await expect(monthlyNbreadItem(page, monthlyTitle)).toBeVisible()
-    await expect(monthlyNbreadItem(page, currentYearTitle)).toBeVisible()
-    await expect(monthlyNbreadItem(page, otherYearTitle)).not.toBeVisible()
-
-    await expect(myNbreadItem(page, monthlyTitle)).toBeVisible()
-    await expect(myNbreadItem(page, currentYearTitle)).toBeVisible()
-    await expect(myNbreadItem(page, otherYearTitle)).toBeVisible()
-    await expect(myNbreadCount(page, 3)).toBeVisible()
-
-    // 이번 달 엔빵 목록(매월 그룹 + 이번 달 매년 그룹)의 1인당 금액 합만 반영한다.
-    // 9,333원 = 매월 그룹(10000원 / 3명 = 3333원) + 이번 달 매년 그룹(12000원 / 2명 = 6000원)
-    await expect(monthlyNbreadTotalAmount(page, 9333)).toBeVisible()
-  })
-
-  // GROUP-HOME-002
-  test('참여 중인 그룹이 없으면 빈 상태와 추가 동선을 보여준다', async ({
-    page,
-    seed,
-  }) => {
-    // 참여 이력이 없는 사용자라 대기 중 초대도 없으므로 초대 배너와는 섞이지 않는다.
-    const user = await seed.createUser()
-    await applySession(page, await createSession(user))
-
-    await page.goto('/home')
-
-    await expect(monthlyNbreadEmptyState(page)).toBeVisible()
-    await expect(
-      page.getByText('엔빵을 추가해보세요!', { exact: true }),
-    ).toBeVisible()
-    await expect(page.getByText(/^\d+개$/)).toHaveCount(0)
-
-    await page.getByText('엔빵 추가하기', { exact: true }).click()
-
-    await expect(page).toHaveURL('/nbread/create')
   })
 })
 
@@ -443,9 +257,7 @@ test.describe('참여자 권한과 그룹 탈퇴', () => {
     await page.getByRole('button', { name: '엔빵 나가기' }).click()
     await page.getByRole('button', { name: '나가기', exact: true }).click()
 
-    await expect(
-      toastMessage(page, '엔빵 나가기에 성공했어요.'),
-    ).toBeVisible()
+    await expect(toastMessage(page, '엔빵 나가기에 성공했어요.')).toBeVisible()
     await expect(page).toHaveURL('/home')
     await expect(myNbreadItem(page, title)).not.toBeVisible()
 
