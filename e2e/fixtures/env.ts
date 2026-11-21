@@ -11,6 +11,16 @@ loadEnvConfig(process.cwd(), true, {
  * service role key는 seed와 cleanup에만 쓰고 브라우저 코드로 넘기지 않는다.
  */
 export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+
+// seed와 cleanup이 service role key로 사용자와 그룹을 만들고 지우므로,
+// .env.local 설정 실수로 운영 DB를 가리키면 데이터를 건드리기 전에 멈춘다.
+const PRODUCTION_PROJECT_REF = 'yyisakaqnaoomehqlyjz'
+
+if (supabaseUrl.includes(PRODUCTION_PROJECT_REF)) {
+  throw new Error(
+    'NEXT_PUBLIC_SUPABASE_URL이 운영 Supabase 프로젝트를 가리킵니다. 테스트는 개발 프로젝트에서만 실행합니다.',
+  )
+}
 export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_KEY ?? ''
 export const supabaseServiceRoleKey = (process.env.SUPABASE_SERVICE_ROLE_KEY ??
   process.env.SUPABASE_SECRET_KEY ??
