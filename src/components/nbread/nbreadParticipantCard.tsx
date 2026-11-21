@@ -25,11 +25,14 @@ interface NbreadParticipantCardProps {
 const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
   const [isChecked, setIsChecked] = useState<boolean>(props.isChecked || false)
   const userData = useUserStore((state) => state.user)
-  const isThrottling = useRef(false)
+  const [isUpdating, setIsUpdating] = useState(false)
+  // state는 다음 렌더 전까지 반영되지 않으므로 같은 틈의 연속 클릭은 ref로 막는다.
+  const isUpdatingRef = useRef(false)
 
   const handleClickCheckbox = async () => {
-    if (isThrottling.current) return
-    isThrottling.current = true // ✅ 실행 중 상태 설정
+    if (isUpdatingRef.current) return
+    isUpdatingRef.current = true
+    setIsUpdating(true)
 
     try {
       await updateNbreadRecord(
@@ -47,14 +50,14 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
 
       useToast.success('완료 여부가 업데이트되었어요.')
       setIsChecked((prev) => !prev)
-    } catch (error) {
+    } catch {
+      // Sentry 보고는 updateNbreadRecord가 하므로 여기서는 사용자에게 알리기만 한다.
       useToast.error('완료 여부 업데이트에 실패했어요. 다시 시도해주세요.')
-      throw error
+    } finally {
+      // 성공과 실패 모두 요청이 끝나면 바로 다시 누를 수 있다.
+      isUpdatingRef.current = false
+      setIsUpdating(false)
     }
-
-    setTimeout(() => {
-      isThrottling.current = false // ✅ 3초 후 다시 실행 가능하도록 초기화
-    }, 3000)
   }
 
   return (
@@ -77,7 +80,7 @@ const NbreadParticipantCard = (props: NbreadParticipantCardProps) => {
       </div>
       {props.hasCheckbox && (
         <Checkbox
-          disabled={props.isCheckboxDisabled}
+          disabled={props.isCheckboxDisabled || isUpdating}
           isChecked={isChecked}
           onChange={() => handleClickCheckbox()}
           testId="participant-payment-toggle"

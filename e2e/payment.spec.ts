@@ -217,11 +217,15 @@ test.describe('납부 상태 저장 처리', () => {
     page,
     seed,
   }) => {
-    const { leader, members, nbread } = await seedSettlementGroup(seed, [
-      'E2E 참여자',
-    ])
+    const { leader, members, nbread, startDate } = await seedSettlementGroup(
+      seed,
+      ['E2E 참여자'],
+    )
     const member = members[0]
     await applySession(page, await createSession(leader))
+
+    const pageErrors: Error[] = []
+    page.on('pageerror', (error) => pageErrors.push(error))
 
     let patchCount = 0
     let releasePatch = () => {}
@@ -247,94 +251,96 @@ test.describe('납부 상태 저장 처리', () => {
 
     await page.goto(`/nbread/${nbread.id}`)
     const label = participantCheckboxLabel(page, member.name)
-    await expect(participantCheckbox(page, member.name)).not.toBeChecked()
+    const checkbox = participantCheckbox(page, member.name)
+    await expect(checkbox).not.toBeChecked()
 
-    // 첫 클릭이 갱신 요청을 붙잡고 있는 동안 연달아 눌러도 요청이 더 나가지 않아야 한다.
     await label.click()
-    await label.click()
-    await label.click()
+
+    // 요청이 진행되는 동안에는 체크박스가 비활성화되어 막혀 있다는 것이 화면에 보여야 한다.
+    await expect(checkbox).toBeDisabled()
+
+    // Playwright는 label 클릭 시 연결된 input이 활성화될 때까지 기다리므로,
+    // 비활성 상태에서 사용자가 누르는 상황은 force로 재현한다.
+    await label.click({ force: true })
+    await label.click({ force: true })
 
     releasePatch()
 
+    // 연속 클릭이 요청을 만들었다면 첫 응답이 돌아오기 전에 이미 route 핸들러에 닿는다.
+    // 따라서 응답 완료(토스트와 활성화 복귀)를 기다린 뒤 세면 고정 대기 없이 확인할 수 있다.
     await expect(toastMessage(page, UPDATE_SUCCESS_MESSAGE)).toBeVisible()
+    await expect(checkbox).toBeEnabled()
+    await expect(checkbox).toBeChecked()
     expect(patchCount).toBe(1)
 
-    // 응답이 끝난 시각을 기준점으로 잡아 둔다. 이후 대기는 이 시각으로부터의
-    // 절대 경과 시간으로 계산한다. 그래야 앞 단계의 클릭·어설션에 걸린 시간이
-    // 누적돼 다음 클릭이 3초 경계에 붙어 버리는 일을 피할 수 있다.
-    const throttleStartedAt = Date.now()
-
-    // 여기까지는 요청이 진행 중인 동안의 잠금만 검증한다. 실제 가드는 두 겹이라
-    // nbreadParticipantCard.tsx의 isThrottling이 응답 완료 후에도 3초 동안 유지된다.
-    // 그 창 안에서 다시 누르면 두 번째 PATCH가 !isChecked를 보내 방금 완료로 바꾼
-    // 상태가 미납으로 되돌아갈 수 있으므로 여기서 이어서 검증한다.
-    // 3초 창에 기대는 구간이라 바로 위 토스트 확인 직후 곧바로 다시 클릭해 대기를
-    // 넣지 않는다. waitForTimeout으로 3초를 흘려보내면 검증 방향이 반대가 된다.
+    // 잠금은 요청이 끝나면 풀린다. 성공 직후 다시 누르면 곧바로 미납으로 되돌릴 수 있다.
     await label.click()
 
-    // 지금 검증하려는 건 "두 번째 요청이 오지 않았다"는 부재이고, 폴링 어설션은
-    // 참이 되기를 기다릴 뿐 이미 참(체크 유지)이면 그대로 통과해 버려 정착점이
-    // 못 된다. click()도 change 이벤트를 보낸 뒤 곧장 반환하므로 아래 두 어설션이
-    // 두 번째 PATCH가 route 핸들러에 닿기 전에 평가될 수 있다.
-    // 부재는 폴링으로 확인할 수 없어 시간을 한정해 기다리는 수밖에 없다. 1초는
-    // 3초 창의 1/3이라 창을 넘겨 스로틀이 풀리는 일 없이, 브라우저가 요청을 만들어
-    // route 핸들러까지 보내기에는 충분하다(2026-09-01 정리 대상이던 고정 대기와
-    // 달리 여기서는 대상이 상태 전이가 아니라 "요청 미발생"이라 고정 대기가 맞는
-    // 도구다. 지우지 말 것 — llm-wiki/log.md 2026-09-01 항목 참고).
-    await page.waitForTimeout(1000)
+    await expect.poll(() => patchCount).toBe(2)
+    await expect(checkbox).not.toBeChecked()
+    await expect(checkbox).toBeEnabled()
 
-    expect(patchCount).toBe(1)
-    await expect(participantCheckbox(page, member.name)).toBeChecked()
-
-    // 위 클릭+대기는 t≈0(응답 직후)에서 가드가 걸려 있는지만 본다. 스로틀이
-    // 3초보다 훨씬 짧게(예: 300ms) 줄어드는 회귀는 t≈0 클릭만으로는 잡히지
-    // 않으므로 창 안쪽 지점(throttleStartedAt로부터 2000ms 지점)도 함께 확인한다.
-    // 2000은 컴포넌트의 3000ms에서 나온 값이라 스로틀 값을 바꾸면 이 값도 함께
-    // 봐야 한다. 남은 시간만큼만 기다리는 이유: 위 블록(클릭 1회 + 1000ms 대기 +
-    // 어설션 2건)이 이미 시간을 썼는데 여기서 또 2000ms를 그대로 더하면 클릭
-    // 시점이 절대 경과 3000ms 부근(창 경계)까지 밀려 창 안쪽 검증이 아니라
-    // 경계에서 흔들리는 검증이 돼 버린다.
-    const elapsedSinceThrottleStart = Date.now() - throttleStartedAt
-    await page.waitForTimeout(Math.max(0, 2000 - elapsedSinceThrottleStart))
-    await label.click()
-
-    // 두 번째 PATCH가 나갔다면 이 대기 안에 route 핸들러까지 도달한다.
-    // 클릭 시점이 throttleStartedAt로부터 2000ms 부근이므로 500ms를 더해도
-    // 여전히 3000ms 창 안이다.
-    await page.waitForTimeout(500)
-
-    expect(patchCount).toBe(1)
-    await expect(participantCheckbox(page, member.name)).toBeChecked()
-
-    // route.continue()로 실제 DB에 요청이 닿으므로, 쓰기가 정말 한 번만 반영됐는지 DB로도 확인한다.
     const records = await seed.getRecords(nbread.id, member.id)
-    expect(records.filter((record) => record.is_paid)).toHaveLength(1)
+    expect(
+      records.find((record) => record.payment_date === startDate)?.is_paid,
+    ).toBe(false)
+    expect(pageErrors).toEqual([])
   })
 
   // SETTLE-UPDATE-002
-  test('납부 상태 저장에 실패하면 화면 상태를 유지하고 오류를 알린다', async ({
+  test('납부 상태 저장에 실패하면 화면 상태를 유지하고 다시 시도할 수 있다', async ({
     page,
     seed,
   }) => {
-    const { leader, members, nbread } = await seedSettlementGroup(seed, [
-      'E2E 참여자',
-    ])
+    const { leader, members, nbread, startDate } = await seedSettlementGroup(
+      seed,
+      ['E2E 참여자'],
+    )
     const member = members[0]
     await applySession(page, await createSession(leader))
 
-    // 조회는 그대로 두고 정산 기록 갱신 요청만 실패로 만든다.
-    await failRequest(page, '/rest/v1/nbread_records', 'PATCH')
+    const pageErrors: Error[] = []
+    page.on('pageerror', (error) => pageErrors.push(error))
 
-    // 카드가 갱신 실패를 다시 던져 브라우저에 처리되지 않은 거부가 남는다.
-    // 던지는 값이 Error가 아니라 PostgrestError 객체라 pageerror에 메시지가 실리지 않으므로
-    // 오류 내용 대신 사용자에게 보이는 결과만 검증한다.
+    let patchCount = 0
+    page.on('request', (request) => {
+      if (
+        request.method() === 'PATCH' &&
+        new URL(request.url()).pathname.endsWith('/rest/v1/nbread_records')
+      ) {
+        patchCount += 1
+      }
+    })
+
+    // 조회는 그대로 두고 첫 갱신 요청만 실패로 만든다. 두 번째 요청은 실제 DB로 간다.
+    await failRequest(page, '/rest/v1/nbread_records', 'PATCH', { times: 1 })
+
     await page.goto(`/nbread/${nbread.id}`)
-    await expect(participantCheckbox(page, member.name)).not.toBeChecked()
+    const label = participantCheckboxLabel(page, member.name)
+    const checkbox = participantCheckbox(page, member.name)
+    await expect(checkbox).not.toBeChecked()
 
-    await participantCheckboxLabel(page, member.name).click()
+    await label.click()
 
     await expect(toastMessage(page, UPDATE_FAILURE_MESSAGE)).toBeVisible()
-    await expect(participantCheckbox(page, member.name)).not.toBeChecked()
+    await expect(checkbox).not.toBeChecked()
     await expect(toastMessage(page, UPDATE_SUCCESS_MESSAGE)).toHaveCount(0)
+    expect(patchCount).toBe(1)
+
+    // 실패 후에는 잠금이 풀려 있어야 한다. 다시 누르면 두 번째 요청이 나가야 한다.
+    await expect(checkbox).toBeEnabled()
+    await label.click()
+
+    await expect.poll(() => patchCount).toBe(2)
+    await expect(toastMessage(page, UPDATE_SUCCESS_MESSAGE)).toBeVisible()
+    await expect(checkbox).toBeChecked()
+
+    const records = await seed.getRecords(nbread.id, member.id)
+    expect(
+      records.find((record) => record.payment_date === startDate)?.is_paid,
+    ).toBe(true)
+
+    // 실패한 요청이 UI 핸들러 밖으로 처리되지 않은 rejection을 남기지 않아야 한다.
+    expect(pageErrors).toEqual([])
   })
 })

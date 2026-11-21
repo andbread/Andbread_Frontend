@@ -42,7 +42,7 @@ GitHub Actions에서는 GitHub Secrets로 같은 값을 주입한다.
 ```bash
 npm run test:e2e                       # 전체 (mobile + desktop)
 npx playwright test --project=mobile   # 모바일 뷰포트만
-npx playwright test e2e/settlement.spec.ts
+npx playwright test e2e/payment.spec.ts
 npx playwright test --grep '납부 상태'
 ```
 
