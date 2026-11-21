@@ -63,16 +63,29 @@ dev 서버는 경로마다 첫 진입에서 컴파일해 느리고 결과가 흔
 실패하면 `playwright-report/`와 `test-results/`가 실행 요약 페이지의 Artifacts에 올라간다.
 trace는 내려받아 `npx playwright show-trace trace.zip`으로 확인한다.
 
+## Route Handler 통합 테스트
+
+`src/**/*.integration.test.ts`는 Route Handler 함수를 서버 없이 직접 호출해
+실제 테스트용 Supabase에서 응답 상태와 DB 상태를 확인한다.
+E2E와 같은 `.env.local`과 `fixtures/env.ts`, `seed.ts`를 쓰므로 실행 준비도 같다.
+
+```bash
+npm run test:integration
+```
+
+`npm test`는 단위 테스트만 실행한다. 통합 테스트는 아직 CI에 연결하지 않았다.
+
 ## 구조
 
-| 파일                  | 역할                                              |
-| --------------------- | ------------------------------------------------- |
-| `fixtures/env.ts`     | `.env` 로딩, 테스트 DB 접속 정보와 실행 조건 판정 |
-| `fixtures/seed.ts`    | 사용자·그룹·참여자·초대·정산 기록 생성과 cleanup  |
-| `fixtures/session.ts` | Supabase 세션 생성과 브라우저 주입                |
-| `fixtures/ui.ts`      | 라벨·참여자 카드·토스트 등 공용 선택자            |
-| `fixtures/net.ts`     | 특정 경로·메서드 요청만 실패로 대체하는 mock      |
-| `fixtures/test.ts`    | `seed` fixture를 붙인 `test`                      |
+| 파일                  | 역할                                                        |
+| --------------------- | ----------------------------------------------------------- |
+| `fixtures/env.ts`     | `.env` 로딩, 테스트 DB 접속 정보와 실행 조건 판정           |
+| `fixtures/seed.ts`    | 사용자·그룹·참여자·초대·정산 기록 생성과 cleanup            |
+| `fixtures/session.ts` | Supabase 세션 생성과 브라우저 주입, 통합 테스트용 토큰 발급 |
+| `fixtures/ui.ts`      | 라벨·참여자 카드·토스트 등 공용 선택자                      |
+| `fixtures/net.ts`     | 특정 경로·메서드 요청만 실패로 대체하는 mock                |
+| `fixtures/test.ts`    | `seed` fixture를 붙인 `test`                                |
+| `fixtures/route.ts`   | 통합 테스트가 Route Handler에 넘길 Request 생성             |
 
 ## 인증 방식
 

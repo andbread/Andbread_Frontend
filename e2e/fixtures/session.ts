@@ -63,6 +63,28 @@ export const createSession = async (
 }
 
 /**
+ * Route Handler 통합 테스트는 브라우저 없이 Bearer 헤더로 요청하므로 access token만 받는다.
+ */
+export const signInAccessToken = async (user: TestUser): Promise<string> => {
+  const client = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  })
+
+  const { data, error } = await client.auth.signInWithPassword({
+    email: user.email,
+    password: user.password,
+  })
+
+  if (error) throw error
+
+  return data.session.access_token
+}
+
+/**
  * ProtectRoute는 localStorage의 `user-store` 존재 여부만으로 보호 경로 접근을 허용한다.
  * 실제 백엔드 응답이 필요 없는 화면(폼 검증, 네트워크를 대체한 케이스)에서는
  * 이 값으로 실제 Supabase 로그인(계정 생성, signInWithPassword) 없이 보호 경로에 들어갈 수 있다.

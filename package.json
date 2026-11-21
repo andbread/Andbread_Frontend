@@ -9,8 +9,9 @@
     "start": "next start",
     "lint": "next lint --dir src --dir e2e",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --project unit",
+    "test:watch": "vitest --project unit",
+    "test:integration": "vitest run --project integration",
     "test:e2e": "playwright test",
     "generate-sitemap": "next-sitemap",
     "update-types": "supabase gen types typescript --project-id yyisakaqnaoomehqlyjz --schema public > src/types/supabase.ts"
