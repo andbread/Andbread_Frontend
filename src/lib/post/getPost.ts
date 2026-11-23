@@ -1,18 +1,11 @@
-import { supabase } from '../supabaseClient'
+import { apiRequest } from '@/lib/apiClient'
 import { Post } from '@/types/post'
+
 export const getPost = async (nbreadId: string) => {
   try {
-    const { data, error } = await supabase
-      .from('post')
-      .select('*')
-      .eq('nbread_id', nbreadId)
-      .order('created_at', { ascending: false })
-      if(error){
-        console.error("게시글을 찾을수 없어!",error)
-        return
-      }
-      return data
+    return await apiRequest<Post[]>(`/api/nbreads/${nbreadId}/posts`)
   } catch (error) {
-
+    // 실패 시 아무 값도 돌려주지 않던 기존 동작을 유지한다.
+    console.error('게시글을 찾을수 없어!', error)
   }
 }

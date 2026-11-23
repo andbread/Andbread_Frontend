@@ -1,13 +1,9 @@
-import { supabase } from '../supabaseClient'
+import { apiRequest } from '@/lib/apiClient'
+
 export const deletePost = async (post: number) => {
   try {
-    const { data, error } = await supabase
-      .from('post')
-      .delete()
-      .eq('id', post)
-      if(error){
-        console.error(error)
-      }
-      return data
+    await apiRequest(`/api/posts/${post}`, { method: 'DELETE' })
+
+    return null
   } catch (error) {}
 }

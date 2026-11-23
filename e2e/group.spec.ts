@@ -132,7 +132,7 @@ test.describe('그룹 생성', () => {
     seed.trackNbreadTitle(title)
     await applySession(page, await createSession(user))
 
-    await failRequest(page, '/rest/v1/nbread', 'POST')
+    await failRequest(page, '/api/nbreads', 'POST')
 
     await page.goto('/nbread/create')
     await fillCreateForm(page, {

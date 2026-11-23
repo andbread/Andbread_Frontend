@@ -145,7 +145,7 @@ test.describe('초대 응답', () => {
     })
 
     await page.route(
-      (url) => url.pathname.endsWith('/rest/v1/rpc/respond_to_nbread_invite'),
+      (url) => url.pathname === `/api/invites/${inviteToken}/response`,
       async (route) => {
         await held
         await route.continue()

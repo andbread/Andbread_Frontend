@@ -55,7 +55,7 @@ export default function ProtectRoute({
     }
 
     setIsRedirectingToLanding(false)
-  }, [pathname, router])
+  }, [pathname, router, user?.id])
 
   useEffect(() => {
     if (!user?.id || termsAgreementExemptRoutes.includes(pathname)) return

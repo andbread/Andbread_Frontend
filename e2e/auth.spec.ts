@@ -1,6 +1,11 @@
 import { expect, test } from './fixtures/test'
 import { hasTestDatabase, testDatabaseSkipReason } from './fixtures/env'
-import { applySession, createSession, readUserStore } from './fixtures/session'
+import {
+  applySession,
+  createFakeSession,
+  createSession,
+  readUserStore,
+} from './fixtures/session'
 import { toastMessage } from './fixtures/ui'
 import { failRequest } from './fixtures/net'
 
@@ -74,6 +79,19 @@ test.describe('접근 제어', () => {
     await page.goto('/login')
 
     await expect(page).toHaveURL('/home')
+  })
+
+  // AUTH-ACCESS-006
+  test('만료된 세션으로 보호 경로를 열면 로그인 상태를 지우고 첫 화면으로 이동한다', async ({
+    page,
+  }) => {
+    await applySession(page, createFakeSession('E2E 만료 세션'))
+
+    await page.goto('/home')
+
+    await expect(page).toHaveURL('/')
+    const userStore = await readUserStore(page)
+    expect(userStore?.state?.user).toBeNull()
   })
 })
 

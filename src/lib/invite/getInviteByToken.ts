@@ -1,51 +1,21 @@
-import { supabase } from '@/lib/supabaseClient'
+import { apiRequest } from '@/lib/apiClient'
 import { captureAppError } from '@/lib/sentry/sentry'
+import type {
+  InviteDetails,
+  InviteStatus,
+} from '@/lib/server/invite/getInviteByToken'
 
-export type InviteStatus = 'pending' | 'accepted' | 'rejected' | 'expired'
-
-export interface InviteDetails {
-  nbreadId: string
-  status: InviteStatus
-  nbreadTitle: string
-  leaderName: string
-}
+export type { InviteDetails, InviteStatus }
 
 export const getInviteByToken = async (
   inviteToken: string,
 ): Promise<InviteDetails | null> => {
   try {
-    // 공개 링크에는 엔빵 ID 대신 초대 토큰만 노출하고 실제 초대 정보를 조회한다.
-    const { data: invite, error: inviteError } = await supabase
-      .from('nbread_invite')
-      .select('nbread_id, status')
-      .eq('invite_token', inviteToken)
-      .maybeSingle()
-
-    if (inviteError) throw inviteError
-    if (!invite) return null
-
-    const { data: nbread, error: nbreadError } = await supabase
-      .from('nbread')
-      .select('title, leader_id')
-      .eq('id', invite.nbread_id)
-      .single()
-
-    if (nbreadError) throw nbreadError
-
-    const { data: leader, error: leaderError } = await supabase
-      .from('user')
-      .select('name')
-      .eq('id', nbread.leader_id)
-      .single()
-
-    if (leaderError) throw leaderError
-
-    return {
-      nbreadId: invite.nbread_id,
-      status: invite.status as InviteStatus,
-      nbreadTitle: nbread.title,
-      leaderName: leader.name,
-    }
+    // 로그인 전에도 열리는 공개 링크라 서버는 토큰을 요구하지 않는다.
+    // 다만 로그인 상태라면 토큰이 붙어야 RLS를 통과하므로 apiRequest 기본 동작을 쓴다.
+    return await apiRequest<InviteDetails | null>(
+      `/api/invites/${inviteToken}`,
+    )
   } catch (error) {
     captureAppError(error, {
       action: 'invite.get_by_token',

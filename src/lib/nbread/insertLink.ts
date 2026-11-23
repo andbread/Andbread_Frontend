@@ -1,19 +1,16 @@
+import { apiRequest } from '@/lib/apiClient'
 import { captureAppError } from '@/lib/sentry/sentry'
-import { supabase } from '@/lib/supabaseClient'
 
 export const createLinkInvite = async (nbreadId: string) => {
-  // 링크 초대도 공유 전에 대상 사용자 없는 초대 레코드를 생성한다.
-  const { data, error } = await supabase
-    .from('nbread_invite')
-    .insert({
-      nbread_id: nbreadId,
-      target_user_id: null,
-      status: 'pending',
-    })
-    .select('invite_token')
-    .single()
+  let inviteToken: string
 
-  if (error) {
+  try {
+    const result = await apiRequest<{ inviteToken: string }>(
+      `/api/nbreads/${nbreadId}/invites/link`,
+      { method: 'POST' },
+    )
+    inviteToken = result.inviteToken
+  } catch (error) {
     captureAppError(error, {
       action: 'invite.create_link',
       tags: { nbreadId },
@@ -21,9 +18,10 @@ export const createLinkInvite = async (nbreadId: string) => {
     throw error
   }
 
+  // origin을 아는 쪽에서 URL을 조립한다.
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, '') ??
     window.location.origin
 
-  return `${baseUrl}/invite/${data.invite_token}`
+  return `${baseUrl}/invite/${inviteToken}`
 }
