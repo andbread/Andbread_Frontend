@@ -19,6 +19,7 @@ describe('/api/nbreads/[nbreadId]', () => {
   let member: TestUser
   let outsider: TestUser
   let leaderToken: string
+  let memberToken: string
 
   beforeAll(async () => {
     ;[leader, member, outsider] = await Promise.all([
@@ -26,7 +27,10 @@ describe('/api/nbreads/[nbreadId]', () => {
       seed.createUser('통합 참여자'),
       seed.createUser('통합 비참여자'),
     ])
-    leaderToken = await signInAccessToken(leader)
+    ;[leaderToken, memberToken] = await Promise.all([
+      signInAccessToken(leader),
+      signInAccessToken(member),
+    ])
   })
 
   afterAll(async () => {
@@ -103,6 +107,26 @@ describe('/api/nbreads/[nbreadId]', () => {
         leader_id: leader.id,
       })
     })
+
+    // GROUP-UPDATE-002
+    it('일반 참여자가 수정하면 거부하고 기존 정보를 유지한다', async () => {
+      const nbread = await createGroup()
+
+      const response = await patch(
+        nbread.id,
+        memberToken,
+        seed.unique('권한 없는 수정'),
+      )
+
+      expect(response.status).toBe(403)
+      expect(await readNbread(nbread.id)).toMatchObject({
+        title: nbread.title,
+        amount: ORIGINAL.amount,
+        participant_count: ORIGINAL.participantCount,
+        payment_date: ORIGINAL.paymentDate,
+        leader_id: leader.id,
+      })
+    })
   })
 
   describe('DELETE', () => {
@@ -128,6 +152,17 @@ describe('/api/nbreads/[nbreadId]', () => {
       expect(await countRows('participant', nbread.id)).toBe(0)
       expect(await countRows('nbread_records', nbread.id)).toBe(0)
       expect(await countRows('nbread_invite', nbread.id)).toBe(0)
+    })
+
+    // GROUP-DELETE-002
+    it('일반 참여자가 삭제하면 거부하고 엔빵을 유지한다', async () => {
+      const nbread = await createGroup()
+
+      const response = await remove(nbread.id, memberToken)
+
+      expect(response.status).toBe(403)
+      expect(await readNbread(nbread.id)).not.toBeNull()
+      expect(await countRows('participant', nbread.id)).toBe(2)
     })
   })
 })

@@ -1,4 +1,5 @@
 import { requireAuth } from '@/app/api/_lib/requireAuth'
+import { requireNbreadLeader } from '@/app/api/_lib/requireNbreadLeader'
 import { fail, noContent, ok } from '@/app/api/_lib/response'
 import { getParticipants } from '@/lib/server/participant/getParticipants'
 import { insertParticipant } from '@/lib/server/participant/insertParticipant'
@@ -73,6 +74,15 @@ export async function DELETE(request: Request, context: RouteContext) {
   }
 
   try {
+    if (userId !== auth.user.id) {
+      const permission = await requireNbreadLeader(
+        auth.client,
+        nbreadId,
+        auth.user.id,
+      )
+      if (!permission.ok) return permission.response
+    }
+
     await deleteParticipants(auth.client, userId, nbreadId)
     return noContent()
   } catch (error) {

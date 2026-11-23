@@ -1,4 +1,5 @@
 import { requireAuth } from '@/app/api/_lib/requireAuth'
+import { requireNbreadLeader } from '@/app/api/_lib/requireNbreadLeader'
 import { fail, noContent, ok } from '@/app/api/_lib/response'
 import { getNbread } from '@/lib/server/nbread/getNbread'
 import { updateNbread } from '@/lib/server/nbread/updateNbread'
@@ -41,6 +42,13 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 
   try {
+    const permission = await requireNbreadLeader(
+      auth.client,
+      nbreadId,
+      auth.user.id,
+    )
+    if (!permission.ok) return permission.response
+
     await updateNbread(auth.client, nbreadId, body)
     return noContent()
   } catch (error) {
@@ -59,6 +67,13 @@ export async function DELETE(request: Request, context: RouteContext) {
   const { nbreadId } = await context.params
 
   try {
+    const permission = await requireNbreadLeader(
+      auth.client,
+      nbreadId,
+      auth.user.id,
+    )
+    if (!permission.ok) return permission.response
+
     await deleteNbread(auth.client, nbreadId)
     return noContent()
   } catch (error) {

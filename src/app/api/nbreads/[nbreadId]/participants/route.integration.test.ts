@@ -151,5 +151,17 @@ describe('/api/nbreads/[nbreadId]/participants', () => {
         [users.leader.id, users.otherMember.id].sort(),
       )
     })
+
+    // GROUP-MEMBER-009
+    it('일반 참여자가 다른 참여자를 내보내면 거부한다', async () => {
+      const nbread = await createGroup()
+
+      const response = await remove(nbread.id, 'member', users.otherMember.id)
+
+      expect(response.status).toBe(403)
+      expect(await participantIds(nbread.id)).toEqual(
+        [users.leader.id, users.member.id, users.otherMember.id].sort(),
+      )
+    })
   })
 })
